@@ -108,18 +108,24 @@ export function useWizardFlow(_studentData: StudentData): UseWizardFlowReturn {
   const goNext = useCallback(() => {
     if (canGoNext) {
       setCurrentStepIndex((prev) => prev + 1)
+      // Scroll to top when advancing to next step
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [canGoNext])
 
   const goBack = useCallback(() => {
     if (canGoBack) {
       setCurrentStepIndex((prev) => prev - 1)
+      // Scroll to top when going back
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [canGoBack])
 
   const goToStep = useCallback((index: number) => {
     if (index >= 0 && index < totalSteps) {
       setCurrentStepIndex(index)
+      // Scroll to top when jumping to a step
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [totalSteps])
 
