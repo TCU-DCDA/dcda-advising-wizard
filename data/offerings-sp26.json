@@ -1,0 +1,223 @@
+{
+  "term": "Spring 2026",
+  "updated": "2026-01-06",
+  "offeredCodes": [
+    "ADRN 30503",
+    "ARST 10123",
+    "ARST 20743",
+    "COSC 10603",
+    "CRJU 20883",
+    "DCDA 30970",
+    "DCDA 40273",
+    "DCDA 40833",
+    "DSGN 10153",
+    "ECON 40313",
+    "ENGL 20813",
+    "ENGL 30803",
+    "ENGR 10573",
+    "ENTR 30123",
+    "GEOG 30313",
+    "GEOG 30323",
+    "GEOG 40323",
+    "GEOL 20113",
+    "HIST 30673",
+    "HIST 30693",
+    "INSC 20153",
+    "INTR 20103",
+    "MATH 10043",
+    "STCO 36403",
+    "STCO 43803",
+    "WRIT 40563"
+  ],
+  "sections": [
+    {
+      "code": "ADRN 30503",
+      "section": "060\nREG",
+      "title": "A Human-Centered AI Future",
+      "schedule": "MW\n14:00-15:20",
+      "modality": "In Person",
+      "enrollment": "18\n20",
+      "status": "Open"
+    },
+    {
+      "code": "ARST 20743",
+      "section": "055\nREG",
+      "title": "Photography - Photography One",
+      "schedule": "TR\n14:00-16:50",
+      "modality": "In Person",
+      "enrollment": "9\n12",
+      "status": "Open"
+    },
+    {
+      "code": "COSC 10603",
+      "section": "065\nREG",
+      "title": "Intro to Python for Data Analy",
+      "schedule": "TR\n15:30-16:50",
+      "modality": "In Person",
+      "enrollment": "32\n35",
+      "status": "Open"
+    },
+    {
+      "code": "CRJU 20883",
+      "section": "020\nREG",
+      "title": "Data Analyses in CRJU",
+      "schedule": "MWF\n10:00-10:50",
+      "modality": "In Person",
+      "enrollment": "19\n24",
+      "status": "Open"
+    },
+    {
+      "code": "DCDA 40833",
+      "section": "015\nREG",
+      "title": "Dig Cltr & Data An Capstone",
+      "schedule": "TR\n9:30-10:50",
+      "modality": "In Person",
+      "enrollment": "19\n20",
+      "status": "Open"
+    },
+    {
+      "code": "DCDA 40833",
+      "section": "055\nREG",
+      "title": "Dig Cltr & Data An Capstone",
+      "schedule": "TR\n14:00-15:20",
+      "modality": "In Person",
+      "enrollment": "10\n20",
+      "status": "Open"
+    },
+    {
+      "code": "ENGR 10573",
+      "section": "081\nREG",
+      "title": "Applied Programming-Matlab",
+      "schedule": "TR\n17:00-18:20",
+      "modality": "In Person",
+      "enrollment": "23\n30",
+      "status": "Open"
+    },
+    {
+      "code": "ENTR 30123",
+      "section": "040\nREG",
+      "title": "Technology Entrepreneurship",
+      "schedule": "MW\n12:30-13:50",
+      "modality": "In Person",
+      "enrollment": "38\n40",
+      "status": "Open"
+    },
+    {
+      "code": "GEOL 20113",
+      "section": "015\nREG",
+      "title": "NSC",
+      "schedule": "In Person",
+      "modality": "01/12/26",
+      "enrollment": "Open",
+      "status": "TR\n9:30-10:20"
+    },
+    {
+      "code": "GEOL 20113",
+      "section": "115\nREG",
+      "title": "NSC",
+      "schedule": "In Person",
+      "modality": "01/12/26",
+      "enrollment": "Open",
+      "status": "W\n11:00-12:50"
+    },
+    {
+      "code": "HIST 30673",
+      "section": "055\nREG",
+      "title": "Hist of Museums and Collecting - Messoamerican Antiquities",
+      "schedule": "TR\n14:00-15:20",
+      "modality": "In Person",
+      "enrollment": "11\n12",
+      "status": "Open"
+    },
+    {
+      "code": "HIST 30693",
+      "section": "035\nREG",
+      "title": "HT",
+      "schedule": "In Person",
+      "modality": "01/12/26",
+      "enrollment": "Open",
+      "status": "TR\n11:00-12:20"
+    },
+    {
+      "code": "INSC 20153",
+      "section": "002\nREG",
+      "title": "Statistical Analysis",
+      "schedule": "MWF\n8:00- 8:50",
+      "modality": "In Person",
+      "enrollment": "38\n39",
+      "status": "Open"
+    },
+    {
+      "code": "INSC 20153",
+      "section": "011\nREG",
+      "title": "Statistical Analysis",
+      "schedule": "MWF\n9:00- 9:50",
+      "modality": "In Person",
+      "enrollment": "28\n39",
+      "status": "Open"
+    },
+    {
+      "code": "INSC 20153",
+      "section": "020\nREG",
+      "title": "Statistical Analysis",
+      "schedule": "MWF\n10:00-10:50",
+      "modality": "In Person",
+      "enrollment": "38\n39",
+      "status": "Open"
+    },
+    {
+      "code": "INTR 20103",
+      "section": "045\nREG",
+      "title": "Tech Skills for Emerging Prof",
+      "schedule": "TR\n12:30-13:50",
+      "modality": "In Person",
+      "enrollment": "16\n25",
+      "status": "Open"
+    },
+    {
+      "code": "MATH 10043",
+      "section": "081\nREG",
+      "title": "MTH",
+      "schedule": "In Person",
+      "modality": "01/12/26",
+      "enrollment": "Open",
+      "status": "MW\n19:00-20:20"
+    },
+    {
+      "code": "MATH 10043",
+      "section": "084\nREG",
+      "title": "MTH",
+      "schedule": "In Person",
+      "modality": "01/12/26",
+      "enrollment": "Open",
+      "status": "TR\n18:30-19:50"
+    },
+    {
+      "code": "STCO 43803",
+      "section": "015\nREG",
+      "title": "New Media",
+      "schedule": "TR\n9:30-10:50",
+      "modality": "In Person",
+      "enrollment": "14\n18",
+      "status": "Open"
+    },
+    {
+      "code": "WRIT 40563",
+      "section": "045\nREG",
+      "title": "MultimediaAuthr:Sound&Podcast",
+      "schedule": "TR\n12:30-13:50",
+      "modality": "In Person",
+      "enrollment": "15\n20",
+      "status": "Open"
+    },
+    {
+      "code": "WRIT 40563",
+      "section": "055\nREG",
+      "title": "MultimediaAuthr:Sound&Podcast",
+      "schedule": "TR\n14:00-15:20",
+      "modality": "In Person",
+      "enrollment": "19\n20",
+      "status": "Open"
+    }
+  ]
+}

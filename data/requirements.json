@@ -1,0 +1,144 @@
+{
+  "major": {
+    "name": "DCDA Major",
+    "totalHours": 33,
+    "required": {
+      "name": "Required Categories",
+      "hours": 15,
+      "categories": [
+        {
+          "id": "intro",
+          "name": "Intro (Req'd English)",
+          "hours": 3,
+          "courses": ["ENGL 20813", "WRIT 20303", "WRIT 20323", "WRIT 20333"],
+          "selectOne": true
+        },
+        {
+          "id": "statistics",
+          "name": "Statistics",
+          "hours": 3,
+          "courses": ["MATH 10043", "INSC 20153"],
+          "selectOne": true
+        },
+        {
+          "id": "coding",
+          "name": "Coding",
+          "hours": 3,
+          "courses": ["WRIT 20833", "GEOG 30323", "COSC 10603"],
+          "selectOne": true
+        },
+        {
+          "id": "mmAuthoring",
+          "name": "MM Authoring",
+          "hours": 3,
+          "courses": ["WRIT 40163", "WRIT 40263", "WRIT 40363", "WRIT 40463", "WRIT 40563", "CRWT 30363", "STCO 36403", "EDUC 50263"],
+          "selectOne": true
+        },
+        {
+          "id": "capstone",
+          "name": "Capstone or Thesis",
+          "hours": 3,
+          "courses": ["DCDA 40833", "DCDA 40003"],
+          "selectOne": true,
+          "prerequisites": ["statistics", "coding"]
+        }
+      ]
+    },
+    "electives": {
+      "name": "DC & DA Electives",
+      "hours": 6,
+      "categories": [
+        {
+          "id": "dcElective",
+          "name": "Digital Culture Elective",
+          "hours": 3,
+          "category": "Digital Culture",
+          "count": 1
+        },
+        {
+          "id": "daElective",
+          "name": "Data Analytics Elective",
+          "hours": 3,
+          "category": "Data Analytics",
+          "count": 1
+        }
+      ]
+    },
+    "generalElectives": {
+      "name": "General Electives",
+      "hours": 12,
+      "count": 4,
+      "note": "Any DCDA-approved course from any category"
+    }
+  },
+  "minor": {
+    "name": "DCDA Minor",
+    "totalHours": 21,
+    "required": {
+      "name": "Required Categories",
+      "hours": 12,
+      "categories": [
+        {
+          "id": "statistics",
+          "name": "Statistics",
+          "hours": 3,
+          "courses": ["MATH 10043", "INSC 20153"],
+          "selectOne": true
+        },
+        {
+          "id": "coding",
+          "name": "Coding",
+          "hours": 3,
+          "courses": ["WRIT 20833", "GEOG 30323", "COSC 10603"],
+          "selectOne": true
+        },
+        {
+          "id": "mmAuthoring",
+          "name": "MM Authoring",
+          "hours": 3,
+          "courses": ["WRIT 40163", "WRIT 40263", "WRIT 40363", "WRIT 40463", "WRIT 40563", "CRWT 30363", "STCO 36403", "EDUC 50263"],
+          "selectOne": true
+        },
+        {
+          "id": "capstone",
+          "name": "Capstone or Thesis",
+          "hours": 3,
+          "courses": ["DCDA 40833", "DCDA 40003"],
+          "selectOne": true,
+          "prerequisites": ["statistics", "coding"]
+        }
+      ]
+    },
+    "generalElectives": {
+      "name": "General Electives",
+      "hours": 9,
+      "count": 3,
+      "note": "Any DCDA-approved course from any category"
+    }
+  },
+  "enrollmentWarnings": {
+    "DSGN": {
+      "courses": ["DSGN 10103", "DSGN 10153"],
+      "contact": "Tyra Musoma",
+      "email": "t.musoma@tcu.edu",
+      "message": "Because of enrollment pressures, DCDA students need to contact Tyra Musoma (t.musoma@tcu.edu) to ask to be placed on a waiting list to allow DSGN majors the first opportunity to sign up for their required intro classes. Please identify yourself as a DCDA student and CC your DCDA advisor."
+    },
+    "STCO": {
+      "courses": ["STCO 36403", "STCO 43803"],
+      "contact": "Instructor of record",
+      "message": "Because of enrollment pressures, DCDA students need to contact the instructor of record for the section to ask to be placed on a waiting list. Please identify yourself as a DCDA student and CC your DCDA advisor."
+    }
+  },
+  "prerequisites": {
+    "capstone": {
+      "requires": ["statistics", "coding"],
+      "message": "The Capstone course requires both Statistics and Coding to be completed first."
+    }
+  },
+  "mutuallyExclusive": [
+    {
+      "courses": ["MATH 10043", "INSC 20153"],
+      "message": "Students may not receive credit for both MATH 10043 and INSC 20153."
+    }
+  ]
+}
