@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils'
 
 interface ReviewStepProps {
   studentData: StudentData
+  generalElectives?: string[]
 }
 
 interface SummarySectionProps {
@@ -75,10 +76,10 @@ function CourseRow({ code, category, showCheck = false }: CourseRowProps) {
   )
 }
 
-export function ReviewStep({ studentData }: ReviewStepProps) {
+export function ReviewStep({ studentData, generalElectives }: ReviewStepProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [previewFilename, setPreviewFilename] = useState<string>('')
-  const { degreeProgress } = useRequirements(studentData)
+  const { degreeProgress } = useRequirements(studentData, generalElectives)
 
   const capstoneTarget = getCapstoneTargetSemester(studentData.expectedGraduation)
 

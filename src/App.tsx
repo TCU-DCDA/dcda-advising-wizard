@@ -384,6 +384,7 @@ function App() {
               completedCourses: allCompletedCourses,
               scheduledCourses: allScheduledCourses,
             }}
+            generalElectives={categorySelections.generalElectives}
           />
         )
 

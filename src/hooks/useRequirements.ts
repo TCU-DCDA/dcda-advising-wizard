@@ -29,7 +29,10 @@ export interface DegreeProgress {
   isComplete: boolean
 }
 
-export function useRequirements(studentData: StudentData) {
+export function useRequirements(
+  studentData: StudentData,
+  explicitGeneralElectives?: string[]
+) {
   const { degreeType, completedCourses, specialCredits, courseCategories = {} } = studentData
 
   // Count special credits by category
@@ -124,27 +127,40 @@ export function useRequirements(studentData: StudentData) {
 
     // Process general electives
     const allCourseCodes = courses.map((c) => c.code)
-    const electiveCategoryCourses = degree.electives?.categories.flatMap((cat) =>
-      courses.filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code)).map((c) => c.code)
-    ) ?? []
 
-    const generalCompleted = [
-      ...completedCourses.filter((c) => {
-        if (!allCourseCodes.includes(c)) return false
-        if (requiredCategoryCourses.includes(c)) return false
+    let generalCompleted: string[]
 
-        // For flexible courses, check if assigned to generalElectives
-        if (isFlexibleCourse(c)) {
-          const assignedCategory = courseCategories[c as keyof typeof courseCategories] as FlexibleCourseCategory | undefined
-          return assignedCategory === 'generalElectives'
-        }
+    if (explicitGeneralElectives) {
+      // Use explicitly provided general electives list (from Part 1 selections)
+      generalCompleted = [
+        ...explicitGeneralElectives,
+        ...requiredOverflow,
+        ...electiveOverflow,
+      ]
+    } else {
+      // Fallback: infer general electives (for cases where explicit list not provided)
+      const electiveCategoryCourses = degree.electives?.categories.flatMap((cat) =>
+        courses.filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code)).map((c) => c.code)
+      ) ?? []
 
-        // For non-flexible courses, exclude if they're in elective categories
-        return !electiveCategoryCourses.includes(c)
-      }),
-      ...requiredOverflow,
-      ...electiveOverflow,
-    ]
+      generalCompleted = [
+        ...completedCourses.filter((c) => {
+          if (!allCourseCodes.includes(c)) return false
+          if (requiredCategoryCourses.includes(c)) return false
+
+          // For flexible courses, check if assigned to generalElectives
+          if (isFlexibleCourse(c)) {
+            const assignedCategory = courseCategories[c as keyof typeof courseCategories] as FlexibleCourseCategory | undefined
+            return assignedCategory === 'generalElectives'
+          }
+
+          // For non-flexible courses, exclude if they're in elective categories
+          return !electiveCategoryCourses.includes(c)
+        }),
+        ...requiredOverflow,
+        ...electiveOverflow,
+      ]
+    }
     const generalSpecialCreditCount = specialCreditsByCategory['generalElectives'] || 0
     const totalGeneralCompleted = generalCompleted.length + generalSpecialCreditCount
 
@@ -169,7 +185,7 @@ export function useRequirements(studentData: StudentData) {
       categories,
       isComplete: categories.every((c) => c.isComplete),
     }
-  }, [degreeType, completedCourses, specialCreditsByCategory, courseCategories])
+  }, [degreeType, completedCourses, specialCreditsByCategory, courseCategories, explicitGeneralElectives])
 
   return {
     degreeProgress,
