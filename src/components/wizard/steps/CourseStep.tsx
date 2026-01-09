@@ -51,15 +51,19 @@ export function CourseStep({
   )
 
   if (multiSelect) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-xl font-semibold mb-2">{title}</h2>
-          {hint && <p className="text-sm text-muted-foreground">{hint}</p>}
-        </div>
+    // Group courses by category for general electives
+    const digitalCultureCourses = filteredCourses.filter((c) => c.category === 'Digital Culture')
+    const dataAnalyticsCourses = filteredCourses.filter((c) => c.category === 'Data Analytics')
 
-        <div className="space-y-3">
-          {filteredCourses.map((course) => {
+    const renderCourseGroup = (courses: typeof filteredCourses, categoryLabel: string) => {
+      if (courses.length === 0) return null
+
+      return (
+        <div key={categoryLabel} className="space-y-3">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide px-1">
+            {categoryLabel}
+          </h3>
+          {courses.map((course) => {
             const isSelected = selectedCourses.includes(course.code)
             return (
               <label
@@ -88,6 +92,20 @@ export function CourseStep({
               </label>
             )
           })}
+        </div>
+      )
+    }
+
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-xl font-semibold mb-2">{title}</h2>
+          {hint && <p className="text-sm text-muted-foreground">{hint}</p>}
+        </div>
+
+        <div className="space-y-6">
+          {renderCourseGroup(digitalCultureCourses, 'Digital Culture')}
+          {renderCourseGroup(dataAnalyticsCourses, 'Data Analytics')}
         </div>
 
         {filteredCourses.length === 0 && (
