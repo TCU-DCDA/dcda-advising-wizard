@@ -204,10 +204,14 @@ export function ReviewStep({ studentData, generalElectives }: ReviewStepProps) {
       {/* Still Needed */}
       {neededCount > 0 && (
         <SummarySection title="Still Needed" status="needed" count={neededCount}>
-          {neededCategories.map(({ category, name }) => (
+          {neededCategories.map(({ category, name, remaining }) => (
             <div key={category} className="px-4 py-3 flex justify-between items-center text-sm">
               <div>
-                <div className="font-medium">—</div>
+                <div className="font-medium">
+                  {category === 'generalElectives' && remaining > 1
+                    ? `${remaining} courses`
+                    : '—'}
+                </div>
                 <div className="text-xs text-muted-foreground">{name}</div>
               </div>
               {category === 'capstone' && capstoneTarget && (
