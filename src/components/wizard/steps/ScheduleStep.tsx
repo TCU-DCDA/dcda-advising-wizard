@@ -1,7 +1,7 @@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { cn } from '@/lib/utils'
 import type { RequirementCategoryId } from '@/types'
-import { getOfferedCoursesForCategory, categoryNames, getEnrollmentWarning, getSectionsForCourse } from '@/services/courses'
+import { getOfferedCoursesForCategory, categoryNames, getEnrollmentWarning, getSectionsForCourse, getNextSemesterTerm } from '@/services/courses'
 import { AlertTriangle } from 'lucide-react'
 
 interface ScheduleStepProps {
@@ -37,7 +37,7 @@ export function ScheduleStep({
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold mb-2">
-          Which {categoryName} course for Spring 2026?
+          Which {categoryName} course for {getNextSemesterTerm()}?
         </h2>
         <p className="text-sm text-muted-foreground">
           These courses are offered next semester and fulfill your {categoryName} requirement.

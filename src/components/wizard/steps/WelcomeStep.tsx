@@ -38,9 +38,14 @@ export function WelcomeStep({ onImport }: WelcomeStepProps) {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-2">Welcome to DCDA Advising</h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground mb-4">
           This tool helps you plan your Digital Culture & Data Analytics degree requirements.
         </p>
+
+        <div className="space-y-2 text-sm text-muted-foreground border-l-2 pl-4 py-1">
+          <p><strong>Step 1:</strong> Tell us what you've already taken.</p>
+          <p><strong>Step 2:</strong> Plan your future semesters.</p>
+        </div>
       </div>
 
       <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">

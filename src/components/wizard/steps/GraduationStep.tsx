@@ -1,48 +1,40 @@
 import { cn } from '@/lib/utils'
 import { Info } from 'lucide-react'
+import { getNextSemesterTerm } from '@/services/courses'
 
 interface GraduationStepProps {
   value: string | null
   onChange: (graduation: string) => void
 }
 
-// Generate next 8 semesters starting from current date
+// Generate next semesters starting from the current offering term
 function getNextSemesters(): { semester: string; year: number; value: string }[] {
-  const now = new Date()
-  const currentYear = now.getFullYear()
-  const currentMonth = now.getMonth() // 0-indexed
+  const currentTerm = getNextSemesterTerm()
+  const parts = currentTerm.split(' ')
+  
+  // Default fallback if parse fails
+  let year = new Date().getFullYear()
+  let semester: 'Spring' | 'Summer' | 'Fall' = 'Spring'
+
+  if (parts.length === 2) {
+    semester = parts[0] as 'Spring' | 'Summer' | 'Fall'
+    year = parseInt(parts[1])
+  }
 
   const semesters: { semester: string; year: number; value: string }[] = []
 
-  // Determine starting semester
-  // Fall = Aug-Dec, Spring = Jan-May, Summer = Jun-Jul
-  let startYear = currentYear
-  let startSemester: 'Spring' | 'Fall'
-
-  if (currentMonth >= 7) {
-    // Aug-Dec: Start with Spring next year
-    startSemester = 'Spring'
-    startYear = currentYear + 1
-  } else if (currentMonth >= 0 && currentMonth < 5) {
-    // Jan-May: Start with Fall same year
-    startSemester = 'Fall'
-  } else {
-    // Jun-Jul: Start with Fall same year
-    startSemester = 'Fall'
-  }
-
-  let year = startYear
-  let semester = startSemester
-
-  for (let i = 0; i < 8; i++) {
+  // Generate 3 years worth of terms (3 * 3 = 9 terms)
+  for (let i = 0; i < 9; i++) {
     semesters.push({
       semester,
       year,
       value: `${semester} ${year}`,
     })
 
-    // Alternate semesters
+    // Cycle: Spring -> Summer -> Fall
     if (semester === 'Spring') {
+      semester = 'Summer'
+    } else if (semester === 'Summer') {
       semester = 'Fall'
     } else {
       semester = 'Spring'

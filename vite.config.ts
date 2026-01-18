@@ -40,4 +40,26 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-ui': [
+            '@radix-ui/react-checkbox', 
+            '@radix-ui/react-dialog', 
+            '@radix-ui/react-radio-group', 
+            '@radix-ui/react-select', 
+            '@radix-ui/react-slot', 
+            'lucide-react', 
+            'class-variance-authority', 
+            'clsx', 
+            'tailwind-merge'
+          ],
+          'vendor-pdf': ['jspdf'],
+        }
+      }
+    }
+  }
 })

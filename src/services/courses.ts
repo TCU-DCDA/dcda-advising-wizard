@@ -172,7 +172,7 @@ export function getSemestersUntilGraduation(expectedGraduation: string | null): 
   
   // Start from Spring 2026 (next semester)
   let year = 2026
-  let season: 'Spring' | 'Fall' = 'Spring'
+  let season: 'Spring' | 'Summer' | 'Fall' = 'Spring'
   
   while (true) {
     const semesterName = `${season} ${year}`
@@ -181,10 +181,12 @@ export function getSemestersUntilGraduation(expectedGraduation: string | null): 
     // Check if we've reached graduation
     if (year === gradYear && season === gradSeason) break
     if (year > gradYear) break
-    if (semesters.length > 10) break // Safety limit
+    if (semesters.length > 12) break // Safety limit
     
-    // Advance to next semester (skip summer for now)
+    // Advance to next semester
     if (season === 'Spring') {
+      season = 'Summer'
+    } else if (season === 'Summer') {
       season = 'Fall'
     } else {
       season = 'Spring'

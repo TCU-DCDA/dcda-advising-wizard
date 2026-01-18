@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react'
 import type { WizardStep, WizardPart, RequirementCategoryId, StudentData } from '@/types'
+import { getNextSemesterTerm } from '@/services/courses'
 
 // Define all wizard steps - will be filtered based on degree type
 const ALL_PART_1_STEPS: WizardStep[] = [
@@ -94,7 +95,7 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
       allSteps.push({
         id: 'schedule',
         part: 'schedule',
-        title: `Which ${categoryNames[categoryId]} course for Spring 2026?`,
+        title: `Which ${categoryNames[categoryId]} course for ${getNextSemesterTerm()}?`,
         categoryId,
       })
     }
@@ -114,7 +115,7 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
     switch (part) {
       case 'completed': return 'Part 1: Completed Courses'
       case 'transition': return 'Phase 2'
-      case 'schedule': return 'Part 2: Schedule for Spring 2026'
+      case 'schedule': return `Part 2: Schedule for ${getNextSemesterTerm()}`
       case 'review': return 'Part 3: Review Your Plan'
     }
   }, [part])
