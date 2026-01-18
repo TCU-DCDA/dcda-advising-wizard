@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { Info } from 'lucide-react'
 
 interface GraduationStepProps {
   value: string | null
@@ -80,6 +81,21 @@ export function GraduationStep({ value, onChange }: GraduationStepProps) {
             <div className="text-sm text-muted-foreground">{sem.year}</div>
           </button>
         ))}
+      </div>
+
+      {/* Capstone info note */}
+      <div className="bg-muted/50 border rounded-lg p-4 space-y-2">
+        <div className="flex items-start gap-2">
+          <Info className="size-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+          <div className="text-sm text-muted-foreground space-y-2">
+            <p>
+              <strong>Capstone:</strong> The DCDA Capstone course will be automatically assigned to the Spring semester of your graduation year.
+            </p>
+            <p>
+              <strong>Honors Thesis:</strong> Students interested in completing an honors thesis in lieu of the capstone should speak with their advisor about available options.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )

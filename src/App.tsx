@@ -181,24 +181,6 @@ function App() {
     }))
   }, [])
 
-  // Handle multi-select for general electives
-  const handleAddGeneralElective = useCallback((courseCode: string) => {
-    setCategorySelections((prev) => ({
-      ...prev,
-      generalElectives: [...prev.generalElectives, courseCode],
-    }))
-    setNotYetSelections((prev) => ({
-      ...prev,
-      generalElectives: false,
-    }))
-  }, [])
-
-  const handleRemoveGeneralElective = useCallback((courseCode: string) => {
-    setCategorySelections((prev) => ({
-      ...prev,
-      generalElectives: prev.generalElectives.filter((c) => c !== courseCode),
-    }))
-  }, [])
 
   // Handle scheduling a course in Part 2
   const handleScheduleCourse = useCallback((categoryId: RequirementCategoryId, courseCode: string) => {
@@ -242,8 +224,6 @@ function App() {
         return categorySelections.dcElectives.length > 0 || notYetSelections.dcElective
       case 'daElective':
         return categorySelections.daElectives.length > 0 || notYetSelections.daElective
-      case 'generalElectives':
-        return true // Can proceed even with no selections
       case 'specialCredits':
         return true // Can proceed with no credits
       case 'schedule':
@@ -500,40 +480,6 @@ function App() {
             onDeselectCourse={handleRemoveDAElective}
             onSelectNotYet={() => handleSelectNotYet('daElective')}
             isNotYetSelected={notYetSelections.daElective}
-            degreeType={studentData.degreeType || 'major'}
-          />
-        )
-      }
-
-      case 'generalElectives': {
-        // For general electives, exclude courses from ALL other categories
-        const otherCategoryCourses = [
-          categorySelections.intro,
-          categorySelections.statistics,
-          categorySelections.coding,
-          categorySelections.mmAuthoring,
-          ...categorySelections.dcElectives,
-          ...categorySelections.daElectives,
-        ].filter((c): c is string => c !== null)
-
-        // Different hint for majors vs minors
-        const genElectiveHint = studentData.degreeType === 'major'
-          ? "Honors Seminars count toward General Electives. Note: Junior + Senior Honors Seminars together satisfy the capstone requirement."
-          : "Select any DCDA courses you've completed. These count toward your General Electives."
-
-        return (
-          <CourseStep
-            categoryId="generalElectives"
-            title={currentStep.title}
-            hint={genElectiveHint}
-            selectedCourse={null}
-            selectedCourses={categorySelections.generalElectives}
-            allSelectedCourses={otherCategoryCourses}
-            multiSelect
-            onSelectCourse={handleAddGeneralElective}
-            onDeselectCourse={handleRemoveGeneralElective}
-            onSelectNotYet={() => handleSelectNotYet('generalElectives')}
-            isNotYetSelected={notYetSelections.generalElectives}
             degreeType={studentData.degreeType || 'major'}
           />
         )

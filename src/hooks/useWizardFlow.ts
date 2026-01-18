@@ -13,7 +13,7 @@ const ALL_PART_1_STEPS: WizardStep[] = [
   // Capstone is auto-assigned based on graduation, no step needed
   { id: 'dcElective', part: 'completed', title: 'Have you completed a Digital Culture Elective?', categoryId: 'dcElective' },
   { id: 'daElective', part: 'completed', title: 'Have you completed a Data Analytics Elective?', categoryId: 'daElective' },
-  { id: 'generalElectives', part: 'completed', title: 'Select any other completed DCDA courses', categoryId: 'generalElectives' },
+  // generalElectives step removed - Honors Seminars info is now on graduation screen
   { id: 'specialCredits', part: 'completed', title: 'Any special credits?' },
 ]
 
