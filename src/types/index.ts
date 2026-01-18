@@ -125,6 +125,8 @@ export interface StudentData {
   specialCredits: SpecialCredit[]
   // Category assignments for flexible courses (DCDA 40273, DCDA 30970) - majors only
   courseCategories?: Partial<Record<FlexibleCourseCode, FlexibleCourseCategory>>
+  // Explicit general electives selection (to preserve categorization on CSV re-import)
+  generalElectives?: string[]
 }
 
 // Wizard step types

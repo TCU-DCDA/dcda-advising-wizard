@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Eye, Printer, Download, CalendarDays } from 'lucide-react'
+import { Eye, Printer, Download, CalendarDays, Calendar, Mail } from 'lucide-react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { generatePdfBlob, downloadPdf, printPdf, exportToCSV } from '@/services/export'
@@ -322,7 +322,7 @@ export function ReviewStep({ studentData, generalElectives }: ReviewStepProps) {
   }
 
   const handleDownload = () => {
-    exportToCSV(studentData)
+    exportToCSV({ ...studentData, generalElectives })
   }
 
   const handleDownloadPdf = () => {
@@ -332,7 +332,7 @@ export function ReviewStep({ studentData, generalElectives }: ReviewStepProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       <div>
         <h2 className="text-xl font-semibold mb-2">Your Advising Plan</h2>
         <p className="text-sm text-muted-foreground">
@@ -426,6 +426,34 @@ export function ReviewStep({ studentData, generalElectives }: ReviewStepProps) {
         >
           <Download className="size-5" />
           Save CSV
+        </Button>
+      </div>
+
+      {/* Farewell / Next Steps */}
+      <div className="bg-primary/5 border border-primary/20 rounded-xl p-5 space-y-4">
+        <h3 className="font-semibold text-primary">Next Steps</h3>
+        <p className="text-sm text-muted-foreground">
+          Great job completing your degree plan! To make sure you're on track, schedule an advising appointment to review your plan together.
+        </p>
+        <div className="flex items-start gap-3 text-sm text-muted-foreground">
+          <Mail className="size-4 mt-0.5 flex-shrink-0" />
+          <p>
+            <strong>Tip:</strong> Save your PDF or CSV and email it to your advisor before your meeting so they can review it in advance.
+          </p>
+        </div>
+        <Button
+          asChild
+          className="w-full"
+        >
+          <a
+            href="https://calendly.com/c-rode/appointments"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2"
+          >
+            <Calendar className="size-4" />
+            Schedule Advising Appointment
+          </a>
         </Button>
       </div>
 

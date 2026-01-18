@@ -1,7 +1,39 @@
-import { AlertCircle, Heart, Calendar } from 'lucide-react'
+import { useRef } from 'react'
+import { AlertCircle, Heart, Calendar, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import type { StudentData } from '@/types'
 
-export function WelcomeStep() {
+interface WelcomeStepProps {
+  onImport?: (data: Partial<StudentData>) => void
+}
+
+export function WelcomeStep({ onImport }: WelcomeStepProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !onImport) return
+
+    try {
+      const content = await file.text()
+      const { parseCSVImport } = await import('@/services/export')
+      const data = parseCSVImport(content)
+      if (data) {
+        onImport(data)
+      } else {
+        alert('Invalid file format. Please select a DCDA CSV export file.')
+      }
+    } catch (error) {
+      console.error('Import error:', error)
+      alert('Failed to import file. Please try again.')
+    }
+
+    // Reset input so the same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -55,10 +87,34 @@ export function WelcomeStep() {
         </div>
       </div>
 
-      <div className="pt-2">
+      <div className="pt-2 space-y-3">
         <p className="text-sm text-muted-foreground text-center">
           Click "Next" to begin planning your degree requirements
         </p>
+
+        {onImport && (
+          <div className="border-t pt-4">
+            <p className="text-xs text-muted-foreground text-center mb-2">
+              Have a previous plan? Import it to continue where you left off.
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Import Previous Plan (CSV)
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

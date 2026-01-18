@@ -52,6 +52,11 @@ export function exportToCSV(studentData: StudentData): void {
     lines.push(`courseCategories,${escapeCSV(JSON.stringify(studentData.courseCategories))}`)
   }
 
+  // General electives (explicit selections to preserve categorization on re-import)
+  if (studentData.generalElectives && studentData.generalElectives.length > 0) {
+    lines.push(`generalElectives,${studentData.generalElectives.join(';')}`)
+  }
+
   const csvContent = lines.join('\n')
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   const url = URL.createObjectURL(blob)
@@ -138,6 +143,9 @@ export function parseCSVImport(csvContent: string): Partial<StudentData> | null 
               console.error('Failed to parse course categories')
             }
           }
+          break
+        case 'generalElectives':
+          data.generalElectives = value ? value.split(';').filter(Boolean) : []
           break
       }
     }
@@ -235,28 +243,85 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
     return acc
   }, {} as Record<string, SpecialCredit[]>)
 
-  // Build scheduled courses by category
+  // Build scheduled courses by category (matching ReviewStep logic)
   const requiredCategoryCourses = degree.required.categories.flatMap((c: { courses?: string[] }) => c.courses ?? [])
   const scheduledByCategory: Record<string, string[]> = {}
+  const assignedScheduledCourses = new Set<string>() // Track courses already assigned to avoid double-counting
 
-  // Process required categories for scheduled courses
+  // Type for degree with electives
+  const degreeWithElectives = degree as typeof degree & { electives?: { categories: Array<{ id: string; name: string; category: string; count?: number }> } }
+
+  // Build a combined list of all categories with their metadata
+  type CategoryInfo = {
+    id: string
+    name: string
+    courses: string[]
+    required: number
+    isElective: boolean
+    isGeneralElective: boolean
+  }
+  const allCategories: CategoryInfo[] = []
+
+  // Add required categories
   for (const cat of degree.required.categories) {
-    const scheduledInCat = studentData.scheduledCourses.filter((code: string) => cat.courses?.includes(code))
-    if (scheduledInCat.length > 0) {
-      scheduledByCategory[cat.id] = scheduledInCat
-    }
+    allCategories.push({
+      id: cat.id,
+      name: cat.name,
+      courses: cat.courses ?? [],
+      required: cat.selectOne ? 1 : ((cat as { count?: number }).count ?? 1),
+      isElective: false,
+      isGeneralElective: false,
+    })
   }
 
-  // Process elective categories for scheduled courses (major only)
-  const degreeWithElectives = degree as typeof degree & { electives?: { categories: Array<{ id: string; name: string; category: string; count?: number }> } }
+  // Add elective categories (major only)
   if (degreeWithElectives.electives) {
     for (const cat of degreeWithElectives.electives.categories) {
       const categoryCourseCodes = courses
         .filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code))
         .map((c) => c.code)
+      allCategories.push({
+        id: cat.id,
+        name: cat.name,
+        courses: categoryCourseCodes,
+        required: cat.count ?? 1,
+        isElective: true,
+        isGeneralElective: false,
+      })
+    }
+  }
 
+  // Sort categories: required first, then electives, then general electives (matching ReviewStep)
+  allCategories.sort((a, b) => {
+    if (a.isGeneralElective) return 1
+    if (b.isGeneralElective) return -1
+    if (a.isElective && !b.isElective) return 1
+    if (!a.isElective && b.isElective) return -1
+    return 0
+  })
+
+  // Process scheduled courses with double-counting prevention
+  for (const cat of allCategories) {
+    // Check completion status first
+    const completedInCat = studentData.completedCourses.filter((c: string) => {
+      if (!cat.courses.includes(c)) return false
+      if (generalElectives && generalElectives.includes(c)) return false
+      if (isFlexibleCourse(c)) {
+        const assignedCategory = studentData.courseCategories?.[c as keyof typeof studentData.courseCategories] as FlexibleCourseCategory | undefined
+        return assignedCategory === cat.id
+      }
+      return true
+    })
+    const credits = specialCreditsByCategory[cat.id] || []
+    const specialCreditCount = credits.length
+    const totalCompleted = completedInCat.length + specialCreditCount
+
+    // Only assign scheduled courses if category is not yet satisfied
+    const isAlreadySatisfied = totalCompleted >= cat.required
+    if (!isAlreadySatisfied) {
       const scheduledInCat = studentData.scheduledCourses.filter((code: string) => {
-        if (!categoryCourseCodes.includes(code)) return false
+        if (assignedScheduledCourses.has(code)) return false // Skip already assigned
+        if (!cat.courses.includes(code)) return false
         if (isFlexibleCourse(code)) {
           const assignedCategory = studentData.courseCategories?.[code as keyof typeof studentData.courseCategories] as FlexibleCourseCategory | undefined
           return assignedCategory === cat.id
@@ -265,6 +330,8 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
       })
       if (scheduledInCat.length > 0) {
         scheduledByCategory[cat.id] = scheduledInCat
+        // Mark as assigned to prevent double-counting
+        scheduledInCat.forEach((code: string) => assignedScheduledCourses.add(code))
       }
     }
   }
@@ -460,70 +527,41 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
   y += 10
   checkPageBreak(50)
 
-  // Calculate needed categories for semester plan
+  // Build scheduledCourseCategories and neededCategoriesForPlan using allCategories data
   const scheduledCourseCategories: Record<string, string> = {}
   const neededCategoriesForPlan: { category: string; name: string; remaining: number }[] = []
-  
-  // Process required categories
-  for (const cat of degree.required.categories) {
-    const completedInCat = studentData.completedCourses.filter((c: string) => cat.courses?.includes(c))
+
+  // Process all categories (already sorted in priority order)
+  for (const cat of allCategories) {
+    const completedInCat = studentData.completedCourses.filter((c: string) => {
+      if (!cat.courses.includes(c)) return false
+      if (generalElectives && generalElectives.includes(c)) return false
+      if (isFlexibleCourse(c)) {
+        const assignedCategory = studentData.courseCategories?.[c as keyof typeof studentData.courseCategories] as FlexibleCourseCategory | undefined
+        return assignedCategory === cat.id
+      }
+      return true
+    })
     const scheduledInCat = scheduledByCategory[cat.id] || []
     const credits = specialCreditsByCategory[cat.id] || []
     const specialCreditCount = credits.length
-    const requiredCount = cat.selectOne ? 1 : ((cat as { count?: number }).count ?? 1)
     const totalCompleted = completedInCat.length + specialCreditCount
     const totalWithScheduled = totalCompleted + scheduledInCat.length
-    
+
     // Track scheduled course categories
     scheduledInCat.forEach((code: string) => {
       scheduledCourseCategories[code] = cat.name
     })
-    
-    if (totalWithScheduled < requiredCount) {
+
+    if (totalWithScheduled < cat.required) {
       neededCategoriesForPlan.push({
         category: cat.id,
         name: cat.name,
-        remaining: requiredCount - totalWithScheduled
+        remaining: cat.required - totalWithScheduled
       })
     }
   }
-  
-  // Process elective categories (major only)
-  if (degreeWithElectives.electives) {
-    for (const cat of degreeWithElectives.electives.categories) {
-      const categoryCourseCodes = courses
-        .filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code))
-        .map((c) => c.code)
-      const completedInCat = studentData.completedCourses.filter((c: string) => {
-        if (!categoryCourseCodes.includes(c)) return false
-        if (generalElectives && generalElectives.includes(c)) return false
-        if (isFlexibleCourse(c)) {
-          const assignedCategory = studentData.courseCategories?.[c as keyof typeof studentData.courseCategories] as FlexibleCourseCategory | undefined
-          return assignedCategory === cat.id
-        }
-        return true
-      })
-      const scheduledInCat = scheduledByCategory[cat.id] || []
-      const credits = specialCreditsByCategory[cat.id] || []
-      const specialCreditCount = credits.length
-      const requiredCount = cat.count ?? 1
-      const totalCompleted = Math.min(completedInCat.length + specialCreditCount, requiredCount)
-      const totalWithScheduled = totalCompleted + Math.min(scheduledInCat.length, requiredCount - totalCompleted)
-      
-      scheduledInCat.forEach((code: string) => {
-        scheduledCourseCategories[code] = cat.name
-      })
-      
-      if (totalWithScheduled < requiredCount) {
-        neededCategoriesForPlan.push({
-          category: cat.id,
-          name: cat.name,
-          remaining: requiredCount - totalWithScheduled
-        })
-      }
-    }
-  }
-  
+
   // General electives needed
   if (totalGeneral + generalScheduled.length < generalRequired) {
     neededCategoriesForPlan.push({

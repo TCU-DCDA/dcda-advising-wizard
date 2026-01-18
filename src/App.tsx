@@ -13,7 +13,7 @@ import {
 } from '@/components/wizard'
 import { InstallPrompt } from '@/components/InstallPrompt'
 import { getRequiredCategoryCourses } from '@/services/courses'
-import type { RequirementCategoryId } from '@/types'
+import type { RequirementCategoryId, StudentData } from '@/types'
 
 // Track selections per category for Part 1
 interface CategorySelections {
@@ -325,13 +325,74 @@ function App() {
     setSkippedCategories(new Set())
   }, [resetStudentData, wizard])
 
+  // Handle CSV import
+  const handleImport = useCallback((data: Partial<StudentData>) => {
+    const degreeType = data.degreeType || 'major'
+
+    // Update student data with imported values
+    updateStudentData({
+      name: data.name || '',
+      degreeType,
+      expectedGraduation: data.expectedGraduation || null,
+      completedCourses: data.completedCourses || [],
+      scheduledCourses: data.scheduledCourses || [],
+      specialCredits: data.specialCredits || [],
+      courseCategories: data.courseCategories,
+      generalElectives: data.generalElectives,
+    })
+
+    // Populate category selections from imported completed courses
+    // This allows the wizard to show the correct state when navigating
+    if (data.completedCourses && data.completedCourses.length > 0) {
+      const newSelections: CategorySelections = {
+        intro: null,
+        statistics: null,
+        coding: null,
+        mmAuthoring: null,
+        dcElectives: [],
+        daElectives: [],
+        generalElectives: data.generalElectives || [],
+      }
+
+      // Get courses for each required category
+      const introCourses = getRequiredCategoryCourses('intro', degreeType)
+      const statsCourses = getRequiredCategoryCourses('statistics', degreeType)
+      const codingCourses = getRequiredCategoryCourses('coding', degreeType)
+      const mmCourses = getRequiredCategoryCourses('mmAuthoring', degreeType)
+      const dcCourses = getRequiredCategoryCourses('dcElective', degreeType)
+      const daCourses = getRequiredCategoryCourses('daElective', degreeType)
+
+      // Match completed courses to required categories
+      for (const code of data.completedCourses) {
+        if (introCourses.includes(code) && !newSelections.intro) {
+          newSelections.intro = code
+        } else if (statsCourses.includes(code) && !newSelections.statistics) {
+          newSelections.statistics = code
+        } else if (codingCourses.includes(code) && !newSelections.coding) {
+          newSelections.coding = code
+        } else if (mmCourses.includes(code) && !newSelections.mmAuthoring) {
+          newSelections.mmAuthoring = code
+        } else if (dcCourses.includes(code)) {
+          newSelections.dcElectives.push(code)
+        } else if (daCourses.includes(code)) {
+          newSelections.daElectives.push(code)
+        }
+      }
+
+      setCategorySelections(newSelections)
+    }
+
+    // Move to the review step (last step)
+    wizard.goToStep(wizard.totalSteps - 1)
+  }, [updateStudentData, wizard])
+
   // Render current step content
   const renderStep = () => {
     const { currentStep } = wizard
 
     switch (currentStep.id) {
       case 'welcome':
-        return <WelcomeStep />
+        return <WelcomeStep onImport={handleImport} />
 
       case 'name':
         return (
