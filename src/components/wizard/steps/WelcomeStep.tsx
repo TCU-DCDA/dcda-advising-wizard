@@ -76,7 +76,7 @@ export function WelcomeStep({ onImport }: WelcomeStepProps) {
             <Button
               asChild
               variant="outline"
-              className="w-full h-auto whitespace-normal py-3 bg-white dark:bg-amber-900 border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+              className="w-full h-auto whitespace-normal py-3 bg-white border-amber-300 hover:bg-amber-100 text-amber-900"
             >
               <a
                 href="https://calendly.com/c-rode/appointments"
