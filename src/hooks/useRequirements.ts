@@ -61,7 +61,12 @@ export function useRequirements(
       const completedInCategory = completedCourses.filter((c) =>
         cat.courses?.includes(c)
       )
-      const specialCreditCount = specialCreditsByCategory[cat.id] || 0
+      
+      const categorySpecialCredits = specialCredits
+        .filter(c => c.countsAs === cat.id)
+        .map(c => `${c.description}`)
+
+      const specialCreditCount = categorySpecialCredits.length
       const totalCompleted = completedInCategory.length + specialCreditCount
       const requiredCount = cat.selectOne ? 1 : (cat.count ?? 1)
 
@@ -69,6 +74,9 @@ export function useRequirements(
       if (completedInCategory.length > requiredCount) {
         requiredOverflow.push(...completedInCategory.slice(requiredCount))
       }
+      
+      // Combine courses and credits for the list
+      const allCompletedItems = [...completedInCategory, ...categorySpecialCredits]
 
       categories.push({
         id: cat.id,
@@ -77,7 +85,7 @@ export function useRequirements(
         completed: Math.min(totalCompleted, requiredCount),
         isComplete: totalCompleted >= requiredCount,
         courses: cat.courses ?? [],
-        completedCourses: completedInCategory.slice(0, requiredCount),
+        completedCourses: allCompletedItems.slice(0, requiredCount),
       })
     }
 
@@ -107,7 +115,12 @@ export function useRequirements(
           }
           return true
         })
-        const specialCreditCount = specialCreditsByCategory[cat.id] || 0
+        
+        const categorySpecialCredits = specialCredits
+          .filter(c => c.countsAs === cat.id)
+          .map(c => `${c.description}`)
+          
+        const specialCreditCount = categorySpecialCredits.length
         const totalCompleted = completedInCategory.length + specialCreditCount
         const requiredCount = cat.count ?? 1
 
@@ -116,6 +129,9 @@ export function useRequirements(
           electiveOverflow.push(...completedInCategory.slice(requiredCount))
         }
 
+        // Combine courses and credits for the list
+        const allCompletedItems = [...completedInCategory, ...categorySpecialCredits]
+
         categories.push({
           id: cat.id,
           name: cat.name,
@@ -123,7 +139,7 @@ export function useRequirements(
           completed: Math.min(totalCompleted, requiredCount),
           isComplete: totalCompleted >= requiredCount,
           courses: categoryCourseCodes,
-          completedCourses: completedInCategory.slice(0, requiredCount),
+          completedCourses: allCompletedItems.slice(0, requiredCount),
         })
       }
     }
@@ -164,8 +180,15 @@ export function useRequirements(
         ...electiveOverflow,
       ]
     }
-    const generalSpecialCreditCount = specialCreditsByCategory['generalElectives'] || 0
+    
+    const generalSpecialCredits = specialCredits
+      .filter(c => c.countsAs === 'generalElectives')
+      .map(c => `${c.description}`)
+      
+    const generalSpecialCreditCount = generalSpecialCredits.length
     const totalGeneralCompleted = generalCompleted.length + generalSpecialCreditCount
+
+    const allGeneralItems = [...generalCompleted, ...generalSpecialCredits]
 
     categories.push({
       id: 'generalElectives',
@@ -174,7 +197,7 @@ export function useRequirements(
       completed: Math.min(totalGeneralCompleted, degree.generalElectives.count),
       isComplete: totalGeneralCompleted >= degree.generalElectives.count,
       courses: allCourseCodes,
-      completedCourses: generalCompleted.slice(0, degree.generalElectives.count),
+      completedCourses: allGeneralItems.slice(0, degree.generalElectives.count),
     })
 
     const completedHours = categories.reduce(

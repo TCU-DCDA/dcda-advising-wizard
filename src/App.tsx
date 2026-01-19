@@ -110,18 +110,20 @@ function App() {
     // Only include courses from required categories
     // For minors: statistics, coding, mmAuthoring
     // For majors: intro, statistics, coding, mmAuthoring
-    const requiredCategories: (keyof CategorySelections)[] = studentData.degreeType === 'minor'
+    const requiredCategories = (studentData.degreeType === 'minor'
       ? ['statistics', 'coding', 'mmAuthoring']
-      : ['intro', 'statistics', 'coding', 'mmAuthoring']
+      : ['intro', 'statistics', 'coding', 'mmAuthoring']) as (keyof CategorySelections & keyof NotYetSelections)[]
 
     for (const cat of requiredCategories) {
       const value = categorySelections[cat]
-      if (value && typeof value === 'string') {
+      // Ensure we don't include courses if the category was marked "Not Yet"
+      // (This ensures courses from skipped required categories WILL show up in elective lists)
+      if (value && typeof value === 'string' && !notYetSelections[cat]) {
         courses.push(value)
       }
     }
     return courses
-  }, [categorySelections, studentData.degreeType])
+  }, [categorySelections, studentData.degreeType, notYetSelections])
 
   // Handle course selection for a single-select category
   const handleSelectCourse = useCallback((categoryId: RequirementCategoryId, courseCode: string) => {
@@ -484,11 +486,11 @@ function App() {
           ...categorySelections.generalElectives,
         ].filter((c): c is string => c !== null)
 
-        // If MM Authoring is "Not Yet", exclude those courses from DC electives
-        // (student may need them to fulfill MM Authoring requirement)
-        const mmAuthoringCourses = notYetSelections.mmAuthoring
-          ? getRequiredCategoryCourses('mmAuthoring', studentData.degreeType || 'major')
-          : []
+        // If any core category is "Not Yet", exclude those courses from DC electives
+        // (student needs them to fulfill core requirements later)
+        const skippedCoreCourses = (['intro', 'statistics', 'coding', 'mmAuthoring'] as const)
+          .filter(cat => notYetSelections[cat])
+          .flatMap(cat => getRequiredCategoryCourses(cat, studentData.degreeType || 'major'))
 
         return (
           <CourseStep
@@ -497,7 +499,7 @@ function App() {
             hint="Select all Digital Culture courses you've taken. The first fulfills your Digital Culture Elective requirement; additional courses count as General Electives."
             selectedCourse={null}
             selectedCourses={categorySelections.dcElectives}
-            allSelectedCourses={[...excludeCourses, ...mmAuthoringCourses]}
+            allSelectedCourses={[...excludeCourses, ...skippedCoreCourses]}
             completedRequiredCourses={completedRequiredCourses}
             multiSelect
             onSelectCourse={handleAddDCElective}
@@ -520,11 +522,11 @@ function App() {
           ...categorySelections.generalElectives,
         ].filter((c): c is string => c !== null)
 
-        // If Coding is "Not Yet", exclude those courses from DA electives
-        // (student may need them to fulfill Coding requirement)
-        const codingCourses = notYetSelections.coding
-          ? getRequiredCategoryCourses('coding', studentData.degreeType || 'major')
-          : []
+        // If any core category is "Not Yet", exclude those courses from DA electives
+        // (student needs them to fulfill core requirements later)
+        const skippedCoreCourses = (['intro', 'statistics', 'coding', 'mmAuthoring'] as const)
+          .filter(cat => notYetSelections[cat])
+          .flatMap(cat => getRequiredCategoryCourses(cat, studentData.degreeType || 'major'))
 
         return (
           <CourseStep
@@ -533,7 +535,7 @@ function App() {
             hint="Select all Data Analytics courses you've taken. The first fulfills your Data Analytics Elective requirement; additional courses count as General Electives."
             selectedCourse={null}
             selectedCourses={categorySelections.daElectives}
-            allSelectedCourses={[...excludeCourses, ...codingCourses]}
+            allSelectedCourses={[...excludeCourses, ...skippedCoreCourses]}
             completedRequiredCourses={completedRequiredCourses}
             multiSelect
             onSelectCourse={handleAddDAElective}
@@ -555,11 +557,22 @@ function App() {
         )
 
       case 'transition':
-        // Merge special credits into general electives for display
+        // Split DC/DA electives: first one stays, rest go to general
+        const primaryDCElective = categorySelections.dcElectives.slice(0, 1)
+        const extraDCElectives = categorySelections.dcElectives.slice(1)
+        
+        const primaryDAElective = categorySelections.daElectives.slice(0, 1)
+        const extraDAElectives = categorySelections.daElectives.slice(1)
+
+        // Merge special credits and extra DC/DA electives into general electives for display
         const transitionSelections = {
           ...categorySelections,
+          dcElectives: primaryDCElective,
+          daElectives: primaryDAElective,
           generalElectives: [
             ...categorySelections.generalElectives,
+            ...extraDCElectives,
+            ...extraDAElectives,
             ...studentData.specialCredits.map(c => `${c.description} (${c.type})`)
           ]
         }
