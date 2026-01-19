@@ -35,15 +35,6 @@ export function useRequirements(
 ) {
   const { degreeType, completedCourses, specialCredits, courseCategories = {} } = studentData
 
-  // Count special credits by category
-  const specialCreditsByCategory = useMemo(() => {
-    const counts: Record<string, number> = {}
-    for (const credit of specialCredits) {
-      counts[credit.countsAs] = (counts[credit.countsAs] || 0) + 1
-    }
-    return counts
-  }, [specialCredits])
-
   const degreeProgress = useMemo((): DegreeProgress | null => {
     if (!degreeType) return null
 
@@ -212,7 +203,7 @@ export function useRequirements(
       categories,
       isComplete: categories.every((c) => c.isComplete),
     }
-  }, [degreeType, completedCourses, specialCreditsByCategory, courseCategories, explicitGeneralElectives])
+  }, [degreeType, completedCourses, specialCredits, courseCategories, explicitGeneralElectives])
 
   return {
     degreeProgress,

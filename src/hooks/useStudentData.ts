@@ -15,33 +15,27 @@ const defaultStudentData: StudentData = {
 }
 
 export function useStudentData() {
-  const [studentData, setStudentData] = useState<StudentData>(defaultStudentData)
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  // Load from localStorage on mount
-  useEffect(() => {
+  // Initialize state lazily from localStorage to avoid sync setState in effect
+  const [studentData, setStudentData] = useState<StudentData>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
-        const parsed = JSON.parse(stored) as StudentData
-        setStudentData(parsed)
+        return JSON.parse(stored) as StudentData
       }
     } catch (error) {
       console.error('Failed to load student data:', error)
     }
-    setIsLoaded(true)
-  }, [])
+    return defaultStudentData
+  })
 
   // Save to localStorage whenever data changes
   useEffect(() => {
-    if (isLoaded) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(studentData))
-      } catch (error) {
-        console.error('Failed to save student data:', error)
-      }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(studentData))
+    } catch (error) {
+      console.error('Failed to save student data:', error)
     }
-  }, [studentData, isLoaded])
+  }, [studentData])
 
   const updateStudentData = useCallback((updates: Partial<StudentData>) => {
     setStudentData((prev) => ({ ...prev, ...updates }))
@@ -134,7 +128,7 @@ export function useStudentData() {
 
   return {
     studentData,
-    isLoaded,
+    isLoaded: true,
     updateStudentData,
     setCompletedCourse,
     removeCompletedCourse,

@@ -282,6 +282,7 @@ function App() {
       studentData.specialCredits.length
       
     // Get requirement count
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const requirements = requirementsData as any
     const requiredGeneralCount = requirements[degreeType].generalElectives.count
     
@@ -363,7 +364,7 @@ function App() {
     })
 
     // Populate category selections and not-yet selections from imported data
-    let newSelections: CategorySelections = {
+    const newSelections: CategorySelections = {
       intro: null,
       statistics: null,
       coding: null,
@@ -374,7 +375,7 @@ function App() {
     }
 
     // Default: assume Not Yet for all, then mark false if found
-    let newNotYet: NotYetSelections = {
+    const newNotYet: NotYetSelections = {
       intro: true,
       statistics: true,
       coding: true,
@@ -440,14 +441,14 @@ function App() {
          if (wizard.unmetCategories.length > 0) {
             if (wizard.goToStepId) {
                wizard.goToStepId('transition')
-               setPendingImportNav(null)
+               setTimeout(() => setPendingImportNav(null), 0)
             }
          }
       } else {
          // Review doesn't depend on unmet categories
          if (wizard.goToStepId) {
             wizard.goToStepId('review')
-            setPendingImportNav(null)
+            setTimeout(() => setPendingImportNav(null), 0)
          }
       }
     }
@@ -581,7 +582,7 @@ function App() {
           />
         )
 
-      case 'transition':
+      case 'transition': {
         // Split DC/DA electives: first one stays, rest go to general
         const primaryDCElective = categorySelections.dcElectives.slice(0, 1)
         const extraDCElectives = categorySelections.dcElectives.slice(1)
@@ -611,6 +612,7 @@ function App() {
             onToggleSummer={(include) => updateStudentData({ includeSummer: include })}
           />
         )
+      }
 
       case 'schedule':
         if (currentStep.categoryId) {

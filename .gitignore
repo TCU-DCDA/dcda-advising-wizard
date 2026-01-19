@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Data dumps
+data/*.csv
+
 # Environment variables
 .env
 .env.local

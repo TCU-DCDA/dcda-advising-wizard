@@ -1,73 +1,82 @@
-# React + TypeScript + Vite
+# DCDA Advisor Mobile
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mobile-first degree planning application for **Digital Culture & Data Analytics (DCDA)** students at TCU. This tool acts as an interactive wizard to help students audit their completed coursework and plan their future semesters leading up to graduation.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The DCDA Advisor helps students navigate the complex requirements of the DCDA Major and Minor. It splits the advising process into two distinct phases:
 
-## React Compiler
+1.  **History (Part 1):** Users record what they have already completed. The app enforces logic such as:
+    *   Mutually exclusive courses (e.g., MATH 10043 vs INSC 20153).
+    *   Core vs. Elective categorization.
+    *   Transfer/Special credits (automatically mapped to General Electives for simplicity).
+2.  **Planning (Part 2):** Based on the "Unmet" categories calculated from history, the app prompts the user to schedule specific courses for the upcoming semester.
+3.  **Review:** A comprehensive dashboard showing progress bars, completed lists, and a generated Semester Plan through graduation.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Key Features
 
-## Expanding the ESLint configuration
+*   **Smart Degree Logic:**
+    *   Handles differences between **Major** (33 hours) and **Minor** (21 hours).
+    *   Logic to push "overflow" elective credits into the General Elective bucket.
+    *   Ensures core requirements skipped in Part 1 are excluded from Elective lists to prevent double-counting errors.
+*   **Dynamic Scheduling:**
+    *   Generates semester plans based on the user's expected graduation date.
+    *   Supports optional **Summer Terms** logic via a toggle.
+    *   Automatically schedules the Capstone course in the final Spring semester.
+*   **Data-Driven:**
+    *   Powered by JSON datasets for Course Catalog (`data/courses.json`) and specific Semester Offerings (`data/offerings-sp26.json`).
+*   **Privacy First:**
+    *   All data is stored locally in the browser (`localStorage`). No external database is used.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/
+├── components/
+│   ├── ui/             # shadcn/ui components (Buttons, Dialogs, etc.)
+│   └── wizard/         # Core logic for the advising flow
+│       ├── steps/      # Individual screens (CourseStep, ScheduleStep, etc.)
+│       └── WizardShell.tsx
+├── data/
+│   ├── courses.json    # Full course catalog
+│   ├── requirements.json # Logic rules for Major/Minor
+│   └── offerings-sp26.json # Courses available for the target semester
+├── hooks/
+│   ├── useStudentData.ts  # State management for user choices
+│   └── useRequirements.ts # Grading engine / Progress calculation
+└── services/
+    └── courses.ts      # Helper functions for filtering and search
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
+*   Node.js (v18 or higher recommended)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
+1.  Clone the repository.
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+### Development
+Start the local development server:
+```bash
+npm run dev
 ```
+
+### Build
+Create a production build (outputs to `dist/`):
+```bash
+npm run build
+```
+
+## Maintenance Notes
+
+*   **Updating Offerings:** To prepare for a new semester, update `data/offerings-[term].json` and adjust the `getNextSemesterTerm()` helper in `services/courses.ts`.
+*   **Requirement Changes:** Edit `data/requirements.json` to adjust credit hours, added courses, or new policy constraints.
+
+## License
+
+Private / TCU Internal Use.
