@@ -15,6 +15,7 @@ import {
 import { InstallPrompt } from '@/components/InstallPrompt'
 import { getRequiredCategoryCourses } from '@/services/courses'
 import type { RequirementCategoryId, StudentData } from '@/types'
+import requirementsData from '../data/requirements.json'
 
 // Track selections per category for Part 1
 interface CategorySelections {
@@ -252,6 +253,7 @@ function App() {
   ): RequirementCategoryId[] => {
     const unmet: RequirementCategoryId[] = []
     
+    // Check Core Requirement Categories
     // For minors: statistics, coding, mmAuthoring
     // For majors: intro, statistics, coding, mmAuthoring, dcElective, daElective
     const requiredCategories: RequirementCategoryId[] = degreeType === 'minor'
@@ -263,9 +265,32 @@ function App() {
         unmet.push(cat)
       }
     }
+
+    // Check General Electives
+    // Calculate how many General Electives slots are filled by:
+    // 1. Explicit General selections (none in current UI, but kept for logic)
+    // 2. Overflow from DC Electives (first 1 counts for DC, rest for General)
+    // 3. Overflow from DA Electives (first 1 counts for DA, rest for General)
+    // 4. Special Credits (all count as General in current simplified UI)
+    const dcOverflow = Math.max(0, categorySelections.dcElectives.length - 1)
+    const daOverflow = Math.max(0, categorySelections.daElectives.length - 1)
+    
+    const filledGeneralSlots = 
+      categorySelections.generalElectives.length + 
+      dcOverflow + 
+      daOverflow + 
+      studentData.specialCredits.length
+      
+    // Get requirement count
+    const requirements = requirementsData as any
+    const requiredGeneralCount = requirements[degreeType].generalElectives.count
+    
+    if (filledGeneralSlots < requiredGeneralCount) {
+      unmet.push('generalElectives')
+    }
     
     return unmet
-  }, [])
+  }, [categorySelections, studentData.specialCredits])
 
   // Handle next button
   const handleNext = useCallback(() => {

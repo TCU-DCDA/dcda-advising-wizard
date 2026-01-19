@@ -1,40 +1,55 @@
 # UX Review: DCDA Advisor Mobile App
 
-**Date:** January 18, 2026
+**Date:** January 19, 2026
 **Reviewer:** GitHub Copilot
 
 ## Executive Summary
-The DCDA Advisor app provides a solid, logical flow for students to track their progress and plan future semesters. However, several friction points exist that may cause confusion, particularly during the transition between "History" and "Scheduling" phases, and when managing long lists of courses.
+Significant progress has been made to address the initial friction points. The application flow now includes better transitions, clearer introductions, and robust handling of complex logic constraints (Summer terms, special credits).
 
 ## Detailed Findings
 
 ### 1. Navigation & Flow
-*   **Linear Rigidity**: The current wizard enforces a strict linear progression. While necessary for data dependencies, the inability to jump back to a specific previous step via the `StepIndicator` is a usability hurdle. Users must click "Back" repeatedly.
-*   **The "Phase 2" Surprise**: There is a jarring transition between checking off completed requirements and scheduling new ones.
-    *   *Issue*: After the "Special Credits" step, the user is immediately dropped into "Schedule: Statistics" (or similar) without context.
-    *   *Risk*: Students may think they are still indicating what they *have done*, rather than what they *want to do*.
-*   **Lack of Introduction**: The Welcome screen is privacy-focused but lacks a "How this works" overview (e.g., "First we check your history, then we plan your release").
+*   **Linear Rigidity**:
+    *   **Status:** [Resolved]
+    *   **Resolution:** The `StepIndicator` now allows users to click on previously completed steps to jump back and edit selection.
+*   **The "Phase 2" Surprise**:
+    *   **Status:** [Resolved]
+    *   **Resolution:** A dedicated `TransitionStep` ("Great job so far!") has been added. It provides a visual break, summarizes completed requirements, and explicitly asks about Summer preferences before moving to scheduling.
+*   **Lack of Introduction**:
+    *   **Status:** [Resolved]
+    *   **Resolution:** The Welcome screen now includes a "Step 1 / Step 2" process overview and clear FERPA/Advisor statements.
 
 ### 2. Course Selection (CourseStep)
 *   **Searchability**:
-    *   *Issue*: The "General Electives" and "Digital Culture Elective" lists can be very long.
-    *   *Friction*: There is no text search. Users must scroll through potential dozens of options.
-*   **Comparison**: When selecting a course, users only see the title. They cannot easily compare prerequisites or descriptions without clicking "Info" for each one individually.
+    *   **Status:** [Resolved]
+    *   **Resolution:** A search bar has been implemented in `CourseStep` to filter long lists (General Electives, etc.).
+*   **Comparison**:
+    *   **Status:** [Partially Resolved]
+    *   **Note:** While users still need to click "Info" for full details, the search filter helps narrow down choices quickly. Inline details remains a constraint of the mobile-first design.
 
 ### 3. Special Credits (SpecialCreditsStep)
 *   **Ambiguity**:
-    *   *Issue*: Users are asked "Counts Toward..." with a dropdown of requirement categories.
-    *   *Confusion*: A student transferring "CS 101" from a community college might not know if that maps to "Coding" or "Check Sheet Elective" without consulting an advisor.
-    *   *Recommendation*: Add helper text: "If unsure, check the 'General / other' category and ask your advisor."
+    *   **Status:** [Resolved]
+    *   **Resolution:** The complex category dropdown has been removed. All special credits are now automatically assigned to "General Electives" to prevent user error, with a clear advisory note directing students to consult their advisor for specific overrides. This simplifies the mental model significantly.
 
 ### 4. Scheduling (ScheduleStep)
-*   **Summer Term Blind Spot**: The logic currently assumes a standard Fall/Spring cadence. Students checking "Summer 2026" as graduation might find the schedule generation (which looks at `offerings-sp26.json`) confusing or empty if summer data isn't handled explicitly.
-*   **"Skip" Visibility**: The "Skip for now" option is good, but could be more prominent to prevent blocking users who are undecided.
+*   **Summer Term Blind Spot**:
+    *   **Status:** [Resolved]
+    *   **Resolution:** `includeSummer` logic was added to the Transition step. The semester generation algorithm now dynamically inserts Summer terms if the user opts in.
+*   **General Requirements Logic**:
+    *   **Status:** [Resolved]
+    *   **Resolution:** The logic now correctly calculates if a student is short on "General Elective" hours (even if they finished specific categories) and prompts them to select additional courses in Part 2.
 
-## Recommendations for Implementation
+## Recommendations for Future Iteration
 
-1.  **Add Search Filter**: Implement a simple string match filter on `CourseStep` lists.
-2.  **Transition Step**: Insert a simple interstitial screen:
-    > "Great! Now let's plan your remaining courses. Based on what you've finished, here is what you need to take next."
-3.  **Step Navigation**: Make the circles in `StepIndicator` clickable if the step has already been visited ( `index < currentStep`).
-4.  **Helper Text**: Enhance `SpecialCreditsStep` with examples.
+1.  **Advisor Integration**: Consider adding a "Copy Summary to Clipboard" feature on the Review step to easily paste into an email to an advisor.
+2.  **Course Comparison**: If screen real estate allows (e.g., tablet), expand the course card to show prerequisites inline.
+
+## Implementation Changelog (Jan 19)
+
+*   **Mobile Optimizations**: Fixed "Next" button positioning for safe areas.
+*   **Logic Hardening**:
+    *   Skipped core courses (Intro, Coding, etc.) are now strictly excluded from Elective lists to prevent mis-allocation.
+    *   Special Credits are now merged into "General Electives" for the Review summary count.
+    *   General Elective "overflow" logic fixed to ensure valid Part 2 prompting.
+*   **UI Polish**: Added "emphatic" header branding and improved text wrapping on advisor statements.

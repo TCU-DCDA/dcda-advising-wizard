@@ -197,7 +197,8 @@ export function useRequirements(
       completed: Math.min(totalGeneralCompleted, degree.generalElectives.count),
       isComplete: totalGeneralCompleted >= degree.generalElectives.count,
       courses: allCourseCodes,
-      completedCourses: allGeneralItems.slice(0, degree.generalElectives.count),
+      // Do not slice general electives - show all of them even if they exceed requirement
+      completedCourses: allGeneralItems,
     })
 
     const completedHours = categories.reduce(
