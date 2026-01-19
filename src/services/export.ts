@@ -56,6 +56,11 @@ export function exportToCSV(studentData: StudentData): void {
   if (studentData.generalElectives && studentData.generalElectives.length > 0) {
     lines.push(`generalElectives,${studentData.generalElectives.join(';')}`)
   }
+  
+  // Notes
+  if (studentData.notes) {
+    lines.push(`notes,${escapeCSV(studentData.notes)}`)
+  }
 
   const csvContent = lines.join('\n')
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
@@ -147,6 +152,9 @@ export function parseCSVImport(csvContent: string): Partial<StudentData> | null 
         case 'generalElectives':
           data.generalElectives = value ? value.split(';').filter(Boolean) : []
           break
+        case 'notes':
+          data.notes = value
+          break
       }
     }
 
@@ -201,29 +209,42 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
 
   // Header
   doc.setFillColor(77, 28, 141) // TCU Purple
-  doc.rect(0, 0, pageWidth, 30, 'F')
+  doc.rect(0, 0, pageWidth, 40, 'F')
   doc.setTextColor(255, 255, 255)
-  doc.setFontSize(18)
+  doc.setFontSize(22)
   doc.setFont('helvetica', 'bold')
-  doc.text('DCDA Advising Plan', margin, 18)
-  doc.setFontSize(9)
+  doc.text('DCDA Advising Plan', margin, 20)
+  doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
-  doc.text('Digital Culture & Data Analytics Program', margin, 26)
+  doc.text('Digital Culture & Data Analytics Program', margin, 27)
+  
+  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  doc.setFontSize(8)
+  doc.text(`Generated: ${today}`, margin, 34)
 
   // Reset text color
   doc.setTextColor(0, 0, 0)
-  y = 40
+  y = 50
 
   // Student Info Row
-  doc.setFontSize(10)
+  doc.setFontSize(14)
   doc.setFont('helvetica', 'bold')
-  doc.text(`${studentData.name || 'Student'}`, margin, y)
+  doc.setTextColor(77, 28, 141)
+  doc.text(`${studentData.name || 'Student Name'}`, margin, y)
+  
+  y += 6
+  doc.setFontSize(10)
+  doc.setTextColor(80)
   doc.setFont('helvetica', 'normal')
+  
   const degreeText = `DCDA ${studentData.degreeType === 'major' ? 'Major' : 'Minor'}`
-  const gradText = studentData.expectedGraduation ? ` • Expected: ${studentData.expectedGraduation}` : ''
-  const capstoneText = capstoneTarget ? ` • Capstone: ${capstoneTarget}` : ''
-  doc.text(`${degreeText}${gradText}${capstoneText}`, margin + doc.getTextWidth(studentData.name || 'Student') + 5, y)
-  y += 10
+  const gradText = studentData.expectedGraduation ? `  |  Expected Graduation: ${studentData.expectedGraduation}` : ''
+  const capstoneText = capstoneTarget ? `  |  Capstone Target: ${capstoneTarget}` : ''
+  
+  doc.text(`${degreeText}${gradText}${capstoneText}`, margin, y)
+  
+  doc.setTextColor(0)
+  y += 15
 
   // Get degree requirements
   const degree = studentData.degreeType ? requirementsData[studentData.degreeType] : null
@@ -341,20 +362,27 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
   const tableWidth = colWidths.requirement + colWidths.completed + colWidths.scheduled
   const startX = margin
 
+  // Section Title
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(77, 28, 141)
+  doc.text('Degree Requirements Checklist', startX, y)
+  y += 6
+
   // Table Header
   checkPageBreak(15)
-  doc.setFillColor(240, 240, 240)
-  doc.rect(startX, y - 4, tableWidth, 8, 'F')
+  doc.setFillColor(245, 245, 245)
+  doc.setDrawColor(200)
+  doc.rect(startX, y - 5, tableWidth, 9, 'FD')
+  
+  doc.setTextColor(0)
   doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
-  doc.text('Requirement', startX + 2, y)
-  doc.text('Completed', startX + colWidths.requirement + 2, y)
-  doc.text('Spring 2026', startX + colWidths.requirement + colWidths.completed + 2, y)
+  doc.text('Requirement', startX + 2, y + 1)
+  doc.text('Completed / Credits', startX + colWidths.requirement + 2, y + 1)
+  doc.text('Spring 2026 / Future', startX + colWidths.requirement + colWidths.completed + 2, y + 1)
+  
   y += 8
-
-  // Draw header border
-  doc.setDrawColor(200)
-  doc.line(startX, y - 4, startX + tableWidth, y - 4)
 
   // Helper to draw a row
   const drawRow = (
@@ -366,26 +394,28 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
     isFuture = false
   ) => {
     const maxItems = Math.max(completedItems.length, scheduledItems.length, credits.length, 1)
-    const rowHeight = Math.max(maxItems * 5 + 4, 10)
+    const rowHeight = Math.max(maxItems * 6 + 6, 14)
 
     checkPageBreak(rowHeight + 5)
 
     // Requirement column
-    doc.setFontSize(8)
+    doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.text(reqName, startX + 2, y)
+    doc.setTextColor(77, 28, 141)
+    doc.text(reqName, startX + 2, y + 1)
+    
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(7)
-    doc.setTextColor(100)
-    doc.text(reqStatus, startX + 2, y + 4)
+    doc.setFontSize(8)
+    doc.setTextColor(120)
+    doc.text(reqStatus, startX + 4, y + 6)
     doc.setTextColor(0)
 
     // Completed column
-    doc.setFontSize(7)
-    let itemY = y
+    doc.setFontSize(8)
+    let itemY = y + 1
     for (const code of completedItems) {
       doc.text(`✓ ${code}`, startX + colWidths.requirement + 2, itemY)
-      itemY += 4
+      itemY += 5
     }
     // Show credits that count toward this category
     for (const credit of credits) {
@@ -393,17 +423,17 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
       const creditText = `[${creditTypeLabels[credit.type]}] ${credit.description.substring(0, 20)}${credit.description.length > 20 ? '...' : ''}`
       doc.text(creditText, startX + colWidths.requirement + 2, itemY)
       doc.setTextColor(0)
-      itemY += 4
+      itemY += 5
     }
 
     // Scheduled column
-    itemY = y
+    itemY = y + 1
     if (isFuture) {
       doc.setTextColor(0, 100, 180) // Blue for future
     }
     for (const code of scheduledItems) {
       doc.text(code, startX + colWidths.requirement + colWidths.completed + 2, itemY)
-      itemY += 4
+      itemY += 5
     }
     doc.setTextColor(0)
 
@@ -411,16 +441,26 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
 
     // Draw row border
     doc.setDrawColor(230)
-    doc.line(startX, y - 2, startX + tableWidth, y - 2)
+    doc.line(startX, y - 3, startX + tableWidth, y - 3)
   }
+
+  // Track overflow courses to add to general electives logic
+  const requiredOverflow: string[] = []
+  const electiveOverflow: string[] = []
 
   // Process each requirement category
   for (const cat of degree.required.categories) {
     const completedInCat = studentData.completedCourses.filter((c: string) => cat.courses?.includes(c))
-    const scheduledInCat = scheduledByCategory[cat.id] || []
     const credits = specialCreditsByCategory[cat.id] || []
+    const scheduledInCat = scheduledByCategory[cat.id] || []
     const specialCreditCount = credits.length
     const requiredCount = cat.selectOne ? 1 : ((cat as { count?: number }).count ?? 1)
+    
+    // Capture overflow
+    if (completedInCat.length > requiredCount) {
+      requiredOverflow.push(...completedInCat.slice(requiredCount))
+    }
+
     const totalCompleted = completedInCat.length + specialCreditCount
     const totalWithScheduled = totalCompleted + scheduledInCat.length
 
@@ -439,7 +479,7 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
       displayScheduled = [`→ ${capstoneTarget}`]
     }
 
-    drawRow(cat.name, status, completedInCat, displayScheduled, credits, cat.id === 'capstone' && capstoneAutoScheduled)
+    drawRow(cat.name, status, completedInCat.slice(0, requiredCount), displayScheduled, credits, cat.id === 'capstone' && capstoneAutoScheduled)
   }
 
   // Process elective categories (major only)
@@ -460,10 +500,17 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
         }
         return true
       })
+      
+      const requiredCount = cat.count ?? 1
+      
+      // Capture overflow
+      if (completedInCat.length > requiredCount) {
+        electiveOverflow.push(...completedInCat.slice(requiredCount))
+      }
+
       const scheduledInCat = scheduledByCategory[cat.id] || []
       const credits = specialCreditsByCategory[cat.id] || []
       const specialCreditCount = credits.length
-      const requiredCount = cat.count ?? 1
       const totalCompleted = Math.min(completedInCat.length + specialCreditCount, requiredCount)
       const totalWithScheduled = totalCompleted + Math.min(scheduledInCat.length, requiredCount - totalCompleted)
 
@@ -484,14 +531,15 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
   let generalCompleted: string[]
 
   if (generalElectives) {
-    // Use explicitly provided general electives
-    generalCompleted = generalElectives
+    // Use explicitly provided general electives + overflow
+    generalCompleted = [...generalElectives, ...requiredOverflow, ...electiveOverflow]
   } else {
     // Fallback: infer general electives
     const electiveCats = degreeWithElectives.electives?.categories.flatMap((cat: { category: string }) =>
       courses.filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code)).map((c) => c.code)
     ) ?? []
-    generalCompleted = studentData.completedCourses.filter((c: string) => {
+    
+    const fallbackGeneral = studentData.completedCourses.filter((c: string) => {
       if (requiredCategoryCourses.includes(c)) return false
       if (isFlexibleCourse(c)) {
         const assignedCategory = studentData.courseCategories?.[c as keyof typeof studentData.courseCategories] as FlexibleCourseCategory | undefined
@@ -499,6 +547,8 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
       }
       return !electiveCats.includes(c)
     })
+    
+    generalCompleted = [...fallbackGeneral, ...requiredOverflow, ...electiveOverflow]
   }
   const generalScheduled = scheduledByCategory['generalElectives'] || []
   const generalCredits = specialCreditsByCategory['generalElectives'] || []
@@ -579,39 +629,46 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
     studentData.scheduledCourses,
     scheduledCourseCategories,
     neededCategoriesForPlan,
-    studentData.expectedGraduation
+    studentData.expectedGraduation,
+    studentData.includeSummer || false
   )
   
   if (semesterPlan.length > 0) {
     // Section header
-    doc.setFontSize(10)
+    y += 6
+    checkPageBreak(30)
+    
+    doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
+    doc.setTextColor(77, 28, 141)
     doc.text('Suggested Semester Plan', margin, y)
     y += 6
     
     // Calculate column widths based on number of semesters
-    const semesterColWidth = Math.min(40, (tableWidth - 5) / semesterPlan.length)
+    const semesterColWidth = Math.min(45, (tableWidth - 2) / semesterPlan.length)
     
     // Draw header row
-    doc.setFillColor(240, 240, 240)
-    doc.rect(startX, y - 4, semesterPlan.length * semesterColWidth, 8, 'F')
-    doc.setFontSize(7)
+    doc.setFillColor(245, 245, 250)
+    doc.setDrawColor(200)
+    doc.rect(startX, y - 5, semesterPlan.length * semesterColWidth, 9, 'FD')
+    doc.setTextColor(0)
+    doc.setFontSize(8)
     doc.setFont('helvetica', 'bold')
     
     semesterPlan.forEach((sem, idx) => {
-      doc.text(sem.semester, startX + idx * semesterColWidth + 2, y)
+      doc.text(sem.semester, startX + idx * semesterColWidth + 2, y + 1)
     })
-    y += 6
+    y += 8
     
     // Find max courses in any semester
     const maxRows = Math.max(...semesterPlan.map(s => s.courses.length), 1)
     
     // Draw course rows
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(6)
+    doc.setFontSize(7)
     
     for (let row = 0; row < maxRows; row++) {
-      checkPageBreak(10)
+      checkPageBreak(12)
       
       semesterPlan.forEach((sem, idx) => {
         const course = sem.courses[row]
@@ -624,19 +681,21 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
           }
           doc.text(course.code, xPos, y)
           doc.setTextColor(100)
+          doc.setFontSize(6)
           // Truncate category name to fit
-          const catText = course.category.length > 10 ? course.category.substring(0, 9) + '…' : course.category
+          const catText = course.category.length > 15 ? course.category.substring(0, 14) + '…' : course.category
           doc.text(catText, xPos, y + 3)
+          doc.setFontSize(7)
           doc.setTextColor(0)
         }
       })
-      y += 8
+      y += 9
     }
     
     // Draw border around plan
     doc.setDrawColor(200)
-    const planHeight = 6 + maxRows * 8 + 2
-    doc.rect(startX, y - planHeight - 4, semesterPlan.length * semesterColWidth, planHeight, 'S')
+    const planHeight = 9 + maxRows * 9 // Header 9 + Rows * 9
+    doc.rect(startX, y - planHeight + 5, semesterPlan.length * semesterColWidth, planHeight, 'S')
     
     // Disclaimer
     y += 2
@@ -644,13 +703,33 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
     doc.setTextColor(120)
     doc.text('— indicates course to be determined. Plan is a suggestion only.', margin, y)
     doc.setTextColor(0)
+    y += 7
+  }
+
+  // Add Notes section if present
+  if (studentData.notes) {
+    checkPageBreak(40)
+    y += 10
+    
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(77, 28, 141)
+    doc.text('Notes & Questions', margin, y)
+    y += 8
+    
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(0, 0, 0)
+    
+    const splitNotes = doc.splitTextToSize(studentData.notes, pageWidth - (margin * 2))
+    doc.text(splitNotes, margin, y)
+    y += (splitNotes.length * 5)
   }
 
   // Footer
   const footerY = 275
   doc.setFontSize(8)
   doc.setTextColor(120)
-  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
   doc.text(`Generated: ${today}`, margin, footerY)
   doc.setFontSize(7)
   doc.text('Disclaimer: For planning purposes only. Use Stellic for official degree auditing.', margin, footerY + 4)

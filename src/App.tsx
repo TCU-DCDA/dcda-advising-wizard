@@ -641,6 +641,7 @@ function App() {
               scheduledCourses: allScheduledCourses,
             }}
             generalElectives={categorySelections.generalElectives}
+            updateStudentData={updateStudentData}
           />
         )
 

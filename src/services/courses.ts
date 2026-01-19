@@ -52,8 +52,13 @@ export function getOfferedCoursesForCategory(
   completedRequiredCourses: string[] = []
 ): Course[] {
   const categoryCourses = getCoursesForCategory(categoryId, degreeType, completedRequiredCourses)
+  
+  // Specific exclusions for General Electives
+  const filteredCourses = categoryId === 'generalElectives' 
+    ? categoryCourses.filter(c => c.code !== 'DCDA 40833')
+    : categoryCourses
 
-  return categoryCourses.filter(
+  return filteredCourses.filter(
     (course) =>
       offerings.offeredCodes.includes(course.code) &&
       !excludeCourses.includes(course.code)

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Dialog,
   DialogContent,
@@ -86,6 +87,7 @@ function DualProgressBars({ majorHours, majorTotal, minorHours, minorTotal, sele
 interface ReviewStepProps {
   studentData: StudentData
   generalElectives?: string[]
+  updateStudentData: (updates: Partial<StudentData>) => void
 }
 
 interface SummarySectionProps {
@@ -201,7 +203,7 @@ function SemesterPlanTable({ plan }: SemesterPlanTableProps) {
   )
 }
 
-export function ReviewStep({ studentData, generalElectives }: ReviewStepProps) {
+export function ReviewStep({ studentData, generalElectives, updateStudentData }: ReviewStepProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [previewFilename, setPreviewFilename] = useState<string>('')
   const { degreeProgress, requirements } = useRequirements(studentData, generalElectives)
@@ -393,6 +395,20 @@ export function ReviewStep({ studentData, generalElectives }: ReviewStepProps) {
       {(scheduledCount > 0 || neededCoursesCount > 0) && (
         <SemesterPlanTable plan={semesterPlan} />
       )}
+
+      {/* Notes Section */}
+      <div className="space-y-3">
+        <label htmlFor="notes" className="text-lg font-semibold block px-1">
+          Notes or Questions for Advisor
+        </label>
+        <Textarea 
+          id="notes"
+          placeholder="Add any questions about transfer credits, specific courses, or career goals..."
+          value={studentData.notes || ''}
+          onChange={(e) => updateStudentData({ notes: e.target.value })}
+          className="text-base"
+        />
+      </div>
 
       {/* Export Buttons */}
       <div className="space-y-3 pt-4">

@@ -129,6 +129,7 @@ export interface StudentData {
   generalElectives?: string[]
   // Planning preferences
   includeSummer?: boolean
+  notes?: string
 }
 
 // Wizard step types

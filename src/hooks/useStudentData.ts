@@ -12,6 +12,7 @@ const defaultStudentData: StudentData = {
   specialCredits: [],
   courseCategories: {},
   includeSummer: false,
+  notes: '',
 }
 
 export function useStudentData() {
