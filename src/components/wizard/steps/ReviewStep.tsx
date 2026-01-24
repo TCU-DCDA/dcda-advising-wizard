@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import {
@@ -7,12 +7,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Eye, Printer, Download, CalendarDays, Calendar, Mail } from 'lucide-react'
+import { Eye, Printer, Download, CalendarDays, Calendar, Mail, Cloud, LogOut, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { generatePdfBlob, downloadPdf, printPdf, exportToCSV } from '@/services/export'
 import { getCapstoneTargetSemester, getCourseByCode, buildSemesterPlan, type SemesterPlan } from '@/services/courses'
+import { isAzureConfigured, signIn, signOut, handleRedirectResponse } from '@/services/azure'
+import { saveToOneDrive, type SaveResult } from '@/services/onedrive'
 import { cn } from '@/lib/utils'
+import type { AccountInfo } from '@azure/msal-browser'
 
 // Dual Progress Bar Component
 interface DualProgressProps {
@@ -208,6 +211,19 @@ export function ReviewStep({ studentData, generalElectives, updateStudentData }:
   const [previewFilename, setPreviewFilename] = useState<string>('')
   const { degreeProgress, requirements } = useRequirements(studentData, generalElectives)
 
+  // OneDrive state
+  const [azureAccount, setAzureAccount] = useState<AccountInfo | null>(null)
+  const [oneDriveSaving, setOneDriveSaving] = useState(false)
+  const [oneDriveResult, setOneDriveResult] = useState<SaveResult | null>(null)
+  const azureConfigured = isAzureConfigured()
+
+  // Check for existing Azure session on mount
+  useEffect(() => {
+    if (azureConfigured) {
+      handleRedirectResponse().then(setAzureAccount)
+    }
+  }, [azureConfigured])
+
   // Calculate progress for both degree types (for dual progress bars)
   const selectedDegreeType = studentData.degreeType || 'major'
   const majorTotalHours = requirements.major.totalHours
@@ -328,6 +344,36 @@ export function ReviewStep({ studentData, generalElectives, updateStudentData }:
     }
   }
 
+  const handleAzureSignIn = async () => {
+    const account = await signIn()
+    if (account) {
+      setAzureAccount(account)
+    }
+  }
+
+  const handleAzureSignOut = async () => {
+    await signOut()
+    setAzureAccount(null)
+    setOneDriveResult(null)
+  }
+
+  const handleSaveToOneDrive = async () => {
+    setOneDriveSaving(true)
+    setOneDriveResult(null)
+    try {
+      const result = await saveToOneDrive({ ...studentData, generalElectives })
+      setOneDriveResult(result)
+    } catch (error) {
+      setOneDriveResult({
+        success: false,
+        filename: '',
+        error: error instanceof Error ? error.message : 'Failed to save to OneDrive',
+      })
+    } finally {
+      setOneDriveSaving(false)
+    }
+  }
+
   return (
     <div className="space-y-6 pb-8">
       <div>
@@ -438,6 +484,99 @@ export function ReviewStep({ studentData, generalElectives, updateStudentData }:
           <Download className="size-5" />
           Save CSV
         </Button>
+
+        {/* OneDrive Save Section */}
+        {azureConfigured && (
+          <div className="pt-3 border-t space-y-3">
+            <div className="text-xs text-muted-foreground px-1">
+              Save to TCU OneDrive for program records
+            </div>
+
+            {!azureAccount ? (
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-3"
+                onClick={handleAzureSignIn}
+              >
+                <Cloud className="size-5" />
+                Sign in with TCU
+              </Button>
+            ) : (
+              <>
+                <div className="flex items-center justify-between text-sm px-1">
+                  <span className="text-muted-foreground">
+                    Signed in as <span className="font-medium text-foreground">{azureAccount.name || azureAccount.username}</span>
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleAzureSignOut}
+                    className="h-auto py-1 px-2 text-xs"
+                  >
+                    <LogOut className="size-3 mr-1" />
+                    Sign out
+                  </Button>
+                </div>
+
+                <Button
+                  variant="default"
+                  className="w-full justify-start gap-3"
+                  onClick={handleSaveToOneDrive}
+                  disabled={oneDriveSaving}
+                >
+                  {oneDriveSaving ? (
+                    <Loader2 className="size-5 animate-spin" />
+                  ) : (
+                    <Cloud className="size-5" />
+                  )}
+                  {oneDriveSaving ? 'Saving...' : 'Save to OneDrive'}
+                </Button>
+
+                {oneDriveResult && (
+                  <div
+                    className={cn(
+                      "flex items-start gap-2 text-sm p-3 rounded-lg",
+                      oneDriveResult.success
+                        ? "bg-green-50 text-green-800 dark:bg-green-950 dark:text-green-200"
+                        : "bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200"
+                    )}
+                  >
+                    {oneDriveResult.success ? (
+                      <CheckCircle className="size-4 mt-0.5 flex-shrink-0" />
+                    ) : (
+                      <AlertCircle className="size-4 mt-0.5 flex-shrink-0" />
+                    )}
+                    <div>
+                      {oneDriveResult.success ? (
+                        <>
+                          <p className="font-medium">Saved successfully!</p>
+                          <p className="text-xs mt-1">
+                            {oneDriveResult.filename} saved to DCDA_Advising_Records folder
+                          </p>
+                          {oneDriveResult.webUrl && (
+                            <a
+                              href={oneDriveResult.webUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs underline mt-1 block"
+                            >
+                              Open in OneDrive →
+                            </a>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <p className="font-medium">Save failed</p>
+                          <p className="text-xs mt-1">{oneDriveResult.error}</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Farewell / Next Steps */}
