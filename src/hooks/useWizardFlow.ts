@@ -22,7 +22,8 @@ const ALL_PART_1_STEPS: WizardStep[] = [
 const MAJOR_ONLY_STEPS: Set<string> = new Set(['intro', 'dcElective', 'daElective'])
 
 const TRANSITION_STEP: WizardStep = { id: 'transition', part: 'transition', title: 'Planning Your Schedule' }
-const REVIEW_STEP: WizardStep = { id: 'review', part: 'review', title: 'Review Your Plan' }
+const REVIEW_SUMMARY_STEP: WizardStep = { id: 'reviewSummary', part: 'review', title: 'Review Your Plan' }
+const REVIEW_ACTIONS_STEP: WizardStep = { id: 'reviewActions', part: 'submit', title: 'Save & Submit' }
 
 export interface UseWizardFlowReturn {
   // Current state
@@ -100,8 +101,9 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
       })
     }
 
-    // Add review step
-    allSteps.push(REVIEW_STEP)
+    // Add review and submit steps
+    allSteps.push(REVIEW_SUMMARY_STEP)
+    allSteps.push(REVIEW_ACTIONS_STEP)
 
     return allSteps
   }, [degreeType, unmetCategories])
@@ -117,6 +119,7 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
       case 'transition': return 'Phase 2'
       case 'schedule': return `Part 2: Schedule for ${getNextSemesterTerm()}`
       case 'review': return 'Part 3: Review Your Plan'
+      case 'submit': return 'Part 4: Save & Submit'
     }
   }, [part])
 

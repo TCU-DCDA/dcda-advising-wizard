@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Upload } from 'lucide-react'
+import { Upload, ClipboardList, CalendarDays, FileCheck, Send } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -46,14 +46,55 @@ export function WelcomeStep({ onImport, onNext }: WelcomeStepProps) {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-2">Welcome to DCDA Advising</h2>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-muted-foreground">
           This tool helps you plan your Digital Culture & Data Analytics degree requirements.
         </p>
+      </div>
 
-        <div className="space-y-2 text-sm text-muted-foreground border-l-2 pl-4 py-1">
-          <p><strong>Part 1:</strong> Tell us what you've already taken.</p>
-          <p><strong>Part 2:</strong> Plan your upcoming semester.</p>
-          <p><strong>Part 3:</strong> Review and export your plan.</p>
+      {/* Part Steps - Visual Cards */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">
+            1
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-foreground">Record Your History</p>
+            <p className="text-xs text-muted-foreground">Tell us what you've already taken</p>
+          </div>
+          <ClipboardList className="w-5 h-5 text-primary/60 shrink-0" />
+        </div>
+
+        <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">
+            2
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-foreground">Plan Your Semester</p>
+            <p className="text-xs text-muted-foreground">Schedule upcoming courses</p>
+          </div>
+          <CalendarDays className="w-5 h-5 text-primary/60 shrink-0" />
+        </div>
+
+        <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">
+            3
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-foreground">Review Your Plan</p>
+            <p className="text-xs text-muted-foreground">See your personalized degree audit</p>
+          </div>
+          <FileCheck className="w-5 h-5 text-primary/60 shrink-0" />
+        </div>
+
+        <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">
+            4
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-foreground">Save & Submit</p>
+            <p className="text-xs text-muted-foreground">Export and schedule an appointment</p>
+          </div>
+          <Send className="w-5 h-5 text-primary/60 shrink-0" />
         </div>
       </div>
 

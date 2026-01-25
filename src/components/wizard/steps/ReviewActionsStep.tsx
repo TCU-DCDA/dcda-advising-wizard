@@ -7,159 +7,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Eye, Printer, Download, CalendarDays, Calendar, Mail, Send } from 'lucide-react'
+import { Eye, Printer, Download, Calendar, Mail, Send } from 'lucide-react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { generatePdfBlob, downloadPdf, printPdf, exportToCSV } from '@/services/export'
-import { getCapstoneTargetSemester, getCourseByCode, buildSemesterPlan, type SemesterPlan } from '@/services/courses'
-import { cn } from '@/lib/utils'
 
-// Dual Progress Bar Component
-interface DualProgressProps {
-  majorHours: number
-  majorTotal: number
-  minorHours: number
-  minorTotal: number
-  selectedDegree: 'major' | 'minor'
-}
-
-function DualProgressBars({ majorHours, majorTotal, minorHours, minorTotal, selectedDegree }: DualProgressProps) {
-  const majorPercent = Math.min(100, Math.round((majorHours / majorTotal) * 100))
-  const minorPercent = Math.min(100, Math.round((minorHours / minorTotal) * 100))
-  
-  return (
-    <div className="bg-card border rounded-xl p-4 space-y-3">
-      <div className="text-sm font-medium text-muted-foreground">Progress Comparison</div>
-      
-      {/* Major Progress */}
-      <div className="space-y-1">
-        <div className="flex justify-between text-sm">
-          <span className={cn("font-medium", selectedDegree === 'major' ? 'text-primary' : 'text-muted-foreground')}>
-            Major {selectedDegree === 'major' && '(selected)'}
-          </span>
-          <span className="text-muted-foreground">{majorHours}/{majorTotal} hrs ({majorPercent}%)</span>
-        </div>
-        <div className="h-3 bg-muted rounded-full overflow-hidden">
-          <div 
-            className={cn(
-              "h-full rounded-full transition-all",
-              selectedDegree === 'major' ? 'bg-primary' : 'bg-muted-foreground/40'
-            )}
-            style={{ width: `${majorPercent}%` }}
-          />
-        </div>
-      </div>
-      
-      {/* Minor Progress */}
-      <div className="space-y-1">
-        <div className="flex justify-between text-sm">
-          <span className={cn("font-medium", selectedDegree === 'minor' ? 'text-primary' : 'text-muted-foreground')}>
-            Minor {selectedDegree === 'minor' && '(selected)'}
-          </span>
-          <span className="text-muted-foreground">{minorHours}/{minorTotal} hrs ({minorPercent}%)</span>
-        </div>
-        <div className="h-3 bg-muted rounded-full overflow-hidden">
-          <div 
-            className={cn(
-              "h-full rounded-full transition-all",
-              selectedDegree === 'minor' ? 'bg-primary' : 'bg-muted-foreground/40'
-            )}
-            style={{ width: `${minorPercent}%` }}
-          />
-        </div>
-      </div>
-      
-      {/* Insight message */}
-      {minorPercent === 100 && majorPercent < 100 && selectedDegree === 'major' && (
-        <p className="text-xs text-green-600 dark:text-green-400 mt-2">
-          ✓ You've completed enough for a minor! Continue {majorTotal - majorHours} more hours for the major.
-        </p>
-      )}
-      {majorPercent === 100 && selectedDegree === 'minor' && (
-        <p className="text-xs text-green-600 dark:text-green-400 mt-2">
-          ✓ You've completed enough courses for a major!
-        </p>
-      )}
-    </div>
-  )
-}
-
-interface ReviewStepProps {
+interface ReviewActionsStepProps {
   studentData: StudentData
   generalElectives?: string[]
   updateStudentData: (updates: Partial<StudentData>) => void
 }
 
-interface SummarySectionProps {
-  title: string
-  status: 'complete' | 'scheduled' | 'needed'
-  count: number
-  children: React.ReactNode
-}
-
-function SummarySection({ title, status, count, children }: SummarySectionProps) {
-  const statusColors = {
-    complete: 'bg-green-100 text-green-800',
-    scheduled: 'bg-blue-100 text-blue-800',
-    needed: 'bg-amber-100 text-amber-800',
-  }
-
-  const statusLabels = {
-    complete: 'courses',
-    scheduled: 'courses',
-    needed: 'remaining',
-  }
-
-  return (
-    <div className="bg-card border rounded-xl overflow-hidden">
-      <div className="bg-muted px-4 py-3 flex items-center justify-between">
-        <span className="font-semibold text-sm">{title}</span>
-        <span className={cn("text-xs px-2 py-1 rounded font-medium", statusColors[status])}>
-          {count} {statusLabels[status]}
-        </span>
-      </div>
-      <div className="divide-y">
-        {children}
-      </div>
-    </div>
-  )
-}
-
-interface CourseRowProps {
-  code: string
-  category: string
-  showCheck?: boolean
-}
-
-function CourseRow({ code, category, showCheck = false }: CourseRowProps) {
-  const course = getCourseByCode(code)
-  return (
-    <div className="px-4 py-3 flex justify-between items-center text-sm">
-      <div>
-        <div className="font-medium">{showCheck && '✓ '}{code}</div>
-        <div className="text-xs text-muted-foreground">{category}</div>
-      </div>
-      {course && (
-        <div className="text-xs text-muted-foreground text-right max-w-[120px] truncate">
-          {course.title}
-        </div>
-      )}
-    </div>
-  )
-}
-
-export function ReviewStep({ studentData, generalElectives, updateStudentData }: ReviewStepProps) {
+export function ReviewActionsStep({ studentData, generalElectives, updateStudentData }: ReviewActionsStepProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [previewFilename, setPreviewFilename] = useState<string>('')
   const { degreeProgress, requirements } = useRequirements(studentData, generalElectives)
 
-  // Calculate progress for both degree types (for dual progress bars)
   const selectedDegreeType = studentData.degreeType || 'major'
   const majorTotalHours = requirements.major.totalHours
   const minorTotalHours = requirements.minor.totalHours
   
-  // For the selected degree, use actual calculated progress
-  // For the other degree, do a simple count of completed course hours (capped)
   const completedCourseHours = studentData.completedCourses.length * 3
   const specialCreditHours = studentData.specialCredits.length * 3
   const totalCompletedHours = completedCourseHours + specialCreditHours
@@ -171,31 +38,20 @@ export function ReviewStep({ studentData, generalElectives, updateStudentData }:
     ? (degreeProgress?.completedHours ?? 0)
     : Math.min(totalCompletedHours, minorTotalHours)
 
-  const capstoneTarget = getCapstoneTargetSemester(studentData.expectedGraduation)
-
-  // Organize courses by status
+  // Organize courses by category for email
   const completedByCategory: Record<string, string[]> = {}
   const scheduledByCategory: Record<string, string[]> = {}
-  const scheduledCourseCategories: Record<string, string> = {} // course code -> category name
   const neededCategories: { category: string; name: string; remaining: number }[] = []
-  const assignedScheduledCourses = new Set<string>() // Track courses already assigned to avoid double-counting
+  const assignedScheduledCourses = new Set<string>()
 
   if (degreeProgress) {
-    // Process in priority order: required categories first, then electives, then general
-    // This ensures multi-category courses (e.g., MM Auth, Coding) fill their required category first,
-    // then electives (DC/DA), then General Electives
     const sortedCategories = [...degreeProgress.categories].sort((a, b) => {
-      // General Electives should be last
       if (a.id === 'generalElectives') return 1
       if (b.id === 'generalElectives') return -1
-
-      // DC/DA Electives before General
       const aIsElective = a.id === 'dcElective' || a.id === 'daElective'
       const bIsElective = b.id === 'dcElective' || b.id === 'daElective'
       if (aIsElective && !bIsElective) return 1
       if (!aIsElective && bIsElective) return -1
-
-      // Keep original order for required categories
       return 0
     })
 
@@ -204,31 +60,25 @@ export function ReviewStep({ studentData, generalElectives, updateStudentData }:
         completedByCategory[cat.name] = cat.completedCourses
       }
 
-      // Check if this category still needs courses (not yet satisfied by completed courses alone)
       const isAlreadySatisfied = cat.completed >= cat.required
 
-      // Only assign scheduled courses to this category if requirement is not yet satisfied
       if (!isAlreadySatisfied) {
         const scheduledInCat = studentData.scheduledCourses.filter((code) =>
           cat.courses.includes(code) && !assignedScheduledCourses.has(code)
         )
         if (scheduledInCat.length > 0) {
           scheduledByCategory[cat.name] = scheduledInCat
-          // Mark these courses as assigned and track their categories
           scheduledInCat.forEach((code) => {
             assignedScheduledCourses.add(code)
-            scheduledCourseCategories[code] = cat.name
           })
         }
 
-        // Check if still needed after scheduled courses
         const totalFilled = cat.completed + scheduledInCat.length
         if (totalFilled < cat.required) {
           const remaining = cat.required - totalFilled
           neededCategories.push({ category: cat.id, name: cat.name, remaining })
         }
       } else {
-        // Category is already satisfied, check if still needed
         if (cat.completed < cat.required) {
           const remaining = cat.required - cat.completed
           neededCategories.push({ category: cat.id, name: cat.name, remaining })
@@ -236,20 +86,6 @@ export function ReviewStep({ studentData, generalElectives, updateStudentData }:
       }
     }
   }
-
-  // Count totals
-  const completedCount = Object.values(completedByCategory).flat().length
-  const scheduledCount = Object.values(scheduledByCategory).flat().length
-  const neededCoursesCount = neededCategories.reduce((sum, cat) => sum + cat.remaining, 0)
-  
-  // Build semester plan
-  const semesterPlan = buildSemesterPlan(
-    studentData.scheduledCourses,
-    scheduledCourseCategories,
-    neededCategories,
-    studentData.expectedGraduation,
-    studentData.includeSummer || false
-  )
 
   const handlePreview = () => {
     const { blobUrl, filename } = generatePdfBlob({ studentData, generalElectives })
@@ -277,40 +113,34 @@ export function ReviewStep({ studentData, generalElectives, updateStudentData }:
     const date = new Date().toLocaleDateString()
     const degreeLabel = studentData.degreeType === 'major' ? 'Major' : 'Minor'
     
-    // Build completed courses by category
     const completedSection = Object.entries(completedByCategory).length > 0
       ? Object.entries(completedByCategory)
           .map(([category, codes]) => `  ${category}:\n    ${codes.join(', ')}`)
           .join('\n')
       : '  None'
 
-    // Build scheduled courses by category
     const scheduledSection = Object.entries(scheduledByCategory).length > 0
       ? Object.entries(scheduledByCategory)
           .map(([category, codes]) => `  ${category}:\n    ${codes.join(', ')}`)
           .join('\n')
       : '  None'
 
-    // Build special credits section
     const specialCreditsSection = studentData.specialCredits.length > 0
       ? studentData.specialCredits
           .map(c => `  • ${c.type.charAt(0).toUpperCase() + c.type.slice(1).replace('-', ' ')}: ${c.description}\n    Counts as: ${c.countsAs}`)
           .join('\n')
       : '  None'
 
-    // Build remaining requirements section
     const remainingSection = neededCategories.length > 0
       ? neededCategories
           .map(cat => `  • ${cat.name}: ${cat.remaining} course${cat.remaining > 1 ? 's' : ''} needed`)
           .join('\n')
       : '  All requirements satisfied!'
 
-    // Progress summary
     const progressHours = selectedDegreeType === 'major' ? majorHours : minorHours
     const totalHours = selectedDegreeType === 'major' ? majorTotalHours : minorTotalHours
     const progressPercent = Math.round((progressHours / totalHours) * 100)
 
-    // Build JSON data for Power Automate parsing
     const jsonData = {
       version: '2.0',
       timestamp: new Date().toISOString(),
@@ -379,104 +209,11 @@ Submitted via DCDA Advisor Mobile`
   return (
     <div className="space-y-6 pb-8">
       <div>
-        <h2 className="text-xl font-semibold mb-2">Your Advising Plan</h2>
+        <h2 className="text-xl font-semibold mb-2">Save & Submit</h2>
         <p className="text-sm text-muted-foreground">
-          {studentData.name} • DCDA {studentData.degreeType === 'major' ? 'Major' : 'Minor'} • Graduating {studentData.expectedGraduation}
+          Add notes, save your plan, and schedule an advising appointment.
         </p>
       </div>
-
-      {/* Dual Progress Bars */}
-      <DualProgressBars
-        majorHours={majorHours}
-        majorTotal={majorTotalHours}
-        minorHours={minorHours}
-        minorTotal={minorTotalHours}
-        selectedDegree={selectedDegreeType}
-      />
-
-      {/* Completed & Scheduled Courses - Side by Side */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Completed Courses */}
-        {completedCount > 0 && (
-          <SummarySection title="Completed Courses" status="complete" count={completedCount}>
-            {Object.entries(completedByCategory).map(([category, codes]) =>
-              codes.map((code) => (
-                <CourseRow key={code} code={code} category={category} showCheck />
-              ))
-            )}
-          </SummarySection>
-        )}
-
-        {/* Scheduled Courses */}
-        {scheduledCount > 0 && (
-          <SummarySection title="Scheduled: Spring 2026" status="scheduled" count={scheduledCount}>
-            {Object.entries(scheduledByCategory).map(([category, codes]) =>
-              codes.map((code) => (
-                <CourseRow key={code} code={code} category={category} />
-              ))
-            )}
-          </SummarySection>
-        )}
-      </div>
-
-      {/* Still Needed & Semester Plan - Combined */}
-      {(scheduledCount > 0 || neededCoursesCount > 0) && (
-        <div className="bg-card border rounded-xl overflow-hidden">
-          <div className="bg-muted px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CalendarDays className="size-4" />
-              <span className="font-semibold text-sm">Remaining Plan</span>
-            </div>
-            {neededCoursesCount > 0 && (
-              <span className="text-xs text-muted-foreground">
-                {neededCoursesCount} course{neededCoursesCount !== 1 ? 's' : ''} still needed
-              </span>
-            )}
-          </div>
-          
-          {/* Responsive Grid Layout - Stacks on mobile, Grid on larger screens */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border">
-            {semesterPlan.map(({ semester, courses }) => (
-              <div key={semester} className="bg-card p-4 flex flex-col gap-3">
-                <div className="font-semibold text-xs uppercase tracking-wider text-muted-foreground border-b pb-1">
-                  {semester}
-                </div>
-                
-                {courses.length > 0 ? (
-                  <div className="space-y-2">
-                    {courses.map((course, idx) => (
-                      <div key={idx} className={cn(
-                        "rounded px-2.5 py-2 border",
-                        course.code === '—' 
-                          ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/50' 
-                          : 'bg-muted/40 border-border/50'
-                      )}>
-                        <div className={cn(
-                          "font-medium text-xs",
-                          course.code === '—' ? 'text-amber-700 dark:text-amber-400' : ''
-                        )}>
-                          {course.code}
-                        </div>
-                        {course.category && (
-                          <div className="text-[10px] text-muted-foreground truncate mt-0.5">
-                            {course.category}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-xs text-muted-foreground italic py-1">No courses</div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div className="px-4 py-3 text-[10px] text-muted-foreground border-t bg-muted/30">
-            — indicates course to be determined. Plan is a suggestion only.
-          </div>
-        </div>
-      )}
 
       {/* Notes Section */}
       <div className="space-y-3">
@@ -540,16 +277,16 @@ Submitted via DCDA Advisor Mobile`
         </div>
       </div>
 
-      {/* Farewell / Next Steps */}
+      {/* Make Appointment */}
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-5 space-y-4">
-        <h3 className="font-semibold text-primary">Next Steps</h3>
+        <h3 className="font-semibold text-primary">Make an Appointment</h3>
         <p className="text-sm text-muted-foreground">
-          Great job completing your degree plan! To make sure you're on track, schedule an advising appointment to review your plan together.
+          Schedule an advising appointment to review your plan together and ensure you're on track.
         </p>
         <div className="flex items-start gap-3 text-sm text-muted-foreground">
           <Mail className="size-4 mt-0.5 flex-shrink-0" />
           <p>
-            <strong>Tip:</strong> Save your PDF or CSV and email it to your advisor before your meeting so they can review it in advance.
+            <strong>Tip:</strong> Save your PDF or CSV and email it before your meeting so your advisor can review it in advance.
           </p>
         </div>
         <Button

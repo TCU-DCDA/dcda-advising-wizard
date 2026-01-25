@@ -133,7 +133,7 @@ export interface StudentData {
 }
 
 // Wizard step types
-export type WizardPart = 'completed' | 'transition' | 'schedule' | 'review'
+export type WizardPart = 'completed' | 'transition' | 'schedule' | 'review' | 'submit'
 
 export type WizardStepId =
   | 'welcome'
@@ -149,7 +149,8 @@ export type WizardStepId =
   | 'specialCredits'
   | 'transition'
   | 'schedule'
-  | 'review'
+  | 'reviewSummary'
+  | 'reviewActions'
 
 export interface WizardStep {
   id: WizardStepId

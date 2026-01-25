@@ -10,7 +10,8 @@ import {
   SpecialCreditsStep,
   TransitionStep,
   ScheduleStep,
-  ReviewStep,
+  ReviewSummaryStep,
+  ReviewActionsStep,
 } from '@/components/wizard'
 import { InstallPrompt } from '@/components/InstallPrompt'
 import { getRequiredCategoryCourses } from '@/services/courses'
@@ -275,7 +276,8 @@ function App() {
           return scheduledSelections[currentStep.categoryId] !== null || skippedCategories.has(currentStep.categoryId)
         }
         return true
-      case 'review':
+      case 'reviewSummary':
+      case 'reviewActions':
         return true
       default:
         return true
@@ -687,9 +689,21 @@ function App() {
         }
         return null
 
-      case 'review':
+      case 'reviewSummary':
         return (
-          <ReviewStep
+          <ReviewSummaryStep
+            studentData={{
+              ...studentData,
+              completedCourses: allCompletedCourses,
+              scheduledCourses: allScheduledCourses,
+            }}
+            generalElectives={categorySelections.generalElectives}
+          />
+        )
+
+      case 'reviewActions':
+        return (
+          <ReviewActionsStep
             studentData={{
               ...studentData,
               completedCourses: allCompletedCourses,
