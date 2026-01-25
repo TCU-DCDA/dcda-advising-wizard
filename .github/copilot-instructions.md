@@ -105,6 +105,3 @@ npm run test:coverage # Coverage report
 
 ## Future Integrations
 - **Power Automate**: Email workflow integration in development. See [docs/power-automate-setup.md](../docs/power-automate-setup.md) for setup guidance.
-
-## Unused Dependencies
-- `@azure/msal-browser`, `@microsoft/microsoft-graph-client` - Legacy from previous Azure integration attempt; can be removed.
