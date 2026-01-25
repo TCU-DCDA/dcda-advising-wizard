@@ -32,7 +32,10 @@ interface CategorySelections {
 type NotYetSelections = Record<RequirementCategoryId, boolean>
 
 // Track scheduled courses per category for Part 2
-type ScheduledSelections = Record<RequirementCategoryId, string | null>
+// generalElectives can have multiple selections, others are single-select
+type ScheduledSelections = Omit<Record<RequirementCategoryId, string | null>, 'generalElectives'> & {
+  generalElectives: string[]
+}
 
 function App() {
   const {
@@ -78,7 +81,7 @@ function App() {
     capstone: null,
     dcElective: null,
     daElective: null,
-    generalElectives: null,
+    generalElectives: [],
   })
 
   // Track skipped categories in Part 2
@@ -102,7 +105,15 @@ function App() {
 
   // All scheduled courses
   const allScheduledCourses = useMemo(() => {
-    return Object.values(scheduledSelections).filter((c): c is string => c !== null)
+    const courses: string[] = []
+    for (const [key, value] of Object.entries(scheduledSelections)) {
+      if (key === 'generalElectives' && Array.isArray(value)) {
+        courses.push(...value)
+      } else if (typeof value === 'string') {
+        courses.push(value)
+      }
+    }
+    return courses
   }, [scheduledSelections])
 
   // Courses being used to fulfill required categories (for excluding from elective options)
@@ -202,11 +213,32 @@ function App() {
     })
   }, [])
 
+  // Handle adding a scheduled general elective in Part 2
+  const handleAddScheduledGeneralElective = useCallback((courseCode: string) => {
+    setScheduledSelections((prev) => ({
+      ...prev,
+      generalElectives: [...prev.generalElectives, courseCode],
+    }))
+    setSkippedCategories((prev) => {
+      const next = new Set(prev)
+      next.delete('generalElectives')
+      return next
+    })
+  }, [])
+
+  // Handle removing a scheduled general elective in Part 2
+  const handleRemoveScheduledGeneralElective = useCallback((courseCode: string) => {
+    setScheduledSelections((prev) => ({
+      ...prev,
+      generalElectives: prev.generalElectives.filter((c) => c !== courseCode),
+    }))
+  }, [])
+
   // Handle skipping a category in Part 2
   const handleSkipCategory = useCallback((categoryId: RequirementCategoryId) => {
     setScheduledSelections((prev) => ({
       ...prev,
-      [categoryId]: null,
+      [categoryId]: categoryId === 'generalElectives' ? [] : null,
     }))
     setSkippedCategories((prev) => new Set(prev).add(categoryId))
   }, [])
@@ -236,6 +268,10 @@ function App() {
       case 'schedule':
         // Part 2: must select a course or skip
         if (currentStep.categoryId) {
+          if (currentStep.categoryId === 'generalElectives') {
+            // For general electives, allow proceeding if at least one is selected or skipped
+            return scheduledSelections.generalElectives.length > 0 || skippedCategories.has(currentStep.categoryId)
+          }
           return scheduledSelections[currentStep.categoryId] !== null || skippedCategories.has(currentStep.categoryId)
         }
         return true
@@ -342,7 +378,7 @@ function App() {
       capstone: null,
       dcElective: null,
       daElective: null,
-      generalElectives: null,
+      generalElectives: [],
     })
     setSkippedCategories(new Set())
   }, [resetStudentData, wizard])
@@ -616,6 +652,25 @@ function App() {
 
       case 'schedule':
         if (currentStep.categoryId) {
+          // Special handling for generalElectives - multi-select
+          if (currentStep.categoryId === 'generalElectives') {
+            return (
+              <ScheduleStep
+                categoryId={currentStep.categoryId}
+                selectedCourse={null}
+                selectedCourses={scheduledSelections.generalElectives}
+                multiSelect
+                allSelectedCourses={allCompletedCourses}
+                allScheduledCourses={allScheduledCourses}
+                completedRequiredCourses={completedRequiredCourses}
+                onSelectCourse={handleAddScheduledGeneralElective}
+                onDeselectCourse={handleRemoveScheduledGeneralElective}
+                onSkip={() => handleSkipCategory(currentStep.categoryId!)}
+                isSkipped={skippedCategories.has(currentStep.categoryId)}
+                degreeType={studentData.degreeType || 'major'}
+              />
+            )
+          }
           return (
             <ScheduleStep
               categoryId={currentStep.categoryId}

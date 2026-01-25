@@ -1,6 +1,12 @@
-import { useRef } from 'react'
-import { AlertCircle, Heart, Calendar, Upload } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import type { StudentData } from '@/types'
 
 interface WelcomeStepProps {
@@ -9,6 +15,7 @@ interface WelcomeStepProps {
 
 export function WelcomeStep({ onImport }: WelcomeStepProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [showFerpa, setShowFerpa] = useState(false)
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -43,84 +50,80 @@ export function WelcomeStep({ onImport }: WelcomeStepProps) {
         </p>
 
         <div className="space-y-2 text-sm text-muted-foreground border-l-2 pl-4 py-1">
-          <p><strong>Step 1:</strong> Tell us what you've already taken.</p>
-          <p><strong>Step 2:</strong> Plan your future semesters.</p>
+          <p><strong>Part 1:</strong> Tell us what you've already taken.</p>
+          <p><strong>Part 2:</strong> Plan your upcoming semester.</p>
+          <p><strong>Part 3:</strong> Review and export your plan.</p>
         </div>
       </div>
 
-      <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-        <div className="flex gap-3">
-          <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-          <div className="space-y-2 flex-1 min-w-0">
-            <h3 className="font-semibold text-blue-900 dark:text-blue-100">FERPA Privacy Notice</h3>
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              This planning tool stores data locally on your device only. No information is sent to external servers.
-              Your course selections and academic data remain private and are protected under FERPA (Family Educational Rights and Privacy Act).
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-        <div className="flex gap-3">
-          <Heart className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-          <div className="space-y-3 flex-1 min-w-0">
-            <h3 className="font-semibold text-amber-900 dark:text-amber-100">Always Check with Your Advisor</h3>
-            <p className="text-sm text-amber-800 dark:text-amber-200">
-              While this tool provides helpful guidance, it's important to always verify your degree plan with a DCDA advisor.
-              They can provide personalized advice, account for transfer credits, and ensure you're on track to graduate.
-            </p>
-            <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
-              Schedule regular check-ins with your DCDA advisor throughout your academic journey.
-            </p>
-            <Button
-              asChild
-              variant="outline"
-              className="w-full h-auto whitespace-normal py-3 bg-white border-amber-300 hover:bg-amber-100 text-amber-900"
-            >
-              <a
-                href="https://calendly.com/c-rode/appointments"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 text-center"
-              >
-                <Calendar className="h-4 w-4 shrink-0" />
-                <span>Schedule an Advising Appointment</span>
-              </a>
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="pt-2 space-y-3">
-        <p className="text-sm text-muted-foreground text-center">
-          Click "Next" to begin planning your degree requirements
-        </p>
-
-        {onImport && (
-          <div className="border-t pt-4">
-            <p className="text-xs text-muted-foreground text-center mb-2">
-              Have a previous plan? Import it to continue where you left off.
-            </p>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".csv"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
+      {/* Import Plan */}
+      {onImport && (
+        <div className="bg-muted/50 border rounded-lg p-3">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          <div className="flex gap-2 items-center">
             <Button
               variant="outline"
               size="sm"
-              className="w-full"
+              className="flex-1"
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-4 w-4 mr-2" />
-              Import Previous Plan (CSV)
+              Import Plan
             </Button>
+            <p className="text-xs text-muted-foreground flex-1">
+              or click <strong>Next</strong> to start fresh
+            </p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Inline info links */}
+      {/* TODO: Update FERPA notice text once Power Automate integration is enabled (data will be sent externally) */}
+      <p className="text-sm text-muted-foreground text-center">
+        Your data stays on your device (
+        <button
+          type="button"
+          onClick={() => setShowFerpa(true)}
+          className="text-primary underline underline-offset-2 hover:text-primary/80"
+        >
+          privacy notice
+        </button>
+        ). Questions?{' '}
+        <a
+          href="https://calendly.com/c-rode/appointments"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline underline-offset-2 hover:text-primary/80"
+        >
+          Schedule time with an advisor
+        </a>
+        .
+      </p>
+
+      {/* FERPA Dialog */}
+      <Dialog open={showFerpa} onOpenChange={setShowFerpa}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>FERPA Privacy Notice</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            This planning tool stores data locally on your device only. No information is sent to external servers.
+            Your course selections and academic data remain private and are protected under FERPA (Family Educational Rights and Privacy Act).
+          </p>
+        </DialogContent>
+      </Dialog>
+
+      {!onImport && (
+        <p className="text-sm text-muted-foreground text-center pt-2">
+          Click "Next" to begin planning your degree requirements
+        </p>
+      )}
     </div>
   )
 }
