@@ -261,18 +261,18 @@ Submitted via DCDA Advisor Mobile`
         {/* Submit to Advisor */}
         <div className="pt-3 border-t space-y-2">
           <div className="text-xs text-muted-foreground px-1">
-            Submit your advising record for program records
+            <strong>Optional:</strong> Submit your advising record for program records
           </div>
           <Button
             variant="default"
-            className="w-full justify-start gap-3"
+            className="w-full justify-center gap-3"
             onClick={handleSubmitToAdvisor}
           >
             <Send className="size-5" />
             Submit to Advisor
           </Button>
           <p className="text-[10px] text-muted-foreground px-1">
-            Opens an email with your advising data. Just click Send!
+            Opens an email with your advising data. You may also bring a printed copy to your advising appointment.
           </p>
         </div>
       </div>

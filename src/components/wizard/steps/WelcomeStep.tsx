@@ -139,7 +139,7 @@ export function WelcomeStep({ onImport, onNext }: WelcomeStepProps) {
       {/* Inline info links */}
       {/* TODO: Update FERPA notice text once Power Automate integration is enabled (data will be sent externally) */}
       <p className="text-sm text-muted-foreground text-center">
-        Your data stays on your device (
+        Your data stays on your device unless you choose to share it with your advisor (
         <button
           type="button"
           onClick={() => setShowFerpa(true)}
