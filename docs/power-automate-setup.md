@@ -62,8 +62,10 @@ Click the trigger to expand it. Set these parameters:
 5. Paste this expression and click **OK**:
 
 ```
-substring(triggerOutputs()?['body/body'],add(indexOf(triggerOutputs()?['body/body'],'<!--DCDA_JSON_START-->'),22),sub(indexOf(triggerOutputs()?['body/body'],'<!--DCDA_JSON_END-->'),add(indexOf(triggerOutputs()?['body/body'],'<!--DCDA_JSON_START-->'),22)))
+substring(triggerOutputs()?['body/body'],add(indexOf(triggerOutputs()?['body/body'],'<!--DCDA_JSON_START-->'),21),sub(indexOf(triggerOutputs()?['body/body'],'<!--DCDA_JSON_END-->'),add(indexOf(triggerOutputs()?['body/body'],'<!--DCDA_JSON_START-->'),21)))
 ```
+
+**Note**: This extracts everything between the JSON markers. The number 21 is the length of `<!--DCDA_JSON_START-->` (21 characters).
 
 ## Step 5: Add Parse JSON Action
 

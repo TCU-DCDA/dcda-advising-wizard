@@ -141,10 +141,20 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
     const totalHours = selectedDegreeType === 'major' ? majorTotalHours : minorTotalHours
     const progressPercent = Math.round((progressHours / totalHours) * 100)
 
+    // Sanitize text fields for JSON - replace newlines and escape problematic chars
+    const sanitizeForJson = (text: string) => {
+      return text
+        .replace(/\r\n/g, ' | ')  // Windows newlines
+        .replace(/\n/g, ' | ')    // Unix newlines
+        .replace(/\r/g, ' | ')    // Old Mac newlines
+        .replace(/\t/g, ' ')      // Tabs
+        .trim()
+    }
+
     const jsonData = {
       version: '2.0',
       timestamp: new Date().toISOString(),
-      name: studentData.name,
+      name: sanitizeForJson(studentData.name),
       degreeType: studentData.degreeType || '',
       expectedGraduation: studentData.expectedGraduation || '',
       progressHours,
@@ -153,9 +163,9 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
       completedCourses: studentData.completedCourses.join('; '),
       scheduledCourses: studentData.scheduledCourses.join('; '),
       specialCredits: studentData.specialCredits.length > 0
-        ? studentData.specialCredits.map(c => `${c.type}: ${c.description} (${c.countsAs})`).join('; ')
+        ? studentData.specialCredits.map(c => `${c.type}: ${sanitizeForJson(c.description)} (${c.countsAs})`).join('; ')
         : '',
-      notes: studentData.notes || '',
+      notes: sanitizeForJson(studentData.notes || ''),
     }
 
     const subject = `DCDA Advising Record: ${studentData.name}`
