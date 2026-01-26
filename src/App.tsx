@@ -567,8 +567,10 @@ function App() {
         return (
           <NameStep
             value={studentData.name}
+            email={studentData.email}
             degreeType={studentData.degreeType}
             onChange={(name) => updateStudentData({ name })}
+            onEmailChange={(email) => updateStudentData({ email })}
             onDegreeTypeChange={(degreeType) => updateStudentData({ degreeType })}
             onNext={wizard.goNext}
           />
