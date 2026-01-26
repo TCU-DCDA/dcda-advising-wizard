@@ -20,7 +20,7 @@ const creditTypeLabels: Record<string, string> = {
 }
 
 // CSV Export - saves student data for later import
-export function exportToCSV(studentData: StudentData): void {
+export function exportToCSV(studentData: StudentData): string {
   const lines: string[] = []
 
   // Header with version for future compatibility
@@ -76,6 +76,8 @@ export function exportToCSV(studentData: StudentData): void {
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
+
+  return filename
 }
 
 // CSV Import - restores student data from a previously exported file
