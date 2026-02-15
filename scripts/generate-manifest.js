@@ -67,14 +67,15 @@ for (const section of (offerings.sections || [])) {
 /**
  * Parse credit hours from a course code (e.g., "ENGL 20813" -> 3)
  * TCU codes: last digit is the credit hours
+ * Codes ending in 0 are variable-credit — default to 3
  */
 function parseHours(code) {
   const match = code.match(/\d+$/);
   if (match) {
     const lastDigit = parseInt(match[0].slice(-1), 10);
-    if (lastDigit >= 0 && lastDigit <= 6) return lastDigit;
+    if (lastDigit >= 1 && lastDigit <= 6) return lastDigit;
   }
-  return 3; // default
+  return 3; // default for variable-credit (codes ending in 0) or unparseable
 }
 
 /**

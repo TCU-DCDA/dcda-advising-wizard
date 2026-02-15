@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0",
   "department": "Digital Culture and Data Analytics",
-  "lastUpdated": "2026-02-14T20:15:50.465Z",
+  "lastUpdated": "2026-02-15T15:11:38.168Z",
   "wizardUrl": "https://dcda-advisor-mobile.web.app",
   "programs": [
     {
@@ -31,18 +31,11 @@
       ],
       "contacts": [
         {
-          "role": "Program Director",
-          "name": "TODO: Add DCDA program director name",
-          "email": "TODO@tcu.edu",
-          "phone": "817-257-TODO",
-          "office": "TODO: Add office location"
-        },
-        {
-          "role": "Academic Advisor",
-          "name": "TODO: Add DCDA advisor name",
-          "email": "TODO@tcu.edu",
-          "phone": "817-257-TODO",
-          "office": "TODO: Add office location"
+          "role": "Program Director & Academic Advisor",
+          "name": "Dr. Curt Rode",
+          "email": "c.rode@tcu.edu",
+          "phone": "817-257-6983",
+          "office": "Scharbauer 2006"
         }
       ],
       "requirements": {
@@ -295,7 +288,7 @@
               {
                 "code": "ARST 30510",
                 "title": "3D Modeling and 3D Printing",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ARST 20503 or permission of instructor. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the creation of digital sculptures, virtual worlds, and experimental studies with fabrication technology.",
                 "category": "Digital Culture"
@@ -303,7 +296,7 @@
               {
                 "code": "ARST 30610",
                 "title": "Interactive Robotics and Kinetic Sculpture",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ARST 20503. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the Arduino microcontroller and its ability to control our physical world. Students will learn how to control motors, read environmental sensors, and utilize fabrication technologies such as laser engraving and 3D printing.",
                 "category": "Digital Culture"
@@ -319,7 +312,7 @@
               {
                 "code": "DCDA 30970",
                 "title": "Special Topics in DCDA",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit.",
                 "category": "Data Analytics"
@@ -495,7 +488,7 @@
               {
                 "code": "WRIT 30390",
                 "title": "Publication Production",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ENGL 10803 or 10833, and 20803 or 20833. A 1.5 hour credit course intended for students with an interest in publication and basic web design. Students in the course will work in every stage of the production of a least one of the English department's print or digital publications. Specifically, students will gain knowledge of and experience in (1) the history and purpose of the publication's genre, (2) the selection, editing, and proofing of the publication's drafts, (3) the publication's layout and the design, and (4) the distribution and promotion of the completed product. Students will also receive practical training with relevant publishing and design software. This course may be repeated for credit.",
                 "category": "Digital Culture"
@@ -615,7 +608,7 @@
               {
                 "code": "DCDA 30970",
                 "title": "Special Topics in DCDA",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit.",
                 "category": "Data Analytics"
@@ -823,7 +816,7 @@
               {
                 "code": "ARST 30510",
                 "title": "3D Modeling and 3D Printing",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ARST 20503 or permission of instructor. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the creation of digital sculptures, virtual worlds, and experimental studies with fabrication technology.",
                 "category": "Digital Culture"
@@ -831,7 +824,7 @@
               {
                 "code": "ARST 30610",
                 "title": "Interactive Robotics and Kinetic Sculpture",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ARST 20503. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the Arduino microcontroller and its ability to control our physical world. Students will learn how to control motors, read environmental sensors, and utilize fabrication technologies such as laser engraving and 3D printing.",
                 "category": "Digital Culture"
@@ -847,7 +840,7 @@
               {
                 "code": "DCDA 30970",
                 "title": "Special Topics in DCDA",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit.",
                 "category": "Data Analytics"
@@ -1023,7 +1016,7 @@
               {
                 "code": "WRIT 30390",
                 "title": "Publication Production",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ENGL 10803 or 10833, and 20803 or 20833. A 1.5 hour credit course intended for students with an interest in publication and basic web design. Students in the course will work in every stage of the production of a least one of the English department's print or digital publications. Specifically, students will gain knowledge of and experience in (1) the history and purpose of the publication's genre, (2) the selection, editing, and proofing of the publication's drafts, (3) the publication's layout and the design, and (4) the distribution and promotion of the completed product. Students will also receive practical training with relevant publishing and design software. This course may be repeated for credit.",
                 "category": "Digital Culture"
@@ -1135,7 +1128,7 @@
               {
                 "code": "DCDA 30970",
                 "title": "Special Topics in DCDA",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit.",
                 "category": "Data Analytics"
@@ -1561,18 +1554,11 @@
       ],
       "contacts": [
         {
-          "role": "Program Director",
-          "name": "TODO: Add DCDA program director name",
-          "email": "TODO@tcu.edu",
-          "phone": "817-257-TODO",
-          "office": "TODO: Add office location"
-        },
-        {
-          "role": "Academic Advisor",
-          "name": "TODO: Add DCDA advisor name",
-          "email": "TODO@tcu.edu",
-          "phone": "817-257-TODO",
-          "office": "TODO: Add office location"
+          "role": "Program Director & Academic Advisor",
+          "name": "Dr. Curt Rode",
+          "email": "c.rode@tcu.edu",
+          "phone": "817-257-6983",
+          "office": "Scharbauer 2006"
         }
       ],
       "requirements": {
@@ -1785,7 +1771,7 @@
               {
                 "code": "ARST 30510",
                 "title": "3D Modeling and 3D Printing",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ARST 20503 or permission of instructor. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the creation of digital sculptures, virtual worlds, and experimental studies with fabrication technology.",
                 "category": "Digital Culture"
@@ -1793,7 +1779,7 @@
               {
                 "code": "ARST 30610",
                 "title": "Interactive Robotics and Kinetic Sculpture",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ARST 20503. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the Arduino microcontroller and its ability to control our physical world. Students will learn how to control motors, read environmental sensors, and utilize fabrication technologies such as laser engraving and 3D printing.",
                 "category": "Digital Culture"
@@ -1809,7 +1795,7 @@
               {
                 "code": "DCDA 30970",
                 "title": "Special Topics in DCDA",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit.",
                 "category": "Data Analytics"
@@ -1985,7 +1971,7 @@
               {
                 "code": "WRIT 30390",
                 "title": "Publication Production",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "Prerequisites: ENGL 10803 or 10833, and 20803 or 20833. A 1.5 hour credit course intended for students with an interest in publication and basic web design. Students in the course will work in every stage of the production of a least one of the English department's print or digital publications. Specifically, students will gain knowledge of and experience in (1) the history and purpose of the publication's genre, (2) the selection, editing, and proofing of the publication's drafts, (3) the publication's layout and the design, and (4) the distribution and promotion of the completed product. Students will also receive practical training with relevant publishing and design software. This course may be repeated for credit.",
                 "category": "Digital Culture"
@@ -2097,7 +2083,7 @@
               {
                 "code": "DCDA 30970",
                 "title": "Special Topics in DCDA",
-                "hours": 0,
+                "hours": 3,
                 "level": "upper",
                 "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit.",
                 "category": "Data Analytics"
@@ -2536,14 +2522,14 @@
     {
       "code": "ARST 30510",
       "title": "3D Modeling and 3D Printing",
-      "hours": 0,
+      "hours": 3,
       "level": "upper",
       "description": "Prerequisites: ARST 20503 or permission of instructor. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the creation of digital sculptures, virtual worlds, and experimental studies with fabrication technology."
     },
     {
       "code": "ARST 30610",
       "title": "Interactive Robotics and Kinetic Sculpture",
-      "hours": 0,
+      "hours": 3,
       "level": "upper",
       "description": "Prerequisites: ARST 20503. An advanced exploration of the concepts, tools and techniques of new media. This course will explore the Arduino microcontroller and its ability to control our physical world. Students will learn how to control motors, read environmental sensors, and utilize fabrication technologies such as laser engraving and 3D printing."
     },
@@ -2557,7 +2543,7 @@
     {
       "code": "DCDA 30970",
       "title": "Special Topics in DCDA",
-      "hours": 0,
+      "hours": 3,
       "level": "upper",
       "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit."
     },
@@ -2711,7 +2697,7 @@
     {
       "code": "WRIT 30390",
       "title": "Publication Production",
-      "hours": 0,
+      "hours": 3,
       "level": "upper",
       "description": "Prerequisites: ENGL 10803 or 10833, and 20803 or 20833. A 1.5 hour credit course intended for students with an interest in publication and basic web design. Students in the course will work in every stage of the production of a least one of the English department's print or digital publications. Specifically, students will gain knowledge of and experience in (1) the history and purpose of the publication's genre, (2) the selection, editing, and proofing of the publication's drafts, (3) the publication's layout and the design, and (4) the distribution and promotion of the completed product. Students will also receive practical training with relevant publishing and design software. This course may be repeated for credit."
     },
@@ -2809,7 +2795,7 @@
     {
       "code": "DCDA 30970",
       "title": "Special Topics in DCDA",
-      "hours": 0,
+      "hours": 3,
       "level": "upper",
       "description": "A directed study in Digital Culture and/or Data Analytics (DCDA). A variety of special or one-time topics in DCDA may be covered in this class. The format may vary by semester. 1-3 semester hours. This course may be repeated for credit."
     },
