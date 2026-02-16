@@ -9,7 +9,7 @@ export default defineConfig(() => {
   const disablePwa = process.env.VITE_PWA_DISABLE === 'true'
 
   return {
-  base: '/dcda-advising-wizard/',
+  base: '/',
   plugins: [
     react(),
     tailwindcss(),
