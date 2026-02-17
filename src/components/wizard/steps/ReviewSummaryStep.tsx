@@ -21,7 +21,7 @@ function ProgressHero({ hours, totalHours, degreeLabel, altHours, altTotalHours,
   const altPercent = altHours && altTotalHours ? Math.min(100, Math.round((altHours / altTotalHours) * 100)) : 0
   
   return (
-    <div className="bg-gradient-to-br from-primary to-primary-light rounded-2xl p-5 text-primary-foreground">
+    <div className="bg-gradient-to-br from-primary to-primary/85 rounded-2xl p-5 text-primary-foreground">
       <div className="flex items-center gap-4">
         <div className="text-5xl font-extrabold leading-none tabular-nums">
           {percent}<span className="text-2xl font-semibold">%</span>
