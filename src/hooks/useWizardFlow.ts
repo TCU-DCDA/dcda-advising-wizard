@@ -59,6 +59,14 @@ export interface UseWizardFlowReturn {
   reset: () => void
 }
 
+const phaseLabels: Record<WizardPart, string> = {
+  completed: 'History',
+  transition: 'Transition',
+  schedule: 'Schedule',
+  review: 'Review',
+  submit: 'Submit',
+}
+
 export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [unmetCategories, setUnmetCategories] = useState<RequirementCategoryId[]>([])
@@ -175,15 +183,6 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
 
   // Progress percentage
   const progress = totalSteps > 1 ? Math.round((currentStepIndex / (totalSteps - 1)) * 100) : 0
-
-  // Phase-based progress info
-  const phaseLabels: Record<WizardPart, string> = {
-    completed: 'History',
-    transition: 'Transition',
-    schedule: 'Schedule',
-    review: 'Review',
-    submit: 'Submit',
-  }
 
   const phases = useMemo(() => {
     const phaseCounts: Record<WizardPart, number> = {
