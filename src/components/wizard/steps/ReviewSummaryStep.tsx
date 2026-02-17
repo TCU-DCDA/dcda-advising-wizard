@@ -1,8 +1,9 @@
+import { useState } from 'react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { getCourseByCode, buildSemesterPlan, getNextSemesterTerm } from '@/services/courses'
 import { cn } from '@/lib/utils'
-import { CalendarDays, Check } from 'lucide-react'
+import { CalendarDays, Check, ChevronDown, ChevronUp } from 'lucide-react'
 
 // Hero Progress Component — large percentage with bar
 interface ProgressHeroProps {
@@ -63,6 +64,8 @@ interface SummarySectionProps {
 }
 
 function SummarySection({ title, status, count, children }: SummarySectionProps) {
+  const [isOpen, setIsOpen] = useState(false)
+
   const statusColors = {
     complete: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
     scheduled: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
@@ -77,15 +80,24 @@ function SummarySection({ title, status, count, children }: SummarySectionProps)
 
   return (
     <div className="bg-card border rounded-xl overflow-hidden">
-      <div className="bg-muted px-4 py-3 flex items-center justify-between">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-muted px-4 py-3 flex items-center justify-between text-left hover:bg-muted/80 transition-colors"
+      >
         <span className="font-semibold text-sm">{title}</span>
-        <span className={cn("text-xs px-2 py-1 rounded font-medium", statusColors[status])}>
-          {count} {statusLabels[status]}
-        </span>
-      </div>
-      <div className="divide-y">
-        {children}
-      </div>
+        <div className="flex items-center gap-2">
+          <span className={cn("text-xs px-2 py-1 rounded font-medium", statusColors[status])}>
+            {count} {statusLabels[status]}
+          </span>
+          {isOpen ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
+        </div>
+      </button>
+      {isOpen && (
+        <div className="divide-y">
+          {children}
+        </div>
+      )}
     </div>
   )
 }
@@ -108,7 +120,7 @@ function CourseRow({ code, category, showCheck = false }: CourseRowProps) {
         <div className="text-xs text-muted-foreground">{category}</div>
       </div>
       {course && (
-        <div className="text-xs text-muted-foreground text-right max-w-[120px] truncate">
+        <div className="text-xs text-muted-foreground text-right max-w-[150px] leading-snug">
           {course.title}
         </div>
       )}
@@ -260,47 +272,80 @@ export function ReviewSummaryStep({ studentData, generalElectives }: ReviewSumma
                   {neededCoursesCount} course{neededCoursesCount !== 1 ? 's' : ''} needed
                 </span>
               )}
-              {semesterPlan.length > 1 && (
-                <span className="text-xs text-muted-foreground sm:hidden">Swipe →</span>
-              )}
             </div>
           </div>
 
+          {/* Scroll hint - visible on mobile when multiple semesters */}
+          {semesterPlan.length > 1 && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground sm:hidden">
+              <span className="flex gap-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="w-1.5 h-1.5 rounded-full bg-border" />
+                <span className="w-1.5 h-1.5 rounded-full bg-border" />
+              </span>
+              Swipe to see all semesters
+            </div>
+          )}
+
           <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible">
-            {semesterPlan.map(({ semester, courses }) => (
-              <div key={semester} className="min-w-[220px] max-w-[260px] sm:min-w-0 sm:max-w-none bg-card border rounded-xl overflow-hidden snap-start shrink-0 sm:shrink">
-                <div className="bg-muted px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-muted-foreground border-b">
-                  {semester}
-                </div>
-                
-                <div className="p-2.5 space-y-2">
-                  {courses.length > 0 ? (
-                    courses.map((course, idx) => (
-                      <div key={idx} className={cn(
-                        "rounded-lg px-3 py-2.5 border-l-[3px]",
-                        course.code === '—' 
-                          ? 'bg-amber-50 dark:bg-amber-950/30 border-l-amber-400' 
-                          : 'bg-muted/40 border-l-blue-500'
-                      )}>
-                        <div className={cn(
-                          "font-semibold text-xs",
-                          course.code === '—' ? 'text-amber-700 dark:text-amber-400' : ''
-                        )}>
-                          {course.code}
-                        </div>
-                        {course.category && (
-                          <div className="text-xs text-muted-foreground mt-0.5">
-                            {course.category}
+            {semesterPlan.map(({ semester, courses }, semIdx) => {
+              const isFirstSemester = semIdx === 0 && scheduledCount > 0
+              return (
+                <div key={semester} className={cn(
+                  "min-w-[240px] max-w-[280px] sm:min-w-0 sm:max-w-none bg-card border rounded-xl overflow-hidden snap-start shrink-0 sm:shrink",
+                  isFirstSemester && "ring-2 ring-primary/30 border-primary/40"
+                )}>
+                  <div className={cn(
+                    "px-3 py-2.5 text-xs font-bold uppercase tracking-wider border-b flex items-center justify-between",
+                    isFirstSemester
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground"
+                  )}>
+                    <span>{semester}</span>
+                    {isFirstSemester && (
+                      <span className="text-[10px] font-semibold bg-primary text-primary-foreground px-1.5 py-0.5 rounded normal-case tracking-normal">
+                        Next
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="p-2.5 space-y-2">
+                    {courses.length > 0 ? (
+                      courses.map((course, idx) => {
+                        const courseInfo = course.code !== '—' ? getCourseByCode(course.code) : null
+                        return (
+                          <div key={idx} className={cn(
+                            "rounded-lg px-3 py-2.5 border-l-[3px]",
+                            course.code === '—' 
+                              ? 'bg-amber-50 dark:bg-amber-950/30 border-l-amber-400' 
+                              : 'bg-muted/40 border-l-blue-500'
+                          )}>
+                            <div className={cn(
+                              "font-semibold text-sm",
+                              course.code === '—' ? 'text-amber-700 dark:text-amber-400' : ''
+                            )}>
+                              {course.code}
+                            </div>
+                            {courseInfo && (
+                              <div className="text-xs text-muted-foreground mt-0.5 leading-snug">
+                                {courseInfo.title}
+                              </div>
+                            )}
+                            {!courseInfo && course.category && (
+                              <div className="text-xs text-muted-foreground mt-0.5">
+                                {course.category}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-xs text-muted-foreground italic py-2 px-1">No courses</div>
-                  )}
+                        )
+                      })
+                    ) : (
+                      <div className="text-xs text-muted-foreground italic py-2 px-1">No courses</div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           <p className="text-xs text-muted-foreground">
