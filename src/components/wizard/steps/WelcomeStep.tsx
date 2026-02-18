@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import type { StudentData } from '@/types'
+import { parseCSVImport } from '@/services/export'
 
 interface WelcomeStepProps {
   onImport?: (data: Partial<StudentData>) => void
@@ -27,7 +28,6 @@ export function WelcomeStep({ onImport, onNext }: WelcomeStepProps) {
 
     try {
       const content = await file.text()
-      const { parseCSVImport } = await import('@/services/export')
       const data = parseCSVImport(content)
       if (data) {
         onImport(data)

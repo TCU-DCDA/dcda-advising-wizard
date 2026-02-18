@@ -2,6 +2,14 @@ import { useState, useCallback, useMemo } from 'react'
 import type { WizardStep, WizardPart, RequirementCategoryId, StudentData } from '@/types'
 import { getNextSemesterTerm } from '@/services/courses'
 
+const PHASE_LABELS: Record<WizardPart, string> = {
+  completed: 'History',
+  transition: 'Transition',
+  schedule: 'Schedule',
+  review: 'Review',
+  submit: 'Submit',
+}
+
 // Define all wizard steps - will be filtered based on degree type
 const ALL_PART_1_STEPS: WizardStep[] = [
   { id: 'welcome', part: 'completed', title: 'Welcome to DCDA Advising' },
@@ -177,14 +185,6 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
   const progress = totalSteps > 1 ? Math.round((currentStepIndex / (totalSteps - 1)) * 100) : 0
 
   // Phase-based progress info
-  const phaseLabels: Record<WizardPart, string> = {
-    completed: 'History',
-    transition: 'Transition',
-    schedule: 'Schedule',
-    review: 'Review',
-    submit: 'Submit',
-  }
-
   const phases = useMemo(() => {
     const phaseCounts: Record<WizardPart, number> = {
       completed: 0,
@@ -200,7 +200,7 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
       .filter(key => phaseCounts[key] > 0)
       .map(key => ({
         key,
-        label: phaseLabels[key],
+        label: PHASE_LABELS[key],
         stepCount: phaseCounts[key],
       }))
   }, [steps])
