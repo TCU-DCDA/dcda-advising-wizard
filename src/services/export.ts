@@ -279,6 +279,9 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
   doc.text('Degree Requirements Checklist', startX, y)
   y += 6
 
+  // Track where the table starts for vertical border lines
+  const tableStartY = y - 5
+
   // Table Header
   checkPageBreak(15)
   doc.setFillColor(245, 245, 245)
@@ -478,10 +481,10 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
 
   // Draw table borders
   doc.setDrawColor(180)
-  doc.line(startX, 44, startX, y - 2)
-  doc.line(startX + colWidths.requirement, 44, startX + colWidths.requirement, y - 2)
-  doc.line(startX + colWidths.requirement + colWidths.completed, 44, startX + colWidths.requirement + colWidths.completed, y - 2)
-  doc.line(startX + tableWidth, 44, startX + tableWidth, y - 2)
+  doc.line(startX, tableStartY, startX, y - 2)
+  doc.line(startX + colWidths.requirement, tableStartY, startX + colWidths.requirement, y - 2)
+  doc.line(startX + colWidths.requirement + colWidths.completed, tableStartY, startX + colWidths.requirement + colWidths.completed, y - 2)
+  doc.line(startX + tableWidth, tableStartY, startX + tableWidth, y - 2)
 
   // Build semester plan
   y += 10
