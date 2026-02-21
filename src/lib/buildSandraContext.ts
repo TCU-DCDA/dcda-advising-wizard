@@ -38,7 +38,8 @@ export function buildSandraContext(
 ): SandraContext | null {
   if (!studentData.degreeType) return null
 
-  const reqs = requirementsData[studentData.degreeType] as { name: string; totalHours: number; required: { categories: { id: string; name: string; hours: number }[] }; electives?: { categories: { id: string; name: string; hours: number }[] }; generalElectives: { hours: number; count: number } }
+  type Cat = { id: string; name: string; hours: number; courses?: string[] }
+  const reqs = requirementsData[studentData.degreeType] as { name: string; totalHours: number; required: { categories: Cat[] }; electives?: { categories: Cat[] }; generalElectives: { hours: number; count: number } }
   const lines: string[] = []
 
   lines.push('Wizard: TCU DCDA Advising Wizard')
@@ -76,9 +77,8 @@ export function buildSandraContext(
 
   const remaining = allCategories
     .filter(cat => {
-      const catCourses = cat.courses as string[] | undefined
-      if (!catCourses) return false
-      const filled = catCourses.some(c => allCourses.includes(c))
+      if (!cat.courses) return false
+      const filled = cat.courses.some(c => allCourses.includes(c))
       const specialFilled = studentData.specialCredits.some(sc => sc.countsAs === cat.id)
       return !filled && !specialFilled
     })

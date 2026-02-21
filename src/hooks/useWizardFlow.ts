@@ -67,14 +67,6 @@ export interface UseWizardFlowReturn {
   reset: () => void
 }
 
-const phaseLabels: Record<WizardPart, string> = {
-  completed: 'History',
-  transition: 'Transition',
-  schedule: 'Schedule',
-  review: 'Review',
-  submit: 'Submit',
-}
-
 export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [unmetCategories, setUnmetCategories] = useState<RequirementCategoryId[]>([])
