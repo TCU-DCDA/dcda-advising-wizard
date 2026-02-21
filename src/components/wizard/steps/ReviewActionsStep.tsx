@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Eye, Printer, Download, Calendar, Mail, Send, ChevronDown, ChevronUp } from 'lucide-react'
+import { Eye, Printer, Download, Calendar, Mail, Send, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { generatePdfBlob, downloadPdf, printPdf, exportToCSV } from '@/services/export'
@@ -16,14 +16,16 @@ interface ReviewActionsStepProps {
   studentData: StudentData
   generalElectives?: string[]
   updateStudentData: (updates: Partial<StudentData>) => void
+  onStartOver: () => void
 }
 
-export function ReviewActionsStep({ studentData, generalElectives, updateStudentData }: ReviewActionsStepProps) {
+export function ReviewActionsStep({ studentData, generalElectives, updateStudentData, onStartOver }: ReviewActionsStepProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [previewFilename, setPreviewFilename] = useState<string>('')
   const [showExportOptions, setShowExportOptions] = useState(false)
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
   const [submitFilename, setSubmitFilename] = useState('')
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
   const { degreeProgress, requirements } = useRequirements(studentData, generalElectives)
   const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
@@ -226,6 +228,18 @@ Submitted via DCDA Advisor Mobile`
         </p>
       </div>
 
+      {/* Start Over */}
+      <div className="pt-2 text-center">
+        <button
+          type="button"
+          onClick={() => setShowResetConfirm(true)}
+          className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors inline-flex items-center gap-1.5"
+        >
+          <RotateCcw className="size-3.5" />
+          Start Over
+        </button>
+      </div>
+
       {/* Submit Confirmation Dialog — replaces alert() */}
       <Dialog open={showSubmitConfirm} onOpenChange={setShowSubmitConfirm}>
         <DialogContent className="max-w-sm">
@@ -278,6 +292,38 @@ Submitted via DCDA Advisor Mobile`
               <Download className="size-4 mr-2" />
               Download
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reset Confirmation Dialog */}
+      <Dialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Start Over?</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              This will clear all your selections and return to the beginning.
+              This action cannot be undone.
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                onClick={() => setShowResetConfirm(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => { setShowResetConfirm(false); onStartOver() }}
+                className="flex-1 gap-2"
+              >
+                <RotateCcw className="size-4" />
+                Start Over
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

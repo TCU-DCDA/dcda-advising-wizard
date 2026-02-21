@@ -621,6 +621,7 @@ function App() {
             }}
             generalElectives={categorySelections.generalElectives}
             updateStudentData={updateStudentData}
+            onStartOver={handleStartOver}
           />
         )
 
