@@ -651,7 +651,7 @@ function App() {
         nextLabel={wizard.isLastStep ? 'Start Over' : 'Next'}
         nextDisabled={!canProceed}
         showBackButton={true}
-        showNextButton={wizard.currentStep.id !== 'welcome'}
+        showNextButton={wizard.currentStep.id !== 'reviewActions'}
         sandraContext={sandraData?.context ?? null}
         sandraProgramName={sandraData?.programName ?? null}
         sandraProgramId={studentData.degreeType ?? null}
