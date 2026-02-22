@@ -116,17 +116,6 @@ export function useStudentData() {
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 
-  const importStudentData = useCallback((importedData: Partial<StudentData>) => {
-    setStudentData((prev) => ({
-      ...prev,
-      ...importedData,
-      completedCourses: importedData.completedCourses ?? prev.completedCourses,
-      scheduledCourses: importedData.scheduledCourses ?? prev.scheduledCourses,
-      specialCredits: importedData.specialCredits ?? prev.specialCredits,
-      courseCategories: importedData.courseCategories ?? prev.courseCategories,
-    }))
-  }, [])
-
   return {
     studentData,
     isLoaded: true,
@@ -140,6 +129,5 @@ export function useStudentData() {
     removeSpecialCredit,
     setCourseCategory,
     resetStudentData,
-    importStudentData,
   }
 }
