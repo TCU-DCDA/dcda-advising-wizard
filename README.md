@@ -104,7 +104,7 @@ The `build` script runs manifest generation automatically before `tsc` and `vite
 
 ## Maintenance Notes
 
-*   **Updating Offerings:** To prepare for a new semester, update `data/offerings-[term].json` and adjust the `getNextSemesterTerm()` helper in `services/courses.ts`.
+*   **Updating Offerings:** From `course-scraper/`, run `node scrape.mjs -t "Fall 2026" -a DCDA --all-sections -o ../dcda-advising-wizard/data/offerings-fa26.json`. Then update the import in `services/courses.ts` to point to the new file.
 *   **Requirement Changes:** Edit `data/requirements.json` to adjust credit hours, added courses, or new policy constraints.
 *   **Updating Contacts/Careers:** Edit `data/contacts.json` and `data/career-options.json`, then run `npm run generate-manifest` to regenerate the advising manifest.
 

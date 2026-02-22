@@ -23,8 +23,8 @@ function getNextSemesters(): { semester: string; year: number; value: string }[]
 
   const semesters: { semester: string; year: number; value: string }[] = []
 
-  // Generate 3 years worth of terms (3 * 3 = 9 terms)
-  for (let i = 0; i < 9; i++) {
+  // Generate 5 years worth of terms (5 * 3 = 15 terms, through Fall 2030)
+  for (let i = 0; i < 15; i++) {
     semesters.push({
       semester,
       year,

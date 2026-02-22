@@ -286,8 +286,8 @@ function generateManifest() {
         };
         if (s.schedule) course.schedule = s.schedule.replace(/\n/g, ' ');
         if (s.modality) course.modality = s.modality;
-        if (s.enrollment) course.enrollment = s.enrollment.replace(/\n/g, '/');
-        if (s.status) course.status = s.status;
+        // status and enrollment intentionally omitted — they're point-in-time
+        // snapshots that go stale as students register
         return course;
       }),
     };

@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0",
   "department": "Digital Culture and Data Analytics",
-  "lastUpdated": "2026-02-22T13:57:26.979Z",
+  "lastUpdated": "2026-02-22T22:33:59.036Z",
   "wizardUrl": "https://dcda-advisor-mobile.web.app",
   "programs": [
     {
@@ -1339,189 +1339,539 @@
             "title": "A Human-Centered AI Future",
             "hours": 3,
             "schedule": "MW 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "18/20",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "ARST 10123",
+            "title": "Design And Color",
+            "hours": 3,
+            "schedule": "MW 14:00-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ARST 20743",
+            "title": "Photography - Photography One",
+            "hours": 3,
+            "schedule": "TR  9:30-12:20",
+            "modality": "In Person"
           },
           {
             "code": "ARST 20743",
             "title": "Photography - Photography One",
             "hours": 3,
             "schedule": "TR 14:00-16:50",
-            "modality": "In Person",
-            "enrollment": "9/12",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "ARST 20743",
+            "title": "Photography - Photography One",
+            "hours": 3,
+            "schedule": "MW 14:00-16:50",
+            "modality": "In Person"
           },
           {
             "code": "COSC 10603",
             "title": "Intro to Python for Data Analy",
             "hours": 3,
             "schedule": "TR 15:30-16:50",
-            "modality": "In Person",
-            "enrollment": "32/35",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "CRJU 20883",
             "title": "Data Analyses in CRJU",
             "hours": 3,
             "schedule": "MWF 10:00-10:50",
-            "modality": "In Person",
-            "enrollment": "19/24",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "CRJU 20883",
+            "title": "Data Analyses in CRJU",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DCDA 30970",
+            "title": "Special Topics in DCDA - Videogame History",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DCDA 40273",
+            "title": "DCDA Internship",
+            "hours": 3,
+            "schedule": "TBA ARR",
+            "modality": "In Person"
           },
           {
             "code": "DCDA 40833",
             "title": "Dig Cltr & Data An Capstone",
             "hours": 3,
-            "schedule": "TR 9:30-10:50",
-            "modality": "In Person",
-            "enrollment": "19/20",
-            "status": "Open"
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DCDA 40833",
+            "title": "Dig Cltr & Data An Capstone",
+            "hours": 3,
+            "schedule": "TR 11:00-12:20",
+            "modality": "In Person"
           },
           {
             "code": "DCDA 40833",
             "title": "Dig Cltr & Data An Capstone",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "10/20",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
+            "schedule": "TR  8:30-10:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
+            "schedule": "TR 10:30-12:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
+            "schedule": "TR 14:00-15:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics - Fashion Merchandising",
+            "hours": 3,
+            "schedule": "MW 16:00-17:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics - Fashion Merchandising",
+            "hours": 3,
+            "schedule": "MW 18:00-19:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ECON 40313",
+            "title": "Econometrics",
+            "hours": 3,
+            "schedule": "TR 11:00-12:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "ECON 40313",
+            "title": "Econometrics",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ENGL 20813",
+            "title": "Intro to Digital Humanities",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ENGL 30803",
+            "title": "Theories of Cinema",
+            "hours": 3,
+            "schedule": "T 17:00-19:40",
+            "modality": "In Person"
+          },
+          {
+            "code": "ENGR 10573",
+            "title": "Applied Programming-Matlab",
+            "hours": 3,
+            "schedule": "MW 17:00-18:20",
+            "modality": "In Person"
           },
           {
             "code": "ENGR 10573",
             "title": "Applied Programming-Matlab",
             "hours": 3,
             "schedule": "TR 17:00-18:20",
-            "modality": "In Person",
-            "enrollment": "23/30",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "ENTR 30123",
             "title": "Technology Entrepreneurship",
             "hours": 3,
             "schedule": "MW 12:30-13:50",
-            "modality": "In Person",
-            "enrollment": "38/40",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
-            "code": "GEOL 20113",
-            "title": "NSC",
+            "code": "GEOG 30313",
+            "title": "Intro to Geog Info Systems",
             "hours": 3,
-            "schedule": "TR 9:30-10:20",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "schedule": "TR 11:00-12:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOG 30323",
+            "title": "Data Analysis & Visualization",
+            "hours": 3,
+            "schedule": "MW 16:00-17:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOG 30323",
+            "title": "Data Analysis & Visualization",
+            "hours": 3,
+            "schedule": "MW 17:30-18:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOG 40323",
+            "title": "Urban and Business GIS",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
           },
           {
             "code": "GEOL 20113",
-            "title": "NSC",
+            "title": "Earth. Sys. Sci.",
+            "hours": 3,
+            "schedule": "TR  9:30-10:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOL 20113",
+            "title": "Earth. Sys. Sci.",
             "hours": 3,
             "schedule": "W 11:00-12:50",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "HIST 30673",
             "title": "Hist of Museums and Collecting - Messoamerican Antiquities",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "11/12",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "HIST 30693",
-            "title": "HT",
+            "title": "Technologies of History - From Cuneiform to Coding",
             "hours": 3,
             "schedule": "TR 11:00-12:20",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "INSC 20153",
             "title": "Statistical Analysis",
             "hours": 3,
-            "schedule": "MWF 8:00- 8:50",
-            "modality": "In Person",
-            "enrollment": "38/39",
-            "status": "Open"
+            "schedule": "MWF  8:00- 8:50",
+            "modality": "In Person"
           },
           {
             "code": "INSC 20153",
             "title": "Statistical Analysis",
             "hours": 3,
-            "schedule": "MWF 9:00- 9:50",
-            "modality": "In Person",
-            "enrollment": "28/39",
-            "status": "Open"
+            "schedule": "TR  8:00- 9:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
           },
           {
             "code": "INSC 20153",
             "title": "Statistical Analysis",
             "hours": 3,
             "schedule": "MWF 10:00-10:50",
-            "modality": "In Person",
-            "enrollment": "38/39",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 10:00-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 12:00-12:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 12:00-12:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MW 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR 15:30-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MW 15:30-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "M 18:30-21:10",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MW 17:00-18:20",
+            "modality": "In Person"
           },
           {
             "code": "INTR 20103",
             "title": "Tech Skills for Emerging Prof",
             "hours": 3,
             "schedule": "TR 12:30-13:50",
-            "modality": "In Person",
-            "enrollment": "16/25",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "MATH 10043",
-            "title": "MTH",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF  8:00- 8:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR  8:00- 9:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 10:00-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 12:00-12:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MW 16:00-17:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MW 17:30-18:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
             "hours": 3,
             "schedule": "MW 19:00-20:20",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "MATH 10043",
-            "title": "MTH",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 17:00-18:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
             "hours": 3,
             "schedule": "TR 18:30-19:50",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "STCO 36403",
+            "title": "Digital Storytelling",
+            "hours": 3,
+            "schedule": "MWF 10:00-10:50",
+            "modality": "In Person"
           },
           {
             "code": "STCO 43803",
             "title": "New Media",
             "hours": 3,
-            "schedule": "TR 9:30-10:50",
-            "modality": "In Person",
-            "enrollment": "14/18",
-            "status": "Open"
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
           },
           {
             "code": "WRIT 40563",
             "title": "MultimediaAuthr:Sound&Podcast",
             "hours": 3,
             "schedule": "TR 12:30-13:50",
-            "modality": "In Person",
-            "enrollment": "15/20",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "WRIT 40563",
             "title": "MultimediaAuthr:Sound&Podcast",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "19/20",
-            "status": "Open"
+            "modality": "In Person"
           }
         ]
       }
@@ -2293,189 +2643,539 @@
             "title": "A Human-Centered AI Future",
             "hours": 3,
             "schedule": "MW 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "18/20",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "ARST 10123",
+            "title": "Design And Color",
+            "hours": 3,
+            "schedule": "MW 14:00-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ARST 20743",
+            "title": "Photography - Photography One",
+            "hours": 3,
+            "schedule": "TR  9:30-12:20",
+            "modality": "In Person"
           },
           {
             "code": "ARST 20743",
             "title": "Photography - Photography One",
             "hours": 3,
             "schedule": "TR 14:00-16:50",
-            "modality": "In Person",
-            "enrollment": "9/12",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "ARST 20743",
+            "title": "Photography - Photography One",
+            "hours": 3,
+            "schedule": "MW 14:00-16:50",
+            "modality": "In Person"
           },
           {
             "code": "COSC 10603",
             "title": "Intro to Python for Data Analy",
             "hours": 3,
             "schedule": "TR 15:30-16:50",
-            "modality": "In Person",
-            "enrollment": "32/35",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "CRJU 20883",
             "title": "Data Analyses in CRJU",
             "hours": 3,
             "schedule": "MWF 10:00-10:50",
-            "modality": "In Person",
-            "enrollment": "19/24",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "CRJU 20883",
+            "title": "Data Analyses in CRJU",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DCDA 30970",
+            "title": "Special Topics in DCDA - Videogame History",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DCDA 40273",
+            "title": "DCDA Internship",
+            "hours": 3,
+            "schedule": "TBA ARR",
+            "modality": "In Person"
           },
           {
             "code": "DCDA 40833",
             "title": "Dig Cltr & Data An Capstone",
             "hours": 3,
-            "schedule": "TR 9:30-10:50",
-            "modality": "In Person",
-            "enrollment": "19/20",
-            "status": "Open"
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DCDA 40833",
+            "title": "Dig Cltr & Data An Capstone",
+            "hours": 3,
+            "schedule": "TR 11:00-12:20",
+            "modality": "In Person"
           },
           {
             "code": "DCDA 40833",
             "title": "Dig Cltr & Data An Capstone",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "10/20",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
+            "schedule": "TR  8:30-10:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
+            "schedule": "TR 10:30-12:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
+            "schedule": "TR 14:00-15:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics - Fashion Merchandising",
+            "hours": 3,
+            "schedule": "MW 16:00-17:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics - Fashion Merchandising",
+            "hours": 3,
+            "schedule": "MW 18:00-19:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ECON 40313",
+            "title": "Econometrics",
+            "hours": 3,
+            "schedule": "TR 11:00-12:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "ECON 40313",
+            "title": "Econometrics",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ENGL 20813",
+            "title": "Intro to Digital Humanities",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "ENGL 30803",
+            "title": "Theories of Cinema",
+            "hours": 3,
+            "schedule": "T 17:00-19:40",
+            "modality": "In Person"
+          },
+          {
+            "code": "ENGR 10573",
+            "title": "Applied Programming-Matlab",
+            "hours": 3,
+            "schedule": "MW 17:00-18:20",
+            "modality": "In Person"
           },
           {
             "code": "ENGR 10573",
             "title": "Applied Programming-Matlab",
             "hours": 3,
             "schedule": "TR 17:00-18:20",
-            "modality": "In Person",
-            "enrollment": "23/30",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "ENTR 30123",
             "title": "Technology Entrepreneurship",
             "hours": 3,
             "schedule": "MW 12:30-13:50",
-            "modality": "In Person",
-            "enrollment": "38/40",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
-            "code": "GEOL 20113",
-            "title": "NSC",
+            "code": "GEOG 30313",
+            "title": "Intro to Geog Info Systems",
             "hours": 3,
-            "schedule": "TR 9:30-10:20",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "schedule": "TR 11:00-12:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOG 30323",
+            "title": "Data Analysis & Visualization",
+            "hours": 3,
+            "schedule": "MW 16:00-17:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOG 30323",
+            "title": "Data Analysis & Visualization",
+            "hours": 3,
+            "schedule": "MW 17:30-18:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOG 40323",
+            "title": "Urban and Business GIS",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
           },
           {
             "code": "GEOL 20113",
-            "title": "NSC",
+            "title": "Earth. Sys. Sci.",
+            "hours": 3,
+            "schedule": "TR  9:30-10:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "GEOL 20113",
+            "title": "Earth. Sys. Sci.",
             "hours": 3,
             "schedule": "W 11:00-12:50",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "HIST 30673",
             "title": "Hist of Museums and Collecting - Messoamerican Antiquities",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "11/12",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "HIST 30693",
-            "title": "HT",
+            "title": "Technologies of History - From Cuneiform to Coding",
             "hours": 3,
             "schedule": "TR 11:00-12:20",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "INSC 20153",
             "title": "Statistical Analysis",
             "hours": 3,
-            "schedule": "MWF 8:00- 8:50",
-            "modality": "In Person",
-            "enrollment": "38/39",
-            "status": "Open"
+            "schedule": "MWF  8:00- 8:50",
+            "modality": "In Person"
           },
           {
             "code": "INSC 20153",
             "title": "Statistical Analysis",
             "hours": 3,
-            "schedule": "MWF 9:00- 9:50",
-            "modality": "In Person",
-            "enrollment": "28/39",
-            "status": "Open"
+            "schedule": "TR  8:00- 9:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
           },
           {
             "code": "INSC 20153",
             "title": "Statistical Analysis",
             "hours": 3,
             "schedule": "MWF 10:00-10:50",
-            "modality": "In Person",
-            "enrollment": "38/39",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 10:00-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 12:00-12:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 12:00-12:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MW 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "TR 15:30-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MW 15:30-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "M 18:30-21:10",
+            "modality": "In Person"
+          },
+          {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "MW 17:00-18:20",
+            "modality": "In Person"
           },
           {
             "code": "INTR 20103",
             "title": "Tech Skills for Emerging Prof",
             "hours": 3,
             "schedule": "TR 12:30-13:50",
-            "modality": "In Person",
-            "enrollment": "16/25",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "MATH 10043",
-            "title": "MTH",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF  8:00- 8:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR  8:00- 9:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF  9:00- 9:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 10:00-10:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 11:00-11:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 12:00-12:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 12:30-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 13:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MW 16:00-17:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MW 17:30-18:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
             "hours": 3,
             "schedule": "MW 19:00-20:20",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "MATH 10043",
-            "title": "MTH",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "TR 17:00-18:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
             "hours": 3,
             "schedule": "TR 18:30-19:50",
-            "modality": "In Person",
-            "enrollment": "01/12/26",
-            "status": "Open"
+            "modality": "In Person"
+          },
+          {
+            "code": "STCO 36403",
+            "title": "Digital Storytelling",
+            "hours": 3,
+            "schedule": "MWF 10:00-10:50",
+            "modality": "In Person"
           },
           {
             "code": "STCO 43803",
             "title": "New Media",
             "hours": 3,
-            "schedule": "TR 9:30-10:50",
-            "modality": "In Person",
-            "enrollment": "14/18",
-            "status": "Open"
+            "schedule": "TR  9:30-10:50",
+            "modality": "In Person"
           },
           {
             "code": "WRIT 40563",
             "title": "MultimediaAuthr:Sound&Podcast",
             "hours": 3,
             "schedule": "TR 12:30-13:50",
-            "modality": "In Person",
-            "enrollment": "15/20",
-            "status": "Open"
+            "modality": "In Person"
           },
           {
             "code": "WRIT 40563",
             "title": "MultimediaAuthr:Sound&Podcast",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
-            "modality": "In Person",
-            "enrollment": "19/20",
-            "status": "Open"
+            "modality": "In Person"
           }
         ]
       }
