@@ -103,7 +103,7 @@ export function SandraPanel({ open, onClose, wizardContext, programName, program
             onLoad={handleIframeLoad}
             className={`flex-1 w-full border-0${timedOut && !iframeReady ? ' hidden' : ''}`}
             title="Sandra AI Advisor"
-            allow="clipboard-write"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
           />
         )}
 
