@@ -40,7 +40,7 @@ console.log('TCU DCDA Department - Manifest Generator\n');
 
 const courses = loadJSON('courses.json');
 const requirements = loadJSON('requirements.json');
-const offerings = loadJSON('offerings-sp26.json');
+const offerings = loadJSON('offerings-fa26.json');
 const contacts = loadJSON('contacts.json');
 const careerOptions = loadJSON('career-options.json');
 
