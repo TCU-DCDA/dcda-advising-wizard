@@ -20,6 +20,7 @@ export default defineConfig(() => {
       manifest: false, // Use our manual manifest.json in public/
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        globIgnores: ['**/admin-*.js'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -62,6 +63,7 @@ export default defineConfig(() => {
             'tailwind-merge'
           ],
           'vendor-pdf': ['jspdf'],
+          'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
         }
       }
     }

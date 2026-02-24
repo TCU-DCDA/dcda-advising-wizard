@@ -14,8 +14,7 @@ export interface CourseSection {
   title: string
   schedule: string
   modality: string
-  enrollment: string
-  status: string
+  enrollment?: string
 }
 
 export interface CourseOfferings {

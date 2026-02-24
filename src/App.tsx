@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useStudentData } from '@/hooks/useStudentData'
 import { useWizardFlow } from '@/hooks/useWizardFlow'
 import {
@@ -18,6 +18,7 @@ import { getRequiredCategoryCourses } from '@/services/courses'
 import { buildSandraContext } from '@/lib/buildSandraContext'
 import type { RequirementCategoryId } from '@/types'
 import requirementsData from '../data/requirements.json'
+import { trackWizardStart, trackStepVisit } from '@/services/analytics'
 
 // Track selections per category for Part 1
 interface CategorySelections {
@@ -50,6 +51,18 @@ function App() {
   } = useStudentData()
 
   const wizard = useWizardFlow(studentData)
+
+  // Anonymous analytics tracking (fire-and-forget, no PII stored)
+  const hasTrackedStart = useRef(false)
+  useEffect(() => {
+    if (!hasTrackedStart.current) {
+      hasTrackedStart.current = true
+      trackWizardStart()
+    }
+  }, [])
+  useEffect(() => {
+    trackStepVisit(wizard.currentStep.id)
+  }, [wizard.currentStep.id])
 
   // Build Sandra context from current wizard state
   const sandraData = useMemo(

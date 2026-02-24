@@ -1,0 +1,112 @@
+import {
+  doc,
+  setDoc,
+  increment,
+  collection,
+  addDoc,
+  serverTimestamp,
+} from 'firebase/firestore'
+import { db } from '@/services/firebase'
+import type { StudentData } from '@/types'
+
+// All tracking is anonymous — no student names, emails, or IDs are stored.
+// This ensures FERPA compliance while enabling aggregate analytics.
+
+function getTodayId(): string {
+  return new Date().toISOString().slice(0, 10) // "2026-02-24"
+}
+
+function getCurrentTerm(): string {
+  const now = new Date()
+  const month = now.getMonth() + 1
+  const year = now.getFullYear().toString().slice(-2)
+  if (month >= 8) return `fa${year}`
+  if (month >= 5) return `su${year}`
+  return `sp${year}`
+}
+
+async function generateSessionHash(): Promise<string> {
+  const sessionId = crypto.randomUUID()
+  const encoder = new TextEncoder()
+  const data = encoder.encode(sessionId)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+export async function trackWizardStart(): Promise<void> {
+  try {
+    const dayRef = doc(db, 'dcda_analytics', 'daily', 'stats', getTodayId())
+    await setDoc(dayRef, { wizardStarts: increment(1) }, { merge: true })
+  } catch {
+    // Analytics failures are silent — never block the student experience
+  }
+}
+
+export async function trackStepVisit(stepId: string): Promise<void> {
+  try {
+    const dayRef = doc(db, 'dcda_analytics', 'daily', 'stats', getTodayId())
+    await setDoc(
+      dayRef,
+      { stepVisits: { [stepId]: increment(1) } },
+      { merge: true }
+    )
+  } catch {
+    // Silent failure
+  }
+}
+
+// Records an anonymous submission — NO PII is included.
+// Only course codes (public catalog data), degree type, and graduation term.
+export async function recordAnonymousSubmission(
+  studentData: StudentData
+): Promise<void> {
+  try {
+    const sessionHash = await generateSessionHash()
+
+    // Write anonymous submission record
+    await addDoc(collection(db, 'dcda_submissions'), {
+      submittedAt: serverTimestamp(),
+      degreeType: studentData.degreeType,
+      expectedGraduation: studentData.expectedGraduation,
+      completedCourseCodes: studentData.completedCourses,
+      scheduledCourseCodes: studentData.scheduledCourses,
+      completedCourseCount: studentData.completedCourses.length,
+      scheduledCourseCount: studentData.scheduledCourses.length,
+      specialCreditCount: studentData.specialCredits.length,
+      sessionHash,
+    })
+
+    // Increment daily completion counter
+    const dayRef = doc(db, 'dcda_analytics', 'daily', 'stats', getTodayId())
+    await setDoc(dayRef, { wizardCompletions: increment(1) }, { merge: true })
+
+    // Increment course demand counters
+    const termId = getCurrentTerm()
+    const demandRef = doc(
+      db,
+      'dcda_analytics',
+      'course_demand',
+      'terms',
+      termId
+    )
+
+    const scheduledIncrements: Record<string, ReturnType<typeof increment>> = {}
+    for (const code of studentData.scheduledCourses) {
+      scheduledIncrements[`scheduled.${code}`] = increment(1)
+    }
+    const completedIncrements: Record<string, ReturnType<typeof increment>> = {}
+    for (const code of studentData.completedCourses) {
+      completedIncrements[`completed.${code}`] = increment(1)
+    }
+
+    if (Object.keys(scheduledIncrements).length > 0) {
+      await setDoc(demandRef, scheduledIncrements, { merge: true })
+    }
+    if (Object.keys(completedIncrements).length > 0) {
+      await setDoc(demandRef, completedIncrements, { merge: true })
+    }
+  } catch {
+    // Silent failure — never block the student experience
+  }
+}

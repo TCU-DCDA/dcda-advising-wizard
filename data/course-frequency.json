@@ -1,0 +1,186 @@
+{
+  "terms": [
+    "Fall 2025",
+    "Spring 2026",
+    "Fall 2026"
+  ],
+  "courses": {
+    "ANTH 40523": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "ARST 10123": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "ARST 20743": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "ARST 30510": [
+      "Fall 2025"
+    ],
+    "COSC 10603": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "CRJU 20883": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "DSGN 10103": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "DSGN 10153": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "ECON 40313": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "EDUC 50263": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "ENGL 20813": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "GEOG 30313": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "GEOG 30323": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "GEOG 30333": [
+      "Fall 2025"
+    ],
+    "GEOG 40333": [
+      "Fall 2025"
+    ],
+    "GEOL 30363": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "INSC 20153": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "MATH 10043": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "RELI 30483": [
+      "Fall 2025"
+    ],
+    "STCO 36403": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "STCO 43803": [
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "WRIT 20303": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "WRIT 20333": [
+      "Fall 2025"
+    ],
+    "WRIT 20833": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "WRIT 30283": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "WRIT 30390": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "WRIT 40233": [
+      "Fall 2025"
+    ],
+    "WRIT 40363": [
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "WRIT 40463": [
+      "Fall 2025"
+    ],
+    "ADRN 30503": [
+      "Spring 2026"
+    ],
+    "DCDA 30970": [
+      "Spring 2026",
+      "Fall 2025"
+    ],
+    "DCDA 40273": [
+      "Spring 2026",
+      "Fall 2025",
+      "Fall 2026"
+    ],
+    "DCDA 40833": [
+      "Spring 2026"
+    ],
+    "ENGL 30803": [
+      "Spring 2026"
+    ],
+    "ENGR 10573": [
+      "Spring 2026"
+    ],
+    "ENTR 30123": [
+      "Spring 2026"
+    ],
+    "GEOG 40323": [
+      "Spring 2026"
+    ],
+    "GEOL 20113": [
+      "Spring 2026"
+    ],
+    "HIST 30673": [
+      "Spring 2026"
+    ],
+    "HIST 30693": [
+      "Spring 2026"
+    ],
+    "INTR 20103": [
+      "Spring 2026",
+      "Fall 2026"
+    ],
+    "WRIT 40563": [
+      "Spring 2026"
+    ],
+    "ARST 20503": [
+      "Fall 2026"
+    ],
+    "ARST 30610": [
+      "Fall 2026"
+    ],
+    "WRIT 40243": [
+      "Fall 2026"
+    ],
+    "DCDA 40343": [
+      "Fall 2025"
+    ]
+  }
+}
