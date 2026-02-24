@@ -26,5 +26,26 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow update, delete: if false;
     }
+
+    // ── English Advising Wizard ──
+
+    // English config — public read, admin-only write
+    match /english_config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // English analytics — anonymous increment by anyone, admin-only read
+    match /english_analytics/{collection}/{subcol}/{docId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    // English submissions — create-only (anonymous), admin-only read, immutable
+    match /english_submissions/{submissionId} {
+      allow create: if true;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
   }
 }
