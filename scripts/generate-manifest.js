@@ -9,7 +9,7 @@
  * Part of the AddRan Advising Ecosystem integration (Phase 2)
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import Ajv from 'ajv';
@@ -36,11 +36,43 @@ function loadJSON(filename) {
   }
 }
 
+/**
+ * Auto-detect the latest offerings file by term date.
+ * Filenames: offerings-{season}{yy}.json where season = sp|su|fa
+ * Sorts by calendar date (fa26 = Fall 2026 = Aug 2026, sp27 = Spring 2027 = Jan 2027)
+ */
+function findLatestOfferings() {
+  const SEASON_ORDER = { sp: 0, su: 1, fa: 2 };
+  const SEASON_LABEL = { sp: 'Spring', su: 'Summer', fa: 'Fall' };
+
+  const files = readdirSync(DATA_DIR)
+    .filter(f => /^offerings-(?:sp|su|fa)\d{2}\.json$/.test(f))
+    .map(f => {
+      const match = f.match(/^offerings-(sp|su|fa)(\d{2})\.json$/);
+      const season = match[1];
+      const year = parseInt(match[2], 10);
+      // Sort key: year * 10 + season order (fa26 = 262, sp27 = 270)
+      const sortKey = year * 10 + SEASON_ORDER[season];
+      return { file: f, season, year, sortKey, label: `${SEASON_LABEL[season]} 20${year}` };
+    })
+    .sort((a, b) => b.sortKey - a.sortKey);
+
+  if (files.length === 0) {
+    console.error('No offerings-*.json files found in data/');
+    process.exit(1);
+  }
+
+  return files[0];
+}
+
 console.log('TCU DCDA Department - Manifest Generator\n');
+
+const latestOfferings = findLatestOfferings();
+console.log(`Auto-detected latest offerings: ${latestOfferings.file} (${latestOfferings.label})`);
 
 const courses = loadJSON('courses.json');
 const requirements = loadJSON('requirements.json');
-const offerings = loadJSON('offerings-fa26.json');
+const offerings = loadJSON(latestOfferings.file);
 const contacts = loadJSON('contacts.json');
 const careerOptions = loadJSON('career-options.json');
 
