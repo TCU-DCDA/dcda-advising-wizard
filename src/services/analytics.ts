@@ -37,7 +37,15 @@ async function generateSessionHash(): Promise<string> {
 export async function trackWizardStart(): Promise<void> {
   try {
     const dayRef = doc(db, 'dcda_analytics', 'daily', 'stats', getTodayId())
-    await setDoc(dayRef, { wizardStarts: increment(1) }, { merge: true })
+    const hour = new Date().getHours().toString()
+    await setDoc(
+      dayRef,
+      {
+        wizardStarts: increment(1),
+        hourlyStarts: { [hour]: increment(1) },
+      },
+      { merge: true }
+    )
   } catch {
     // Analytics failures are silent — never block the student experience
   }
@@ -56,6 +64,22 @@ export async function trackStepVisit(stepId: string): Promise<void> {
   }
 }
 
+// Track export actions (PDF, CSV, print) — anonymous counters only.
+export async function trackExport(
+  method: 'pdf' | 'csv' | 'print' | 'email'
+): Promise<void> {
+  try {
+    const dayRef = doc(db, 'dcda_analytics', 'daily', 'stats', getTodayId())
+    await setDoc(
+      dayRef,
+      { exports: { [method]: increment(1) } },
+      { merge: true }
+    )
+  } catch {
+    // Silent failure
+  }
+}
+
 // Records an anonymous submission — NO PII is included.
 // Only course codes (public catalog data), degree type, and graduation term.
 export async function recordAnonymousSubmission(
@@ -63,6 +87,16 @@ export async function recordAnonymousSubmission(
 ): Promise<void> {
   try {
     const sessionHash = await generateSessionHash()
+
+    // Compute degree progress percentage (anonymous — just a number)
+    const completedCount = studentData.completedCourses.length
+    const specialCount = studentData.specialCredits.length
+    const totalCredits = (completedCount + specialCount) * 3
+    const totalRequired = studentData.degreeType === 'major' ? 33 : 21
+    const degreeProgressPct = Math.min(
+      Math.round((totalCredits / totalRequired) * 100),
+      100
+    )
 
     // Write anonymous submission record
     await addDoc(collection(db, 'dcda_submissions'), {
@@ -74,6 +108,9 @@ export async function recordAnonymousSubmission(
       completedCourseCount: studentData.completedCourses.length,
       scheduledCourseCount: studentData.scheduledCourses.length,
       specialCreditCount: studentData.specialCredits.length,
+      includeSummer: studentData.includeSummer ?? false,
+      hasNotes: !!(studentData.notes && studentData.notes.trim()),
+      degreeProgressPct,
       sessionHash,
     })
 

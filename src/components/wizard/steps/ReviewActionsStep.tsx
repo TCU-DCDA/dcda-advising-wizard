@@ -11,7 +11,7 @@ import { Eye, Printer, Download, Calendar, Mail, Send, ChevronDown, ChevronUp, R
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { generatePdfBlob, downloadPdf, printPdf, exportToCSV } from '@/services/export'
-import { recordAnonymousSubmission } from '@/services/analytics'
+import { recordAnonymousSubmission, trackExport } from '@/services/analytics'
 
 interface ReviewActionsStepProps {
   studentData: StudentData
@@ -67,15 +67,18 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
   const handlePrint = () => {
     const { blobUrl } = generatePdfBlob({ studentData, generalElectives })
     printPdf(blobUrl, () => URL.revokeObjectURL(blobUrl))
+    trackExport('print')
   }
 
   const handleDownload = () => {
     exportToCSV({ ...studentData, generalElectives })
+    trackExport('csv')
   }
 
   const handleDownloadPdf = () => {
     if (previewUrl) {
       downloadPdf(previewUrl, previewFilename)
+      trackExport('pdf')
     }
   }
 
@@ -87,6 +90,7 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
 
     // Record anonymous submission for analytics (fire-and-forget, no PII)
     recordAnonymousSubmission(studentData)
+    trackExport('email')
   }
 
   const handleOpenEmail = () => {
