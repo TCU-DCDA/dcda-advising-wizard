@@ -97,7 +97,12 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
     const progressPercent = Math.round((progressHours / totalHours) * 100)
 
     const subject = `DCDA Advising Record: ${studentData.name}`
-    const body = `DCDA Advising Record
+    const body = `Hi Professor Rode,
+
+I've completed my DCDA advising plan using the advising wizard and wanted to share it with you ahead of our meeting. Please find my plan attached — I'd love to go over it together and make sure I'm on the right track.
+
+---
+DCDA Advising Record
 
 Student: ${studentData.name}
 Degree: DCDA ${degreeLabel}
