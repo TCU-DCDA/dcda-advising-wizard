@@ -2,6 +2,7 @@ import { StrictMode, lazy, Suspense, useState, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { DCDADataProvider } from './components/DCDADataProvider'
 
 const AdminApp = lazy(() => import('./admin/AdminApp'))
 
@@ -28,7 +29,11 @@ function Root() {
     )
   }
 
-  return <App />
+  return (
+    <DCDADataProvider>
+      <App />
+    </DCDADataProvider>
+  )
 }
 
 createRoot(document.getElementById('root')!).render(

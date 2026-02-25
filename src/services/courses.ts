@@ -1,16 +1,21 @@
-import type { Course, CourseSection, RequirementCategoryId } from '@/types'
+import type { Course, CourseSection, CourseOfferings, RequirementCategoryId } from '@/types'
 import coursesData from '../../data/courses.json'
 import offeringsData from '../../data/offerings-fa26.json'
 import requirementsData from '../../data/requirements.json'
 
 // Deduplicate courses by code (keep first occurrence)
 const coursesRaw = coursesData as Course[]
-const courses = coursesRaw.filter((course, index, self) => 
+const courses = coursesRaw.filter((course, index, self) =>
   index === self.findIndex((c) => c.code === course.code)
 )
 
-const offerings = offeringsData as { term: string; offeredCodes: string[]; sections: CourseSection[] }
+let offerings = offeringsData as CourseOfferings
 const requirements = requirementsData as typeof requirementsData
+
+/** Called by DCDADataProvider to update live offerings from Firestore */
+export function updateOfferings(data: CourseOfferings): void {
+  offerings = data
+}
 
 // Get all courses for a specific requirement category
 export function getCoursesForCategory(
