@@ -178,7 +178,7 @@ Submitted via DCDA Advisor Mobile`
         Submit Plan to Advisor
       </Button>
       <p className="text-xs text-muted-foreground text-center -mt-3">
-        Downloads your plan as CSV and opens an email to your advisor.
+        Optional — downloads your plan as CSV and opens an email to your advisor.
       </p>
 
       {/* 4. More export options — collapsed */}
