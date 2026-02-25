@@ -19,7 +19,7 @@ vi.mock('@/services/courses', () => ({
     daElective: 'Data Analytics Elective',
     generalElectives: 'General Electives',
   },
-  getNextSemesterTerm: vi.fn(() => 'Spring 2026'),
+  getNextSemesterTerm: vi.fn(() => 'Fall 2026'),
 }))
 
 import { getOfferedCoursesForCategory } from '@/services/courses'

@@ -1,6 +1,6 @@
 import type { Course, CourseSection, RequirementCategoryId } from '@/types'
 import coursesData from '../../data/courses.json'
-import offeringsData from '../../data/offerings-sp26.json'
+import offeringsData from '../../data/offerings-fa26.json'
 import requirementsData from '../../data/requirements.json'
 
 // Deduplicate courses by code (keep first occurrence)
@@ -145,10 +145,10 @@ export function getCapstoneTargetSemester(expectedGraduation: string | null): st
   return `Spring ${year}`
 }
 
-// Check if capstone should be taken this semester (Spring 2026)
+// Check if capstone should be taken this semester
 export function shouldTakeCapstoneNow(expectedGraduation: string | null): boolean {
   const target = getCapstoneTargetSemester(expectedGraduation)
-  return target === 'Spring 2026'
+  return target === getNextSemesterTerm()
 }
 
 // Category display names
@@ -163,29 +163,41 @@ export const categoryNames: Record<RequirementCategoryId, string> = {
   generalElectives: 'General Electives',
 }
 
-// Generate list of semesters from Spring 2026 to a target graduation semester
+// Generate list of semesters from the current term to a target graduation semester
 export function getSemestersUntilGraduation(expectedGraduation: string | null, includeSummer: boolean = false): string[] {
   const semesters: string[] = []
-  
+
+  const termMatch = getNextSemesterTerm().match(/^(Spring|Summer|Fall)\s+(\d{4})/)
+  const startSeason: 'Spring' | 'Summer' | 'Fall' = termMatch ? (termMatch[1] as 'Spring' | 'Summer' | 'Fall') : 'Fall'
+  const startYear = termMatch ? parseInt(termMatch[2]) : 2026
+
   if (!expectedGraduation) {
-    // Default to 4 semesters if no graduation date
-    const defaultPlan = ['Spring 2026', 'Fall 2026', 'Spring 2027', 'Fall 2027']
-    return includeSummer 
-      ? ['Spring 2026', 'Summer 2026', 'Fall 2026', 'Spring 2027', 'Summer 2027', 'Fall 2027']
-      : defaultPlan
+    // Default to 4 non-summer (or 6 with summer) semesters from the current term
+    let s = startSeason
+    let y = startYear
+    const target = includeSummer ? 6 : 4
+    let iterations = 0
+    while (semesters.length < target && iterations < 20) {
+      if (s !== 'Summer' || includeSummer) semesters.push(`${s} ${y}`)
+      if (s === 'Spring') { s = 'Summer' }
+      else if (s === 'Summer') { s = 'Fall' }
+      else { s = 'Spring'; y++ }
+      iterations++
+    }
+    return semesters
   }
-  
+
   const match = expectedGraduation.match(/(Spring|Fall|Summer)\s+(\d{4})/)
   if (!match) {
-    return ['Spring 2026', 'Fall 2026', 'Spring 2027', 'Fall 2027']
+    return [`${startSeason} ${startYear}`, `Fall ${startYear}`, `Spring ${startYear + 1}`, `Fall ${startYear + 1}`]
   }
-  
+
   const gradSeason = match[1]
   const gradYear = parseInt(match[2])
-  
-  // Start from Spring 2026 (next semester)
-  let year = 2026
-  let season: 'Spring' | 'Summer' | 'Fall' = 'Spring'
+
+  // Start from current term
+  let year = startYear
+  let season: 'Spring' | 'Summer' | 'Fall' = startSeason
   
   while (true) {
     const isSummer = season === 'Summer'
