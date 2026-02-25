@@ -10,7 +10,7 @@ import {
 import { Eye, Printer, Download, Calendar, Mail, Send, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
-import { generatePdfBlob, downloadPdf, printPdf, exportToCSV } from '@/services/export'
+import { generatePdfBlob, downloadPdf, printPdf } from '@/services/export'
 import { recordAnonymousSubmission, trackExport } from '@/services/analytics'
 
 interface ReviewActionsStepProps {
@@ -33,12 +33,12 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
   const selectedDegreeType = studentData.degreeType || 'major'
   const majorTotalHours = requirements.major.totalHours
   const minorTotalHours = requirements.minor.totalHours
-  
+
   const completedCourseHours = studentData.completedCourses.length * 3
   const specialCreditHours = studentData.specialCredits.length * 3
   const totalCompletedHours = completedCourseHours + specialCreditHours
-  
-  const majorHours = selectedDegreeType === 'major' 
+
+  const majorHours = selectedDegreeType === 'major'
     ? (degreeProgress?.completedHours ?? 0)
     : Math.min(totalCompletedHours, majorTotalHours)
   const minorHours = selectedDegreeType === 'minor'
@@ -70,11 +70,6 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
     trackExport('print')
   }
 
-  const handleDownload = () => {
-    exportToCSV({ ...studentData, generalElectives })
-    trackExport('csv')
-  }
-
   const handleDownloadPdf = () => {
     if (previewUrl) {
       downloadPdf(previewUrl, previewFilename)
@@ -83,8 +78,9 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
   }
 
   const handleSubmitToAdvisor = () => {
-    // Download the CSV file first
-    const filename = exportToCSV({ ...studentData, generalElectives })
+    const { blobUrl, filename } = generatePdfBlob({ studentData, generalElectives })
+    downloadPdf(blobUrl, filename)
+    URL.revokeObjectURL(blobUrl)
     setSubmitFilename(filename)
     setShowSubmitConfirm(true)
 
@@ -113,7 +109,7 @@ Notes/Questions:
 ${studentData.notes || 'None'}
 
 ---
-Advising plan CSV attached.
+Advising plan PDF attached.
 Submitted via DCDA Advisor Mobile`
 
     const cc = studentData.email ? `&cc=${encodeURIComponent(studentData.email)}` : ''
@@ -159,7 +155,7 @@ Submitted via DCDA Advisor Mobile`
         <label htmlFor="notes" className="text-sm font-semibold block px-1">
           Notes or Questions for Advisor
         </label>
-        <Textarea 
+        <Textarea
           id="notes"
           placeholder="Add any questions about transfer credits, specific courses, or career goals..."
           value={studentData.notes || ''}
@@ -178,7 +174,7 @@ Submitted via DCDA Advisor Mobile`
         Submit Plan to Advisor
       </Button>
       <p className="text-xs text-muted-foreground text-center -mt-3">
-        Optional — downloads your plan as CSV and opens an email to your advisor.
+        Optional — downloads your plan as PDF and opens an email to your advisor.
       </p>
 
       {/* 4. More export options — collapsed */}
@@ -215,15 +211,6 @@ Submitted via DCDA Advisor Mobile`
                 <span className="text-xs">Print PDF</span>
               </Button>
             )}
-
-            <Button
-              variant="outline"
-              className="flex-col h-auto py-3 gap-1.5"
-              onClick={handleDownload}
-            >
-              <Download className="size-4" />
-              <span className="text-xs">Save CSV</span>
-            </Button>
           </div>
         )}
       </div>
@@ -232,7 +219,7 @@ Submitted via DCDA Advisor Mobile`
       <div className="flex items-start gap-3 text-sm text-muted-foreground px-1">
         <Mail className="size-4 mt-0.5 flex-shrink-0" />
         <p>
-          <strong>Tip:</strong> Save your PDF or CSV and email it before your meeting so your advisor can review it in advance.
+          <strong>Tip:</strong> Save your PDF and email it before your meeting so your advisor can review it in advance.
         </p>
       </div>
 
@@ -248,7 +235,7 @@ Submitted via DCDA Advisor Mobile`
         </button>
       </div>
 
-      {/* Submit Confirmation Dialog — replaces alert() */}
+      {/* Submit Confirmation Dialog */}
       <Dialog open={showSubmitConfirm} onOpenChange={setShowSubmitConfirm}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
@@ -262,7 +249,7 @@ Submitted via DCDA Advisor Mobile`
               {submitFilename}
             </div>
             <p className="text-sm text-muted-foreground">
-              An email will open next. Please <strong>attach the downloaded file</strong> before sending.
+              An email will open next. Please <strong>attach the downloaded PDF</strong> before sending.
             </p>
             <div className="flex gap-2">
               <Button variant="secondary" onClick={() => setShowSubmitConfirm(false)} className="flex-1">
