@@ -22,12 +22,15 @@ const ALL_PART_1_STEPS: WizardStep[] = [
   // Capstone is auto-assigned based on graduation, no step needed
   { id: 'dcElective', part: 'completed', title: 'Have you completed a Digital Culture Elective?', categoryId: 'dcElective' },
   { id: 'daElective', part: 'completed', title: 'Have you completed a Data Analytics Elective?', categoryId: 'daElective' },
-  // generalElectives step removed - Honors Seminars info is now on graduation screen
+  { id: 'generalElectives', part: 'completed', title: 'Have you completed any elective courses?', categoryId: 'generalElectives' },
   { id: 'specialCredits', part: 'completed', title: 'Any special credits?' },
 ]
 
 // Steps that only apply to majors (not minors)
 const MAJOR_ONLY_STEPS: Set<string> = new Set(['intro', 'dcElective', 'daElective'])
+
+// Steps that only apply to minors (majors capture electives via DC/DA elective overflow)
+const MINOR_ONLY_STEPS: Set<string> = new Set(['generalElectives'])
 
 const TRANSITION_STEP: WizardStep = { id: 'transition', part: 'transition', title: 'Planning Your Schedule' }
 const REVIEW_SUMMARY_STEP: WizardStep = { id: 'reviewSummary', part: 'review', title: 'Review Your Plan' }
@@ -77,10 +80,9 @@ export function useWizardFlow(studentData: StudentData): UseWizardFlowReturn {
   const steps = useMemo(() => {
     // Filter Part 1 steps based on degree type
     const part1Steps = ALL_PART_1_STEPS.filter(step => {
-      // Always include non-major-only steps
-      if (!MAJOR_ONLY_STEPS.has(step.id)) return true
-      // Only include major-only steps if pursuing a major
-      return degreeType === 'major'
+      if (MAJOR_ONLY_STEPS.has(step.id)) return degreeType === 'major'
+      if (MINOR_ONLY_STEPS.has(step.id)) return degreeType === 'minor'
+      return true
     })
 
     const allSteps = [...part1Steps]

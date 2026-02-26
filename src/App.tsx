@@ -217,6 +217,24 @@ function App() {
     }))
   }, [])
 
+  // Handle multi-select for general electives (minors)
+  const handleAddGeneralElective = useCallback((courseCode: string) => {
+    setCategorySelections((prev) => ({
+      ...prev,
+      generalElectives: [...prev.generalElectives, courseCode],
+    }))
+    setNotYetSelections((prev) => ({
+      ...prev,
+      generalElectives: false,
+    }))
+  }, [])
+
+  const handleRemoveGeneralElective = useCallback((courseCode: string) => {
+    setCategorySelections((prev) => ({
+      ...prev,
+      generalElectives: prev.generalElectives.filter((c) => c !== courseCode),
+    }))
+  }, [])
 
   // Handle scheduling a course in Part 2
   const handleScheduleCourse = useCallback((categoryId: RequirementCategoryId, courseCode: string) => {
@@ -281,6 +299,8 @@ function App() {
         return categorySelections.dcElectives.length > 0 || notYetSelections.dcElective
       case 'daElective':
         return categorySelections.daElectives.length > 0 || notYetSelections.daElective
+      case 'generalElectives':
+        return categorySelections.generalElectives.length > 0 || notYetSelections.generalElectives
       case 'specialCredits':
         return true // Can proceed with no credits
       case 'schedule':
@@ -530,6 +550,39 @@ function App() {
             onSelectNotYet={() => handleSelectNotYet('daElective')}
             isNotYetSelected={notYetSelections.daElective}
             degreeType={studentData.degreeType || 'major'}
+          />
+        )
+      }
+
+      case 'generalElectives': {
+        // For minors: show all DCDA courses except those already selected in required categories
+        const excludeCourses = [
+          categorySelections.statistics,
+          categorySelections.coding,
+          categorySelections.mmAuthoring,
+        ].filter((c): c is string => c !== null)
+
+        // If any core category is "Not Yet", exclude those courses
+        // (student needs them to fulfill core requirements later)
+        const skippedCoreCourses = (['statistics', 'coding', 'mmAuthoring'] as const)
+          .filter(cat => notYetSelections[cat])
+          .flatMap(cat => getRequiredCategoryCourses(cat, studentData.degreeType || 'minor'))
+
+        return (
+          <CourseStep
+            categoryId="generalElectives"
+            title="Which elective courses have you completed?"
+            hint="Select any DCDA-approved courses you've taken beyond the core requirements. These count toward your General Electives."
+            selectedCourse={null}
+            selectedCourses={categorySelections.generalElectives}
+            allSelectedCourses={[...excludeCourses, ...skippedCoreCourses]}
+            completedRequiredCourses={completedRequiredCourses}
+            multiSelect
+            onSelectCourse={handleAddGeneralElective}
+            onDeselectCourse={handleRemoveGeneralElective}
+            onSelectNotYet={() => handleSelectNotYet('generalElectives')}
+            isNotYetSelected={notYetSelections.generalElectives}
+            degreeType={studentData.degreeType || 'minor'}
           />
         )
       }
