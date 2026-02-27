@@ -13,13 +13,7 @@ flowchart TD
     end
 
     subgraph PHASE1["📋 History: Record Completed Courses"]
-        E --> F{CSV File<br/>Imported?}
-        F -->|Yes| G[Parse CSV &<br/>Populate Selections]
-        F -->|No| H[Name & Degree Type]
-
-        G --> I{Unmet Categories<br/>Exist?}
-        I -->|Yes| TRANS
-        I -->|No| REV
+        E --> H[Name & Degree Type]
 
         H --> J{Major or Minor?}
         J -->|Major| K[Expected Graduation]
@@ -68,8 +62,9 @@ flowchart TD
     subgraph SPECIAL["🎓 Special Credits"]
         AH --> AI{Add Special<br/>Credits?}
         AI -->|Yes| AJ[Transfer/Study Abroad/<br/>One-Time Approval]
+        AJ --> AJ2[Select Category<br/>Credit Counts Toward]
         AI -->|No| AK[Calculate Unmet<br/>Categories]
-        AJ --> AK
+        AJ2 --> AK
     end
 
     subgraph TRANSITION["🔄 TRANSITION"]
@@ -117,7 +112,7 @@ flowchart TD
         BB --> BC[Display Progress<br/>Bars & Summary]
         BC --> BD{Export?}
         BD -->|PDF| BE[Generate PDF]
-        BD -->|CSV| BF[Generate CSV]
+        BD -->|Email| BF[Submit to Advisor]
         BD -->|No| BG{Start Over?}
         BE --> BG
         BF --> BG
@@ -222,7 +217,7 @@ flowchart TD
     E --> F[+ Explicit General<br/>Selections]
     F --> G[+ DC Elective<br/>Overflow]
     G --> H[+ DA Elective<br/>Overflow]
-    H --> I[+ Special Credits<br/>Count]
+    H --> I[+ Special Credits<br/>Targeting General]
 
     I --> J{Filled >= Required?}
 
@@ -311,7 +306,6 @@ flowchart LR
 
 1. **Degree Type** → Determines which steps appear and requirements count
 2. **Course Selection vs Not Yet** → Determines if category goes to Part 2
-3. **CSV Import** → Can skip Part 1 entirely
-4. **Elective Overflow** → Extra electives auto-fill general elective slots
-5. **Capstone Prerequisites** → Must have stats + coding before capstone
-6. **Summer Toggle** → Affects how courses distributed across semesters
+3. **Elective Overflow** → Extra electives auto-fill general elective slots
+4. **Capstone Prerequisites** → Must have stats + coding before capstone
+5. **Summer Toggle** → Affects how courses distributed across semesters
