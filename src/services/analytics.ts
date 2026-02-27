@@ -83,20 +83,11 @@ export async function trackExport(
 // Records an anonymous submission — NO PII is included.
 // Only course codes (public catalog data), degree type, and graduation term.
 export async function recordAnonymousSubmission(
-  studentData: StudentData
+  studentData: StudentData,
+  degreeProgressPct: number
 ): Promise<void> {
   try {
     const sessionHash = await generateSessionHash()
-
-    // Compute degree progress percentage (anonymous — just a number)
-    const completedCount = studentData.completedCourses.length
-    const specialCount = studentData.specialCredits.length
-    const totalCredits = (completedCount + specialCount) * 3
-    const totalRequired = studentData.degreeType === 'major' ? 33 : 21
-    const degreeProgressPct = Math.min(
-      Math.round((totalCredits / totalRequired) * 100),
-      100
-    )
 
     // Write anonymous submission record
     await addDoc(collection(db, 'dcda_submissions'), {

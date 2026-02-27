@@ -350,11 +350,14 @@ function App() {
     const dcOverflow = Math.max(0, categorySelections.dcElectives.length - 1)
     const daOverflow = Math.max(0, categorySelections.daElectives.length - 1)
     
-    const filledGeneralSlots = 
-      categorySelections.generalElectives.length + 
-      dcOverflow + 
-      daOverflow + 
-      studentData.specialCredits.length
+    const generalSpecialCredits = studentData.specialCredits
+      .filter(c => c.countsAs === 'generalElectives').length
+
+    const filledGeneralSlots =
+      categorySelections.generalElectives.length +
+      dcOverflow +
+      daOverflow +
+      generalSpecialCredits
       
     // Get requirement count
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

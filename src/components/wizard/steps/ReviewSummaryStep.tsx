@@ -3,23 +3,18 @@ import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { getCourseByCode, buildSemesterPlan, getNextSemesterTerm } from '@/services/courses'
 import { cn } from '@/lib/utils'
-import { CalendarDays, Check, ChevronDown, ChevronUp } from 'lucide-react'
+import { CalendarDays, ChevronDown, ChevronUp } from 'lucide-react'
 
 // Hero Progress Component — large percentage with bar
 interface ProgressHeroProps {
   hours: number
   totalHours: number
   degreeLabel: string
-  altHours?: number
-  altTotalHours?: number
-  altDegreeLabel?: string
-  showAltInsight?: boolean
 }
 
-function ProgressHero({ hours, totalHours, degreeLabel, altHours, altTotalHours, altDegreeLabel, showAltInsight }: ProgressHeroProps) {
+function ProgressHero({ hours, totalHours, degreeLabel }: ProgressHeroProps) {
   const percent = Math.min(100, Math.round((hours / totalHours) * 100))
-  const altPercent = altHours && altTotalHours ? Math.min(100, Math.round((altHours / altTotalHours) * 100)) : 0
-  
+
   return (
     <div className="bg-gradient-to-br from-primary to-primary/85 rounded-2xl p-5 text-primary-foreground">
       <div className="flex items-center gap-4">
@@ -41,17 +36,6 @@ function ProgressHero({ hours, totalHours, degreeLabel, altHours, altTotalHours,
           </div>
         </div>
       </div>
-      {showAltInsight && altPercent === 100 && altDegreeLabel && (
-        <div className="mt-3 px-3 py-2 bg-white/10 rounded-lg text-xs flex items-center gap-1.5">
-          <Check className="size-3.5" />
-          You've also completed enough for a {altDegreeLabel.toLowerCase()} ({altHours}/{altTotalHours} hrs)
-        </div>
-      )}
-      {showAltInsight && altPercent < 100 && altPercent > 0 && altDegreeLabel && altHours !== undefined && altTotalHours !== undefined && (
-        <div className="mt-3 px-3 py-2 bg-white/10 rounded-lg text-xs opacity-80">
-          {altDegreeLabel} progress: {altHours}/{altTotalHours} hrs ({altPercent}%)
-        </div>
-      )}
     </div>
   )
 }
@@ -136,21 +120,9 @@ interface ReviewSummaryStepProps {
 export function ReviewSummaryStep({ studentData, generalElectives }: ReviewSummaryStepProps) {
   const { degreeProgress, requirements } = useRequirements(studentData, generalElectives)
 
-  // Calculate progress for both degree types (for dual progress bars)
   const selectedDegreeType = studentData.degreeType || 'major'
-  const majorTotalHours = requirements.major.totalHours
-  const minorTotalHours = requirements.minor.totalHours
-  
-  const completedCourseHours = studentData.completedCourses.length * 3
-  const specialCreditHours = studentData.specialCredits.length * 3
-  const totalCompletedHours = completedCourseHours + specialCreditHours
-  
-  const majorHours = selectedDegreeType === 'major' 
-    ? (degreeProgress?.completedHours ?? 0)
-    : Math.min(totalCompletedHours, majorTotalHours)
-  const minorHours = selectedDegreeType === 'minor'
-    ? (degreeProgress?.completedHours ?? 0)
-    : Math.min(totalCompletedHours, minorTotalHours)
+  const completedHours = degreeProgress?.completedHours ?? 0
+  const totalHours = selectedDegreeType === 'major' ? requirements.major.totalHours : requirements.minor.totalHours
 
   // Organize courses by status
   const completedByCategory: Record<string, string[]> = {}
@@ -226,13 +198,9 @@ export function ReviewSummaryStep({ studentData, generalElectives }: ReviewSumma
 
       {/* Progress Hero */}
       <ProgressHero
-        hours={selectedDegreeType === 'major' ? majorHours : minorHours}
-        totalHours={selectedDegreeType === 'major' ? majorTotalHours : minorTotalHours}
+        hours={completedHours}
+        totalHours={totalHours}
         degreeLabel={selectedDegreeType === 'major' ? 'Major' : 'Minor'}
-        altHours={selectedDegreeType === 'major' ? minorHours : majorHours}
-        altTotalHours={selectedDegreeType === 'major' ? minorTotalHours : majorTotalHours}
-        altDegreeLabel={selectedDegreeType === 'major' ? 'Minor' : 'Major'}
-        showAltInsight
       />
 
       {/* Completed & Scheduled Courses - Side by Side */}

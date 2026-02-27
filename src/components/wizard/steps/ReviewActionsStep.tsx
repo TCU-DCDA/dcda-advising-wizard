@@ -31,19 +31,8 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
   const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   const selectedDegreeType = studentData.degreeType || 'major'
-  const majorTotalHours = requirements.major.totalHours
-  const minorTotalHours = requirements.minor.totalHours
-
-  const completedCourseHours = studentData.completedCourses.length * 3
-  const specialCreditHours = studentData.specialCredits.length * 3
-  const totalCompletedHours = completedCourseHours + specialCreditHours
-
-  const majorHours = selectedDegreeType === 'major'
-    ? (degreeProgress?.completedHours ?? 0)
-    : Math.min(totalCompletedHours, majorTotalHours)
-  const minorHours = selectedDegreeType === 'minor'
-    ? (degreeProgress?.completedHours ?? 0)
-    : Math.min(totalCompletedHours, minorTotalHours)
+  const completedHours = degreeProgress?.completedHours ?? 0
+  const totalHoursRequired = selectedDegreeType === 'major' ? requirements.major.totalHours : requirements.minor.totalHours
 
   // Cleanup blob URL to prevent memory leaks
   const revokePreviewUrl = useCallback(() => {
@@ -85,16 +74,15 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
     setShowSubmitConfirm(true)
 
     // Record anonymous submission for analytics (fire-and-forget, no PII)
-    recordAnonymousSubmission(studentData)
+    const progressPct = Math.min(100, Math.round((completedHours / totalHoursRequired) * 100))
+    recordAnonymousSubmission(studentData, progressPct)
     trackExport('email')
   }
 
   const handleOpenEmail = () => {
     const date = new Date().toLocaleDateString()
     const degreeLabel = studentData.degreeType === 'major' ? 'Major' : 'Minor'
-    const progressHours = selectedDegreeType === 'major' ? majorHours : minorHours
-    const totalHours = selectedDegreeType === 'major' ? majorTotalHours : minorTotalHours
-    const progressPercent = Math.round((progressHours / totalHours) * 100)
+    const progressPercent = Math.min(100, Math.round((completedHours / totalHoursRequired) * 100))
 
     const subject = `DCDA Advising Record: ${studentData.name}`
     const body = `Hi Professor Rode,
@@ -108,7 +96,7 @@ Student: ${studentData.name}
 Degree: DCDA ${degreeLabel}
 Expected Graduation: ${studentData.expectedGraduation || 'Not specified'}
 Date: ${date}
-Progress: ${progressHours}/${totalHours} hours (${progressPercent}%)
+Progress: ${completedHours}/${totalHoursRequired} hours (${progressPercent}%)
 
 Notes/Questions:
 ${studentData.notes || 'None'}

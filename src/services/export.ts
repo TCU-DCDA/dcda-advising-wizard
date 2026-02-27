@@ -371,7 +371,7 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
   // General Electives
   let generalCompleted: string[]
 
-  if (generalElectives) {
+  if (generalElectives && generalElectives.length > 0) {
     // Use explicitly provided general electives + overflow
     generalCompleted = [...generalElectives, ...requiredOverflow, ...electiveOverflow]
   } else {
@@ -380,7 +380,9 @@ export function generatePdfBlob({ studentData, generalElectives }: ExportOptions
       courses.filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code)).map((c) => c.code)
     ) ?? []
     
+    const allCourseCodes = courses.map((c) => c.code)
     const fallbackGeneral = studentData.completedCourses.filter((c: string) => {
+      if (!allCourseCodes.includes(c)) return false
       if (requiredCategoryCourses.includes(c)) return false
       if (isFlexibleCourse(c)) {
         const assignedCategory = studentData.courseCategories?.[c as keyof typeof studentData.courseCategories] as FlexibleCourseCategory | undefined
