@@ -81,7 +81,16 @@ export function WelcomeStep() {
         >
           privacy notice
         </button>
-        ).
+        ). Questions?{' '}
+        <a
+          href="https://calendly.com/c-rode/appointments"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline underline-offset-2 hover:text-primary/80"
+        >
+          Schedule time with an advisor
+        </a>
+        .
       </p>
 
       {/* FERPA Dialog */}
