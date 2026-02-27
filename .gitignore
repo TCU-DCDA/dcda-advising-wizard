@@ -31,6 +31,9 @@ data/*.csv
 *.sln
 *.sw?
 
+# Test coverage
+coverage/
+
 # Build / deploy artifacts
 .firebase/
 *.patch
