@@ -74,7 +74,7 @@ export function WizardShell({
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-2xl font-extrabold tracking-tight leading-none truncate">DCDA Advisor</h1>
-          <p className="text-sm font-medium text-primary-foreground/80 mt-1 truncate">Degree Planning Tool</p>
+          <p className="text-sm font-medium text-primary-foreground/80 mt-1 truncate">Semester Planning Tool</p>
         </div>
         <button
           onClick={toggleTheme}
