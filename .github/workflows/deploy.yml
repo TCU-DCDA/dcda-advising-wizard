@@ -33,6 +33,8 @@ jobs:
           VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_SANDRA_API_URL: https://api-zwnbv7lerq-uc.a.run.app
+          VITE_SANDRA_FEEDBACK_URL: https://feedback-zwnbv7lerq-uc.a.run.app
         run: npm run build
 
       - name: Deploy to Firebase Hosting
