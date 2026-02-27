@@ -187,6 +187,7 @@ Submitted via DCDA Advisor Mobile`
         <button
           type="button"
           onClick={() => setShowExportOptions(!showExportOptions)}
+          aria-expanded={showExportOptions}
           className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-muted/50 transition-colors"
         >
           <span>More export options</span>

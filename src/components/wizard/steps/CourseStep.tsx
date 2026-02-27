@@ -195,6 +195,7 @@ export function CourseStep({
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search courses..."
+              aria-label="Search courses"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8"
@@ -231,7 +232,7 @@ export function CourseStep({
 
         <div className="space-y-6">
           {searchedCourses.length === 0 ? (
-             <div className="text-center py-8 text-black/50">
+             <div className="text-center py-8 text-muted-foreground">
                No courses found matching "{searchQuery}"
              </div>
           ) : isSingleCategoryMultiSelect ? (
@@ -308,6 +309,7 @@ export function CourseStep({
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search courses..."
+            aria-label="Search courses"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-8"
@@ -342,7 +344,7 @@ export function CourseStep({
         </label>
 
         {searchedCourses.length === 0 && showSearch && (
-           <div className="text-center py-8 text-black/50">
+           <div className="text-center py-8 text-muted-foreground">
              No courses found matching "{searchQuery}"
            </div>
         )}
