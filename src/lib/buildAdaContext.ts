@@ -27,15 +27,15 @@ function formatCourseList(codes: string[]): string {
   }).join(', ')
 }
 
-export interface SandraContext {
+export interface ChatContext {
   context: string
   programName: string
 }
 
-export function buildSandraContext(
+export function buildAdaContext(
   studentData: StudentData,
   currentStepId: WizardStepId
-): SandraContext | null {
+): ChatContext | null {
   if (!studentData.degreeType) return null
 
   type Cat = { id: string; name: string; hours: number; courses?: string[] }

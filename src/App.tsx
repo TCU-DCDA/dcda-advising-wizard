@@ -15,7 +15,7 @@ import {
 } from '@/components/wizard'
 import { InstallPrompt } from '@/components/InstallPrompt'
 import { getRequiredCategoryCourses } from '@/services/courses'
-import { buildSandraContext } from '@/lib/buildSandraContext'
+import { buildAdaContext } from '@/lib/buildAdaContext'
 import type { RequirementCategoryId } from '@/types'
 import requirementsData from '../data/requirements.json'
 import { trackWizardStart, trackStepVisit } from '@/services/analytics'
@@ -64,9 +64,9 @@ function App() {
     trackStepVisit(wizard.currentStep.id)
   }, [wizard.currentStep.id])
 
-  // Build Sandra context from current wizard state
-  const sandraData = useMemo(
-    () => buildSandraContext(studentData, wizard.currentStep.id),
+  // Build chat context from current wizard state
+  const chatData = useMemo(
+    () => buildAdaContext(studentData, wizard.currentStep.id),
     [studentData, wizard.currentStep.id]
   )
 
@@ -719,9 +719,9 @@ function App() {
         nextDisabled={!canProceed}
         showBackButton={true}
         showNextButton={wizard.currentStep.id !== 'reviewActions'}
-        sandraContext={sandraData?.context ?? null}
-        sandraProgramName={sandraData?.programName ?? null}
-        sandraProgramId={studentData.degreeType ?? null}
+        chatContext={chatData?.context ?? null}
+        chatProgramName={chatData?.programName ?? null}
+        chatProgramId={studentData.degreeType ?? null}
       >
         {renderStep()}
       </WizardShell>
