@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Eye, Printer, Download, Calendar, Mail, Send, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react'
+import { Eye, Printer, Download, Calendar, Mail, Send, ChevronDown, ChevronUp, RotateCcw, Copy, Check } from 'lucide-react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
 import { generatePdfBlob, downloadPdf, printPdf } from '@/services/export'
@@ -27,6 +27,8 @@ export function ReviewActionsStep({ studentData, generalElectives, updateStudent
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
   const [submitFilename, setSubmitFilename] = useState('')
   const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+  const [copied, setCopied] = useState(false)
   const { degreeProgress, requirements } = useRequirements(studentData, generalElectives)
   const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
@@ -108,7 +110,17 @@ Submitted via DCDA Advisor Mobile`
     const cc = studentData.email ? `&cc=${encodeURIComponent(studentData.email)}` : ''
     const mailtoUrl = `mailto:c.rode@tcu.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}${cc}`
     window.location.href = mailtoUrl
-    setShowSubmitConfirm(false)
+    setEmailSent(true)
+  }
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText('c.rode@tcu.edu')
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Fallback: select text for manual copy (clipboard API may be blocked)
+    }
   }
 
   return (
@@ -229,31 +241,56 @@ Submitted via DCDA Advisor Mobile`
       </div>
 
       {/* Submit Confirmation Dialog */}
-      <Dialog open={showSubmitConfirm} onOpenChange={setShowSubmitConfirm}>
+      <Dialog open={showSubmitConfirm} onOpenChange={(open) => {
+        setShowSubmitConfirm(open)
+        if (!open) { setEmailSent(false); setCopied(false) }
+      }}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Plan Downloaded</DialogTitle>
+            <DialogTitle>{emailSent ? 'Email Opened' : 'Plan Downloaded'}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Your advising plan has been saved as:
-            </p>
-            <div className="bg-muted rounded-lg px-3 py-2 text-sm font-mono break-all">
-              {submitFilename}
+          {!emailSent ? (
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Your advising plan has been saved as:
+              </p>
+              <div className="bg-muted rounded-lg px-3 py-2 text-sm font-mono break-all">
+                {submitFilename}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                An email will open next. Please <strong>attach the downloaded PDF</strong> before sending.
+              </p>
+              <div className="flex gap-2">
+                <Button variant="secondary" onClick={() => setShowSubmitConfirm(false)} className="flex-1">
+                  Cancel
+                </Button>
+                <Button onClick={handleOpenEmail} className="flex-1 gap-2">
+                  <Mail className="size-4" />
+                  Open Email
+                </Button>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              An email will open next. Please <strong>attach the downloaded PDF</strong> before sending.
-            </p>
-            <div className="flex gap-2">
-              <Button variant="secondary" onClick={() => setShowSubmitConfirm(false)} className="flex-1">
-                Cancel
-              </Button>
-              <Button onClick={handleOpenEmail} className="flex-1 gap-2">
-                <Mail className="size-4" />
-                Open Email
+          ) : (
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                If your email app opened, attach <strong>{submitFilename}</strong> and send.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                If nothing happened, email your advisor directly:
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm font-mono">
+                  c.rode@tcu.edu
+                </div>
+                <Button variant="outline" size="icon" onClick={handleCopyEmail} className="shrink-0">
+                  {copied ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
+                </Button>
+              </div>
+              <Button variant="secondary" onClick={() => { setShowSubmitConfirm(false); setEmailSent(false) }} className="w-full">
+                Done
               </Button>
             </div>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
 
