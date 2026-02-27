@@ -71,7 +71,9 @@ export function WelcomeStep() {
       {/* Inline info links */}
       {/* TODO: Update FERPA notice text once Power Automate integration is enabled (data will be sent externally) */}
       <p className="text-sm text-muted-foreground text-center">
-        Your data stays on your device unless you choose to share it with your advisor (
+        This tool is for <strong>planning purposes only.</strong> Always work with
+        your (human!) advisor to discuss your degree plan. Your data stays on your
+        device unless you choose to share it (
         <button
           type="button"
           onClick={() => setShowFerpa(true)}
@@ -79,16 +81,7 @@ export function WelcomeStep() {
         >
           privacy notice
         </button>
-        ). Questions?{' '}
-        <a
-          href="https://calendly.com/c-rode/appointments"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary underline underline-offset-2 hover:text-primary/80"
-        >
-          Schedule time with an advisor
-        </a>
-        .
+        ).
       </p>
 
       {/* FERPA Dialog */}
