@@ -53,7 +53,7 @@ export function GraduationStep({ value, onChange }: GraduationStepProps) {
       <div>
         <h2 className="text-xl font-semibold mb-2">When do you expect to graduate?</h2>
         <p className="text-sm text-muted-foreground">
-          Select your target graduation semester.
+          Select your target graduation semester. Planning begins with {getNextSemesterTerm()}, the next available term.
         </p>
       </div>
 

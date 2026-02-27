@@ -381,6 +381,29 @@ function App() {
       // Determine unmet categories for Part 2
       const unmet = calculateUnmetCategories(studentData.degreeType || 'major', notYetSelections)
       setUnmetCategories(unmet)
+
+      // Clear stale Part 2 state for categories that are now met
+      // (handles backtracking: user goes back, completes a requirement, then advances again)
+      const unmetSet = new Set(unmet)
+      setScheduledSelections(prev => {
+        const next = { ...prev }
+        for (const key of Object.keys(next) as RequirementCategoryId[]) {
+          if (key !== 'generalElectives' && !unmetSet.has(key)) {
+            next[key] = null
+          }
+        }
+        if (!unmetSet.has('generalElectives')) {
+          next.generalElectives = []
+        }
+        return next
+      })
+      setSkippedCategories(prev => {
+        const next = new Set(prev)
+        for (const cat of next) {
+          if (!unmetSet.has(cat)) next.delete(cat)
+        }
+        return next
+      })
     }
 
     // Persist scheduled courses when moving through Part 2 or to review
@@ -465,7 +488,6 @@ function App() {
       case 'intro':
       case 'statistics':
       case 'coding':
-      case 'mmAuthoring':
         return (
           <CourseStep
             categoryId={currentStep.id as RequirementCategoryId}
@@ -479,6 +501,24 @@ function App() {
             onSelectNotYet={() => handleSelectNotYet(currentStep.id as RequirementCategoryId)}
             isNotYetSelected={notYetSelections[currentStep.id as RequirementCategoryId]}
             degreeType={studentData.degreeType || 'major'}
+          />
+        )
+
+      case 'mmAuthoring':
+        return (
+          <CourseStep
+            categoryId="mmAuthoring"
+            title={currentStep.title}
+            selectedCourse={categorySelections.mmAuthoring}
+            selectedCourses={[]}
+            allSelectedCourses={allCompletedCourses}
+            completedRequiredCourses={completedRequiredCourses}
+            onSelectCourse={(code) => handleSelectCourse('mmAuthoring', code)}
+            onDeselectCourse={() => {}}
+            onSelectNotYet={() => handleSelectNotYet('mmAuthoring')}
+            isNotYetSelected={notYetSelections.mmAuthoring}
+            degreeType={studentData.degreeType || 'major'}
+            hint="Only one needed — extras count as general electives that you can enter in a later step."
           />
         )
 
