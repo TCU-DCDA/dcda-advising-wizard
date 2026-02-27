@@ -28,13 +28,13 @@ export function SpecialCreditsStep({ credits, onAddCredit, onRemoveCredit }: Spe
   const [showForm, setShowForm] = useState(false)
   const [type, setType] = useState<SpecialCredit['type']>('transfer')
   const [description, setDescription] = useState('')
-  // Previously we allowed selecting a category, but now we default to generalElectives for simplicity
-  const countsAs: RequirementCategoryId = 'generalElectives'
+  const [countsAs, setCountsAs] = useState<RequirementCategoryId>('generalElectives')
 
   const handleAdd = () => {
     if (description.trim()) {
       onAddCredit(type, description.trim(), countsAs)
       setDescription('')
+      setCountsAs('generalElectives')
       setShowForm(false)
     }
   }
@@ -46,10 +46,9 @@ export function SpecialCreditsStep({ credits, onAddCredit, onRemoveCredit }: Spe
         <p className="text-sm text-muted-foreground mb-4">
           Add transfer credits, study abroad courses, or one-time approvals.
         </p>
-        <div className="bg-muted/50 p-4 rounded-lg text-sm text-muted-foreground border border-neutral-200 dark:border-neutral-800">
-           <p className="mb-2"><span className="font-semibold text-primary">Note:</span> For simplicity, all special credits are added as <strong>General Electives</strong> in this tool.</p>
-           <p>If you believe a credit should count toward a specific requirement (like Statistics or Coding), please <strong>consult your advisor</strong> to verify and update your official degree plan.</p>
-        </div>
+        <p className="text-xs text-muted-foreground">
+          Select which requirement each credit satisfies. Your advisor can confirm during your meeting.
+        </p>
       </div>
 
       {/* Existing Credits */}
@@ -101,6 +100,20 @@ export function SpecialCreditsStep({ credits, onAddCredit, onRemoveCredit }: Spe
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Counts toward</label>
+            <Select value={countsAs} onValueChange={(v) => setCountsAs(v as RequirementCategoryId)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(categoryNames).map(([id, name]) => (
+                  <SelectItem key={id} value={id}>{name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex gap-2">
