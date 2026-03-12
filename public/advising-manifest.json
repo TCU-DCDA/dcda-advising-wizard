@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0",
   "department": "Digital Culture and Data Analytics",
-  "lastUpdated": "2026-02-27T18:43:16.564Z",
+  "lastUpdated": "2026-03-12T19:57:01.867Z",
   "wizardUrl": "https://dcda-advisor-mobile.web.app",
   "programs": [
     {
@@ -1378,7 +1378,7 @@
           },
           {
             "code": "ARST 20743",
-            "title": "Photography",
+            "title": "Photography - Beginning Photography",
             "hours": 3,
             "schedule": "MW 14:00-16:50",
             "modality": "In Person"
@@ -1419,10 +1419,10 @@
             "modality": "In Person"
           },
           {
-            "code": "DCDA 40273",
-            "title": "DCDA Internship",
+            "code": "DSGN 10103",
+            "title": "Intro Creative Practice",
             "hours": 3,
-            "schedule": "TBA ARR",
+            "schedule": "TR  9:30-10:50",
             "modality": "In Person"
           },
           {
@@ -1464,6 +1464,13 @@
             "code": "DSGN 10153",
             "title": "Intro to Computer Graphics",
             "hours": 3,
+            "schedule": "MW 12:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
             "schedule": "MW 14:00-15:50",
             "modality": "In Person"
           },
@@ -1472,6 +1479,13 @@
             "title": "Intro to Computer Graphics - Fashion Merchandising",
             "hours": 3,
             "schedule": "MW 16:00-17:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics - Fashion Merchandising",
+            "hours": 3,
+            "schedule": "MW 18:00-19:50",
             "modality": "In Person"
           },
           {
@@ -1650,10 +1664,24 @@
             "modality": "In Person"
           },
           {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "W 17:30-20:10",
+            "modality": "In Person"
+          },
+          {
             "code": "INTR 20103",
             "title": "Tech Skills for Emerging Prof",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INTR 20103",
+            "title": "Tech Skills for Emerging Prof",
+            "hours": 3,
+            "schedule": "MW 16:00-17:20",
             "modality": "In Person"
           },
           {
@@ -1682,13 +1710,6 @@
             "title": "Elementary Statistics",
             "hours": 3,
             "schedule": "MWF  9:00- 9:50",
-            "modality": "In Person"
-          },
-          {
-            "code": "MATH 10043",
-            "title": "Elementary Statistics",
-            "hours": 3,
-            "schedule": "TR  9:30-10:50",
             "modality": "In Person"
           },
           {
@@ -1765,7 +1786,28 @@
             "code": "MATH 10043",
             "title": "Elementary Statistics",
             "hours": 3,
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
             "schedule": "TR 15:30-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 15:00-15:50",
             "modality": "In Person"
           },
           {
@@ -1793,7 +1835,14 @@
             "code": "STCO 43803",
             "title": "New Media",
             "hours": 3,
-            "schedule": "TR 11:00-12:20",
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "STCO 43803",
+            "title": "New Media",
+            "hours": 3,
+            "schedule": "MWF 15:00-15:50",
             "modality": "In Person"
           },
           {
@@ -1819,14 +1868,14 @@
           },
           {
             "code": "WRIT 30390",
-            "title": "Publication Production",
+            "title": "Publication Production - eleven40seven",
             "hours": 3,
             "schedule": "T 15:30-16:50",
             "modality": "In Person"
           },
           {
             "code": "WRIT 30390",
-            "title": "Publication Production",
+            "title": "Publication Production - Art and Wellness",
             "hours": 3,
             "schedule": "R 15:30-16:50",
             "modality": "In Person"
@@ -1842,7 +1891,7 @@
             "code": "WRIT 40363",
             "title": "Multimedia Authrng:Apps&eBooks",
             "hours": 3,
-            "schedule": "MWF 10:00-10:15",
+            "schedule": "MWF 10:00-11:50",
             "modality": "In Person"
           }
         ]
@@ -2654,7 +2703,7 @@
           },
           {
             "code": "ARST 20743",
-            "title": "Photography",
+            "title": "Photography - Beginning Photography",
             "hours": 3,
             "schedule": "MW 14:00-16:50",
             "modality": "In Person"
@@ -2695,10 +2744,10 @@
             "modality": "In Person"
           },
           {
-            "code": "DCDA 40273",
-            "title": "DCDA Internship",
+            "code": "DSGN 10103",
+            "title": "Intro Creative Practice",
             "hours": 3,
-            "schedule": "TBA ARR",
+            "schedule": "TR  9:30-10:50",
             "modality": "In Person"
           },
           {
@@ -2740,6 +2789,13 @@
             "code": "DSGN 10153",
             "title": "Intro to Computer Graphics",
             "hours": 3,
+            "schedule": "MW 12:00-13:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics",
+            "hours": 3,
             "schedule": "MW 14:00-15:50",
             "modality": "In Person"
           },
@@ -2748,6 +2804,13 @@
             "title": "Intro to Computer Graphics - Fashion Merchandising",
             "hours": 3,
             "schedule": "MW 16:00-17:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "DSGN 10153",
+            "title": "Intro to Computer Graphics - Fashion Merchandising",
+            "hours": 3,
+            "schedule": "MW 18:00-19:50",
             "modality": "In Person"
           },
           {
@@ -2926,10 +2989,24 @@
             "modality": "In Person"
           },
           {
+            "code": "INSC 20153",
+            "title": "Statistical Analysis",
+            "hours": 3,
+            "schedule": "W 17:30-20:10",
+            "modality": "In Person"
+          },
+          {
             "code": "INTR 20103",
             "title": "Tech Skills for Emerging Prof",
             "hours": 3,
             "schedule": "TR 14:00-15:20",
+            "modality": "In Person"
+          },
+          {
+            "code": "INTR 20103",
+            "title": "Tech Skills for Emerging Prof",
+            "hours": 3,
+            "schedule": "MW 16:00-17:20",
             "modality": "In Person"
           },
           {
@@ -2958,13 +3035,6 @@
             "title": "Elementary Statistics",
             "hours": 3,
             "schedule": "MWF  9:00- 9:50",
-            "modality": "In Person"
-          },
-          {
-            "code": "MATH 10043",
-            "title": "Elementary Statistics",
-            "hours": 3,
-            "schedule": "TR  9:30-10:50",
             "modality": "In Person"
           },
           {
@@ -3041,7 +3111,28 @@
             "code": "MATH 10043",
             "title": "Elementary Statistics",
             "hours": 3,
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
             "schedule": "TR 15:30-16:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "MATH 10043",
+            "title": "Elementary Statistics",
+            "hours": 3,
+            "schedule": "MWF 15:00-15:50",
             "modality": "In Person"
           },
           {
@@ -3069,7 +3160,14 @@
             "code": "STCO 43803",
             "title": "New Media",
             "hours": 3,
-            "schedule": "TR 11:00-12:20",
+            "schedule": "MWF 14:00-14:50",
+            "modality": "In Person"
+          },
+          {
+            "code": "STCO 43803",
+            "title": "New Media",
+            "hours": 3,
+            "schedule": "MWF 15:00-15:50",
             "modality": "In Person"
           },
           {
@@ -3095,14 +3193,14 @@
           },
           {
             "code": "WRIT 30390",
-            "title": "Publication Production",
+            "title": "Publication Production - eleven40seven",
             "hours": 3,
             "schedule": "T 15:30-16:50",
             "modality": "In Person"
           },
           {
             "code": "WRIT 30390",
-            "title": "Publication Production",
+            "title": "Publication Production - Art and Wellness",
             "hours": 3,
             "schedule": "R 15:30-16:50",
             "modality": "In Person"
@@ -3118,7 +3216,7 @@
             "code": "WRIT 40363",
             "title": "Multimedia Authrng:Apps&eBooks",
             "hours": 3,
-            "schedule": "MWF 10:00-10:15",
+            "schedule": "MWF 10:00-11:50",
             "modality": "In Person"
           }
         ]
@@ -3603,6 +3701,6 @@
     "Students may not receive credit for both DCDA 20833 and WRIT 20833",
     "DSGN courses: contact Tyra Musoma (t.musoma@tcu.edu) to be placed on waiting list — DSGN majors have priority enrollment",
     "STCO courses: contact the instructor of record to be placed on waiting list",
-    "Current semester offerings (Fall 2026): 27 DCDA-approved courses available"
+    "Current semester offerings (Fall 2026): 26 DCDA-approved courses available"
   ]
 }
