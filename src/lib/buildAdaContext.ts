@@ -1,5 +1,5 @@
 import type { StudentData, WizardStepId } from '@/types'
-import { getCourseByCode, categoryNames, isCourseOffered, getNextSemesterTerm } from '@/services/courses'
+import { getCourseByCode, getAllCourses, categoryNames, isCourseOffered, getNextSemesterTerm } from '@/services/courses'
 import requirementsData from '../../data/requirements.json'
 
 const STEP_LABELS: Record<WizardStepId, string> = {
@@ -98,6 +98,14 @@ export function buildAdaContext(
 
   if (remaining.length > 0) {
     lines.push(`Still needed: ${remaining.join('; ')}`)
+  }
+
+  // All DCDA courses offered next semester (regardless of student progress)
+  const allOffered = getAllCourses()
+    .filter(c => isCourseOffered(c.code))
+    .map(c => `${c.code} (${c.title})`)
+  if (allOffered.length > 0) {
+    lines.push(`All DCDA-approved courses offered ${term}: ${allOffered.join('; ')}`)
   }
 
   // Progress summary
