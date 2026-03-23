@@ -57,6 +57,7 @@ export function AnalyticsDashboard() {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Total Submissions" value={summary.totalSubmissions} />
+        <StatCard label="Unique Sessions" value={summary.totalUniqueSessions || '—'} />
         <StatCard label="Majors" value={summary.byDegreeType.major} />
         <StatCard label="Minors" value={summary.byDegreeType.minor} />
         <StatCard label="Completion Rate" value={`${completionRate}%`} />
@@ -106,7 +107,7 @@ export function AnalyticsDashboard() {
                       style={{ width: `${(day.wizardStarts / maxStarts) * 100}%`, minWidth: day.wizardStarts > 0 ? '4px' : '0' }}
                     />
                     <span className="text-xs text-muted-foreground">
-                      {day.wizardStarts} starts / {day.wizardCompletions} completions
+                      {day.wizardStarts} starts / {day.wizardCompletions} completions{day.uniqueSessions > 0 ? ` / ${day.uniqueSessions} unique` : ''}
                     </span>
                   </div>
                 </div>

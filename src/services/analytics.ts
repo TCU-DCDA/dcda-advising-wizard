@@ -2,6 +2,7 @@ import {
   doc,
   setDoc,
   increment,
+  arrayUnion,
   collection,
   addDoc,
   serverTimestamp,
@@ -14,6 +15,17 @@ import type { StudentData } from '@/types'
 
 function getTodayId(): string {
   return new Date().toISOString().slice(0, 10) // "2026-02-24"
+}
+
+// Stable anonymous session ID — survives within a tab session but not across tabs/refreshes.
+// Used to count unique sessions per day without any PII.
+function getSessionId(): string {
+  let id = sessionStorage.getItem('dcda_session_id')
+  if (!id) {
+    id = crypto.randomUUID()
+    sessionStorage.setItem('dcda_session_id', id)
+  }
+  return id
 }
 
 function getCurrentTerm(): string {
@@ -43,6 +55,7 @@ export async function trackWizardStart(): Promise<void> {
       {
         wizardStarts: increment(1),
         hourlyStarts: { [hour]: increment(1) },
+        sessions: arrayUnion(getSessionId()),
       },
       { merge: true }
     )

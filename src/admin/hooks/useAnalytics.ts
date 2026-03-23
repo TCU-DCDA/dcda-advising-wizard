@@ -9,6 +9,7 @@ export interface DailyStats {
   date: string
   wizardStarts: number
   wizardCompletions: number
+  uniqueSessions: number
   stepDropoffs: Record<string, number>
   hourlyStarts: Record<string, number>
   exports: Record<string, number>
@@ -34,6 +35,7 @@ export interface StepFunnel {
 
 export interface SubmissionSummary {
   totalSubmissions: number
+  totalUniqueSessions: number
   byDegreeType: { major: number; minor: number }
   byGraduation: Record<string, number>
   recentDays: DailyStats[]
@@ -61,6 +63,7 @@ export function useAnalytics() {
           date: d.id,
           wizardStarts: d.data().wizardStarts ?? 0,
           wizardCompletions: d.data().wizardCompletions ?? 0,
+          uniqueSessions: Array.isArray(d.data().sessions) ? d.data().sessions.length : 0,
           stepDropoffs: d.data().stepDropoffs ?? {},
           hourlyStarts: d.data().hourlyStarts ?? {},
           exports: d.data().exports ?? {},
@@ -68,10 +71,12 @@ export function useAnalytics() {
         .sort((a, b) => b.date.localeCompare(a.date))
       const recentDays = allDays.slice(0, 30)
 
-      // Aggregate peak hours and export counts across all days
+      // Aggregate peak hours, export counts, and unique sessions across all days
       const peakHours: Record<string, number> = {}
       const exportCounts: Record<string, number> = {}
+      let totalUniqueSessions = 0
       for (const day of allDays) {
+        totalUniqueSessions += day.uniqueSessions
         for (const [hour, count] of Object.entries(day.hourlyStarts)) {
           peakHours[hour] = (peakHours[hour] || 0) + count
         }
@@ -144,6 +149,7 @@ export function useAnalytics() {
 
       setSummary({
         totalSubmissions: total,
+        totalUniqueSessions,
         byDegreeType: { major, minor },
         byGraduation,
         recentDays: recentDays.reverse(),
