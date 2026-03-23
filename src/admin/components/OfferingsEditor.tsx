@@ -134,7 +134,6 @@ export function OfferingsEditor() {
             onChange={(e) => setTermId(e.target.value)}
             className="border rounded-lg px-3 py-1.5 text-sm bg-card"
           >
-            <option value="offerings_sp26">Spring 2026</option>
             <option value="offerings_su26">Summer 2026</option>
             <option value="offerings_fa26">Fall 2026</option>
           </select>
