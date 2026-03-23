@@ -12,8 +12,11 @@ dist
 dist-ssr
 *.local
 
-# Data dumps
+# Data dumps & working files
 data/*.csv
+data/*.numbers
+data/*-scrape-*.json
+data/*-admin.json
 
 # Environment variables
 .env
