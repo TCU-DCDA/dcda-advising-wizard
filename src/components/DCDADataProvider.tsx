@@ -15,13 +15,10 @@ export function DCDADataProvider({ children }: DCDADataProviderProps) {
     if (!data.loading && data.offerings) {
       updateOfferings(data.offerings)
     }
-  }, [data.loading, data.offerings])
-
-  useEffect(() => {
     if (!data.loading && data.summerOfferings) {
       updateSummerOfferings(data.summerOfferings)
     }
-  }, [data.loading, data.summerOfferings])
+  }, [data])
 
   return (
     <DCDADataContext.Provider value={data}>

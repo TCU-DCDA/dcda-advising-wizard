@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { StudentData } from '@/types'
 import { useRequirements } from '@/hooks/useRequirements'
-import { getCourseByCode, buildSemesterPlan, getNextSemesterTerm } from '@/services/courses'
+import { getCourseByCode, buildSemesterPlan, getNextSemesterTerm, getSummerTerm } from '@/services/courses'
 import { cn } from '@/lib/utils'
 import { CalendarDays, ChevronDown, ChevronUp } from 'lucide-react'
 
@@ -116,9 +116,10 @@ interface ReviewSummaryStepProps {
   studentData: StudentData
   generalElectives?: string[]
   scheduledSelections?: Record<string, string | string[] | null>
+  summerScheduledSelections?: Record<string, string | string[] | null>
 }
 
-export function ReviewSummaryStep({ studentData, generalElectives, scheduledSelections }: ReviewSummaryStepProps) {
+export function ReviewSummaryStep({ studentData, generalElectives, scheduledSelections, summerScheduledSelections }: ReviewSummaryStepProps) {
   const { degreeProgress, requirements } = useRequirements(studentData, generalElectives)
 
   const selectedDegreeType = studentData.degreeType || 'major'
@@ -128,6 +129,7 @@ export function ReviewSummaryStep({ studentData, generalElectives, scheduledSele
   // Organize courses by status
   const completedByCategory: Record<string, string[]> = {}
   const scheduledByCategory: Record<string, string[]> = {}
+  const summerScheduledByCategory: Record<string, string[]> = {}
   const scheduledCourseCategories: Record<string, string> = {}
   const neededCategories: { category: string; name: string; remaining: number }[] = []
   const assignedScheduledCourses = new Set<string>()
@@ -137,6 +139,22 @@ export function ReviewSummaryStep({ studentData, generalElectives, scheduledSele
   if (degreeProgress) {
     for (const cat of degreeProgress.categories) {
       categoryNameById[cat.id] = cat.name
+    }
+  }
+
+  // Build summer scheduled-by-category from summerScheduledSelections
+  if (summerScheduledSelections && degreeProgress) {
+    for (const [catId, value] of Object.entries(summerScheduledSelections)) {
+      const catName = categoryNameById[catId]
+      if (!catName) continue
+      const codes = Array.isArray(value) ? value : (value ? [value] : [])
+      if (codes.length > 0) {
+        summerScheduledByCategory[catName] = codes
+        codes.forEach((code) => {
+          assignedScheduledCourses.add(code)
+          scheduledCourseCategories[code] = catName
+        })
+      }
     }
   }
 
@@ -188,8 +206,8 @@ export function ReviewSummaryStep({ studentData, generalElectives, scheduledSele
         }
       }
 
-      // Count scheduled courses assigned to this category
-      const scheduledInCatCount = (scheduledByCategory[cat.name] || []).length
+      // Count scheduled courses assigned to this category (summer + fall)
+      const scheduledInCatCount = (scheduledByCategory[cat.name] || []).length + (summerScheduledByCategory[cat.name] || []).length
       const totalFilled = cat.completed + scheduledInCatCount
       if (totalFilled < cat.required) {
         const remaining = cat.required - totalFilled
@@ -199,15 +217,18 @@ export function ReviewSummaryStep({ studentData, generalElectives, scheduledSele
   }
 
   const completedCount = Object.values(completedByCategory).flat().length
+  const summerScheduledCount = Object.values(summerScheduledByCategory).flat().length
   const scheduledCount = Object.values(scheduledByCategory).flat().length
   const neededCoursesCount = neededCategories.reduce((sum, cat) => sum + cat.remaining, 0)
   
+  const summerCoursesList = Object.values(summerScheduledByCategory).flat()
   const semesterPlan = buildSemesterPlan(
     studentData.scheduledCourses,
     scheduledCourseCategories,
     neededCategories,
     studentData.expectedGraduation,
-    studentData.includeSummer || false
+    studentData.includeSummer || false,
+    summerCoursesList
   )
 
   return (
@@ -226,13 +247,23 @@ export function ReviewSummaryStep({ studentData, generalElectives, scheduledSele
         degreeLabel={selectedDegreeType === 'major' ? 'Major' : 'Minor'}
       />
 
-      {/* Completed & Scheduled Courses - Side by Side */}
+      {/* Completed & Scheduled Courses */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {completedCount > 0 && (
           <SummarySection title="Completed Courses" status="complete" count={completedCount}>
             {Object.entries(completedByCategory).map(([category, codes]) =>
               codes.map((code) => (
                 <CourseRow key={code} code={code} category={category} showCheck />
+              ))
+            )}
+          </SummarySection>
+        )}
+
+        {summerScheduledCount > 0 && (
+          <SummarySection title={`Scheduled: ${getSummerTerm()}`} status="scheduled" count={summerScheduledCount}>
+            {Object.entries(summerScheduledByCategory).map(([category, codes]) =>
+              codes.map((code) => (
+                <CourseRow key={code} code={code} category={category} />
               ))
             )}
           </SummarySection>

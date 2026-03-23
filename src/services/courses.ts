@@ -1,6 +1,7 @@
 import type { Course, CourseSection, CourseOfferings, RequirementCategoryId } from '@/types'
 import coursesData from '../../data/courses.json'
 import offeringsData from '../../data/offerings-fa26.json'
+import summerOfferingsData from '../../data/offerings-su26.json'
 import requirementsData from '../../data/requirements.json'
 
 // Deduplicate courses by code (keep first occurrence)
@@ -10,7 +11,7 @@ const courses = coursesRaw.filter((course, index, self) =>
 )
 
 let offerings = offeringsData as CourseOfferings
-let summerOfferings: CourseOfferings | null = null
+let summerOfferings = summerOfferingsData as CourseOfferings
 const requirements = requirementsData as typeof requirementsData
 
 /** Called by DCDADataProvider to update live offerings from Firestore */
@@ -18,19 +19,9 @@ export function updateOfferings(data: CourseOfferings): void {
   offerings = data
 }
 
-/** Called by DCDADataProvider to update summer offerings from Firestore */
+/** Called by DCDADataProvider to update live summer offerings from Firestore */
 export function updateSummerOfferings(data: CourseOfferings): void {
   summerOfferings = data
-}
-
-/** Get summer offerings (if available) */
-export function getSummerOfferings(): CourseOfferings | null {
-  return summerOfferings
-}
-
-/** Get the summer semester term label (if summer offerings exist) */
-export function getSummerSemesterTerm(): string | null {
-  return summerOfferings?.term ?? null
 }
 
 // Get all courses for a specific requirement category
@@ -70,15 +61,14 @@ export function getCoursesForCategory(
   return []
 }
 
-// Get courses offered next semester for a specific category
+// Get courses offered for a specific category in the given semester
 export function getOfferedCoursesForCategory(
   categoryId: RequirementCategoryId,
   degreeType: 'major' | 'minor' = 'major',
   excludeCourses: string[] = [],
   completedRequiredCourses: string[] = [],
-  useOfferings?: CourseOfferings
+  semester: 'fall' | 'summer' = 'fall'
 ): Course[] {
-  const targetOfferings = useOfferings ?? offerings
   const categoryCourses = getCoursesForCategory(categoryId, degreeType, completedRequiredCourses)
 
   // Specific exclusions for General Electives
@@ -86,9 +76,10 @@ export function getOfferedCoursesForCategory(
     ? categoryCourses.filter(c => c.code !== 'DCDA 40833')
     : categoryCourses
 
+  const source = semester === 'summer' ? summerOfferings : offerings
   return filteredCourses.filter(
     (course) =>
-      targetOfferings.offeredCodes.includes(course.code) &&
+      source.offeredCodes.includes(course.code) &&
       !excludeCourses.includes(course.code)
   )
 }
@@ -109,13 +100,19 @@ export function getRequiredCategoryCourses(
 }
 
 // Get section info for a course
-export function getSectionsForCourse(courseCode: string): CourseSection[] {
-  return offerings.sections.filter((s) => s.code === courseCode)
+export function getSectionsForCourse(courseCode: string, semester: 'fall' | 'summer' = 'fall'): CourseSection[] {
+  const source = semester === 'summer' ? summerOfferings : offerings
+  return source.sections.filter((s) => s.code === courseCode)
 }
 
-// Check if a course is offered next semester
+// Check if a course is offered in the given semester
 export function isCourseOffered(courseCode: string): boolean {
   return offerings.offeredCodes.includes(courseCode)
+}
+
+// Get the summer term label (e.g. "Summer 2026")
+export function getSummerTerm(): string {
+  return summerOfferings.term
 }
 
 // Get course by code
@@ -194,6 +191,11 @@ export function getSemestersUntilGraduation(expectedGraduation: string | null, i
   const startSeason: 'Spring' | 'Summer' | 'Fall' = termMatch ? (termMatch[1] as 'Spring' | 'Summer' | 'Fall') : 'Fall'
   const startYear = termMatch ? parseInt(termMatch[2]) : 2026
 
+  // If including summer and the next term is Fall, prepend the preceding summer
+  if (includeSummer && startSeason === 'Fall') {
+    semesters.push(`Summer ${startYear}`)
+  }
+
   if (!expectedGraduation) {
     // Default to 4 non-summer (or 6 with summer) semesters from the current term
     let s = startSeason
@@ -266,17 +268,32 @@ export function buildSemesterPlan(
   scheduledCategories: Record<string, string>, // course code -> category name
   neededCategories: { category: string; name: string; remaining: number }[],
   expectedGraduation: string | null,
-  includeSummer: boolean = false
+  includeSummer: boolean = false,
+  summerCourses: string[] = []
 ): SemesterPlan[] {
   const semesters = getSemestersUntilGraduation(expectedGraduation, includeSummer)
   const plan: SemesterPlan[] = semesters.map(s => ({ semester: s, courses: [] }))
-  
+
   if (plan.length === 0) return plan
-  
-  // First semester gets all scheduled courses
-  for (const code of scheduledCourses) {
+
+  // Place summer-scheduled courses into the summer semester slot
+  const summerTermLabel = summerOfferings.term
+  const summerIdx = semesters.findIndex(s => s === summerTermLabel)
+  if (summerIdx !== -1) {
+    for (const code of summerCourses) {
+      const category = scheduledCategories[code] || 'Elective'
+      plan[summerIdx].courses.push({ code, category })
+    }
+  }
+
+  // Fall-scheduled courses go into the fall semester (first non-summer slot)
+  const fallCourses = scheduledCourses.filter(c => !summerCourses.includes(c))
+  const fallTermLabel = offerings.term
+  const fallIdx = semesters.findIndex(s => s === fallTermLabel)
+  const targetIdx = fallIdx !== -1 ? fallIdx : 0
+  for (const code of fallCourses) {
     const category = scheduledCategories[code] || 'Elective'
-    plan[0].courses.push({ code, category })
+    plan[targetIdx].courses.push({ code, category })
   }
   
   // Build list of all remaining needed "slots" (courses to plan)

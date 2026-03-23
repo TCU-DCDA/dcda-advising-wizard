@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
-import type { RequirementCategoryId, CourseOfferings } from '@/types'
-import { getOfferedCoursesForCategory, categoryNames, getEnrollmentWarning, getNextSemesterTerm } from '@/services/courses'
+import type { RequirementCategoryId } from '@/types'
+import { getOfferedCoursesForCategory, categoryNames, getEnrollmentWarning, getNextSemesterTerm, getSummerTerm, isMutuallyExcluded } from '@/services/courses'
 import { AlertTriangle, CalendarDays } from 'lucide-react'
 
 // Blue accent classes for schedule phase (vs purple for history)
@@ -28,8 +28,7 @@ interface ScheduleStepProps {
   onSkip: () => void
   isSkipped: boolean
   degreeType: 'major' | 'minor'
-  termOfferings?: CourseOfferings // Override offerings for this step (e.g., summer)
-  termLabel?: string // Override term display label
+  semester?: 'fall' | 'summer'
 }
 
 export function ScheduleStep({
@@ -45,17 +44,18 @@ export function ScheduleStep({
   onSkip,
   isSkipped,
   degreeType,
-  termOfferings,
-  termLabel,
+  semester = 'fall',
 }: ScheduleStepProps) {
-  const displayTerm = termLabel ?? getNextSemesterTerm()
+  const termLabel = semester === 'summer' ? getSummerTerm() : getNextSemesterTerm()
 
-  // Get courses offered next semester for this category
+  // Get courses offered for this category in the target semester
   // For multi-select, exclude already scheduled but keep selected ones visible
   const excludeCourses = multiSelect
     ? [...allSelectedCourses, ...allScheduledCourses.filter((c) => !selectedCourses.includes(c))]
     : [...allSelectedCourses, ...allScheduledCourses.filter((c) => c !== selectedCourse)]
-  const availableCourses = getOfferedCoursesForCategory(categoryId, degreeType, excludeCourses, completedRequiredCourses, termOfferings)
+  const allSelected = [...allSelectedCourses, ...allScheduledCourses]
+  const availableCourses = getOfferedCoursesForCategory(categoryId, degreeType, excludeCourses, completedRequiredCourses, semester)
+    .filter((course) => !isMutuallyExcluded(course.code, allSelected.filter((c) => c !== course.code)))
 
   // Auto-skip when no courses are available
   useEffect(() => {
@@ -75,10 +75,10 @@ export function ScheduleStep({
           <CalendarDays className="size-5 text-blue-600 dark:text-blue-400 shrink-0" />
           <div>
             <div className="text-sm font-semibold text-blue-700 dark:text-blue-300">
-              Scheduling for {displayTerm}
+              Scheduling for {termLabel}
             </div>
             <div className="text-xs text-blue-600/70 dark:text-blue-400/70">
-              Choose courses to take next semester
+              Choose courses to take {semester === 'summer' ? 'this summer' : 'next semester'}
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export function ScheduleStep({
         ) : (
           <div className="text-center py-8 space-y-4">
             <p className="text-muted-foreground">
-              No courses for this category are offered in {displayTerm}.
+              No courses for this category are offered in {termLabel}.
             </p>
             <p className="text-sm text-muted-foreground">
               This category has been automatically skipped. You can plan for a future semester.
@@ -191,10 +191,10 @@ export function ScheduleStep({
         <CalendarDays className="size-5 text-blue-600 dark:text-blue-400 shrink-0" />
         <div>
           <div className="text-sm font-semibold text-blue-700 dark:text-blue-300">
-            Scheduling for {displayTerm}
+            Scheduling for {termLabel}
           </div>
           <div className="text-xs text-blue-600/70 dark:text-blue-400/70">
-            Choose a course to take next semester
+            Choose a course to take {semester === 'summer' ? 'this summer' : 'next semester'}
           </div>
         </div>
       </div>
@@ -274,7 +274,7 @@ export function ScheduleStep({
       ) : (
         <div className="text-center py-8 space-y-4">
           <p className="text-muted-foreground">
-            No courses for this category are offered in {displayTerm}.
+            No courses for this category are offered in {termLabel}.
           </p>
           <p className="text-sm text-muted-foreground">
             This category has been automatically skipped. You can plan for a future semester.

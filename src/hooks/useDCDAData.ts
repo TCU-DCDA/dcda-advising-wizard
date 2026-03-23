@@ -31,9 +31,7 @@ export function useDCDADataLoader(): DCDAData {
         setFallOfferings(snap.exists() ? (snap.data() as CourseOfferings) : null)
         setFallLoaded(true)
       },
-      () => {
-        setFallLoaded(true)
-      }
+      () => setFallLoaded(true)
     )
 
     const unsubSummer = onSnapshot(
@@ -42,9 +40,7 @@ export function useDCDADataLoader(): DCDAData {
         setSummerOfferings(snap.exists() ? (snap.data() as CourseOfferings) : null)
         setSummerLoaded(true)
       },
-      () => {
-        setSummerLoaded(true)
-      }
+      () => setSummerLoaded(true)
     )
 
     return () => { unsubFall(); unsubSummer() }

@@ -157,7 +157,7 @@ export interface WizardStep {
   part: WizardPart
   title: string
   categoryId?: RequirementCategoryId // For course selection steps
-  term?: 'summer' | 'fall' // Which term this schedule step targets
+  semester?: 'fall' | 'summer' // Which term's offerings to use (schedule steps)
 }
 
 // Wizard state

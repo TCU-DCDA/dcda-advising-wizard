@@ -15,7 +15,7 @@ import {
   isValidTcuEmail,
 } from '@/components/wizard'
 import { InstallPrompt } from '@/components/InstallPrompt'
-import { getRequiredCategoryCourses, getSummerOfferings, getSummerSemesterTerm, getNextSemesterTerm } from '@/services/courses'
+import { getRequiredCategoryCourses, getSummerTerm, getNextSemesterTerm } from '@/services/courses'
 import { buildAdaContext } from '@/lib/buildAdaContext'
 import type { RequirementCategoryId } from '@/types'
 import requirementsData from '../data/requirements.json'
@@ -94,7 +94,7 @@ function App() {
     generalElectives: false,
   })
 
-  // Track scheduled courses for Part 2 (fall term)
+  // Track scheduled courses for Part 2 (fall)
   const [scheduledSelections, setScheduledSelections] = useState<ScheduledSelections>({
     intro: null,
     statistics: null,
@@ -106,7 +106,7 @@ function App() {
     generalElectives: [],
   })
 
-  // Track scheduled courses for summer term
+  // Track scheduled courses for summer
   const [summerScheduledSelections, setSummerScheduledSelections] = useState<ScheduledSelections>({
     intro: null,
     statistics: null,
@@ -253,9 +253,9 @@ function App() {
   }, [])
 
   // Handle scheduling a course in Part 2
-  const handleScheduleCourse = useCallback((categoryId: RequirementCategoryId, courseCode: string, term: 'summer' | 'fall' = 'fall') => {
-    const setter = term === 'summer' ? setSummerScheduledSelections : setScheduledSelections
-    const skipSetter = term === 'summer' ? setSummerSkippedCategories : setSkippedCategories
+  const handleScheduleCourse = useCallback((categoryId: RequirementCategoryId, courseCode: string, semester: 'fall' | 'summer' = 'fall') => {
+    const setter = semester === 'summer' ? setSummerScheduledSelections : setScheduledSelections
+    const skipSetter = semester === 'summer' ? setSummerSkippedCategories : setSkippedCategories
     setter((prev) => ({
       ...prev,
       [categoryId]: courseCode,
@@ -268,9 +268,9 @@ function App() {
   }, [])
 
   // Handle adding a scheduled general elective in Part 2
-  const handleAddScheduledGeneralElective = useCallback((courseCode: string, term: 'summer' | 'fall' = 'fall') => {
-    const setter = term === 'summer' ? setSummerScheduledSelections : setScheduledSelections
-    const skipSetter = term === 'summer' ? setSummerSkippedCategories : setSkippedCategories
+  const handleAddScheduledGeneralElective = useCallback((courseCode: string, semester: 'fall' | 'summer' = 'fall') => {
+    const setter = semester === 'summer' ? setSummerScheduledSelections : setScheduledSelections
+    const skipSetter = semester === 'summer' ? setSummerSkippedCategories : setSkippedCategories
     setter((prev) => ({
       ...prev,
       generalElectives: [...prev.generalElectives, courseCode],
@@ -283,8 +283,8 @@ function App() {
   }, [])
 
   // Handle removing a scheduled general elective in Part 2
-  const handleRemoveScheduledGeneralElective = useCallback((courseCode: string, term: 'summer' | 'fall' = 'fall') => {
-    const setter = term === 'summer' ? setSummerScheduledSelections : setScheduledSelections
+  const handleRemoveScheduledGeneralElective = useCallback((courseCode: string, semester: 'fall' | 'summer' = 'fall') => {
+    const setter = semester === 'summer' ? setSummerScheduledSelections : setScheduledSelections
     setter((prev) => ({
       ...prev,
       generalElectives: prev.generalElectives.filter((c) => c !== courseCode),
@@ -292,9 +292,9 @@ function App() {
   }, [])
 
   // Handle skipping a category in Part 2
-  const handleSkipCategory = useCallback((categoryId: RequirementCategoryId, term: 'summer' | 'fall' = 'fall') => {
-    const setter = term === 'summer' ? setSummerScheduledSelections : setScheduledSelections
-    const skipSetter = term === 'summer' ? setSummerSkippedCategories : setSkippedCategories
+  const handleSkipCategory = useCallback((categoryId: RequirementCategoryId, semester: 'fall' | 'summer' = 'fall') => {
+    const setter = semester === 'summer' ? setSummerScheduledSelections : setScheduledSelections
+    const skipSetter = semester === 'summer' ? setSummerSkippedCategories : setSkippedCategories
     setter((prev) => ({
       ...prev,
       [categoryId]: categoryId === 'generalElectives' ? [] : null,
@@ -328,8 +328,9 @@ function App() {
         return true // Can proceed with no credits
       case 'schedule': {
         // Part 2: must select a course or skip
-        const selections = currentStep.term === 'summer' ? summerScheduledSelections : scheduledSelections
-        const skipped = currentStep.term === 'summer' ? summerSkippedCategories : skippedCategories
+        const isSummer = currentStep.semester === 'summer'
+        const selections = isSummer ? summerScheduledSelections : scheduledSelections
+        const skipped = isSummer ? summerSkippedCategories : skippedCategories
         if (currentStep.categoryId) {
           if (currentStep.categoryId === 'generalElectives') {
             return selections.generalElectives.length > 0 || skipped.has(currentStep.categoryId)
@@ -413,7 +414,7 @@ function App() {
       // Clear stale Part 2 state for categories that are now met
       // (handles backtracking: user goes back, completes a requirement, then advances again)
       const unmetSet = new Set(unmet)
-      setScheduledSelections(prev => {
+      const clearStaleSelections = (prev: ScheduledSelections) => {
         const next = { ...prev }
         for (const key of Object.keys(next) as RequirementCategoryId[]) {
           if (key !== 'generalElectives' && !unmetSet.has(key)) {
@@ -424,34 +425,18 @@ function App() {
           next.generalElectives = []
         }
         return next
-      })
-      setSkippedCategories(prev => {
+      }
+      const clearStaleSkips = (prev: Set<RequirementCategoryId>) => {
         const next = new Set(prev)
         for (const cat of next) {
           if (!unmetSet.has(cat)) next.delete(cat)
         }
         return next
-      })
-      // Also clear summer scheduled state for met categories
-      setSummerScheduledSelections(prev => {
-        const next = { ...prev }
-        for (const key of Object.keys(next) as RequirementCategoryId[]) {
-          if (key !== 'generalElectives' && !unmetSet.has(key)) {
-            next[key] = null
-          }
-        }
-        if (!unmetSet.has('generalElectives')) {
-          next.generalElectives = []
-        }
-        return next
-      })
-      setSummerSkippedCategories(prev => {
-        const next = new Set(prev)
-        for (const cat of next) {
-          if (!unmetSet.has(cat)) next.delete(cat)
-        }
-        return next
-      })
+      }
+      setScheduledSelections(clearStaleSelections)
+      setSummerScheduledSelections(clearStaleSelections)
+      setSkippedCategories(clearStaleSkips)
+      setSummerSkippedCategories(clearStaleSkips)
     }
 
     // Persist scheduled courses when moving through Part 2 or to review
@@ -727,56 +712,52 @@ function App() {
             selections={transitionSelections}
             includeSummer={studentData.includeSummer || false}
             onToggleSummer={(include) => updateStudentData({ includeSummer: include })}
-            summerAvailable={getSummerSemesterTerm() !== null}
+            summerAvailable={getSummerTerm() !== null}
           />
         )
       }
 
       case 'schedule': {
-        if (!currentStep.categoryId) return null
-        const term = currentStep.term ?? 'fall'
-        const isSummer = term === 'summer'
-        const selections = isSummer ? summerScheduledSelections : scheduledSelections
-        const skipped = isSummer ? summerSkippedCategories : skippedCategories
-        const termOfferings = isSummer ? (getSummerOfferings() ?? undefined) : undefined
-        const termLabel = isSummer ? (getSummerSemesterTerm() ?? undefined) : getNextSemesterTerm()
-
-        // Special handling for generalElectives - multi-select
-        if (currentStep.categoryId === 'generalElectives') {
+        const stepSemester = currentStep.semester || 'fall'
+        const stepSelections = stepSemester === 'summer' ? summerScheduledSelections : scheduledSelections
+        const stepSkipped = stepSemester === 'summer' ? summerSkippedCategories : skippedCategories
+        if (currentStep.categoryId) {
+          // Special handling for generalElectives - multi-select
+          if (currentStep.categoryId === 'generalElectives') {
+            return (
+              <ScheduleStep
+                categoryId={currentStep.categoryId}
+                selectedCourse={null}
+                selectedCourses={stepSelections.generalElectives}
+                multiSelect
+                allSelectedCourses={allCompletedCourses}
+                allScheduledCourses={allScheduledCourses}
+                completedRequiredCourses={completedRequiredCourses}
+                onSelectCourse={(code) => handleAddScheduledGeneralElective(code, stepSemester)}
+                onDeselectCourse={(code) => handleRemoveScheduledGeneralElective(code, stepSemester)}
+                onSkip={() => handleSkipCategory(currentStep.categoryId!, stepSemester)}
+                isSkipped={stepSkipped.has(currentStep.categoryId)}
+                degreeType={studentData.degreeType || 'major'}
+                semester={stepSemester}
+              />
+            )
+          }
           return (
             <ScheduleStep
               categoryId={currentStep.categoryId}
-              selectedCourse={null}
-              selectedCourses={selections.generalElectives}
-              multiSelect
+              selectedCourse={stepSelections[currentStep.categoryId]}
               allSelectedCourses={allCompletedCourses}
               allScheduledCourses={allScheduledCourses}
               completedRequiredCourses={completedRequiredCourses}
-              onSelectCourse={(code) => handleAddScheduledGeneralElective(code, term)}
-              onDeselectCourse={(code) => handleRemoveScheduledGeneralElective(code, term)}
-              onSkip={() => handleSkipCategory(currentStep.categoryId!, term)}
-              isSkipped={skipped.has(currentStep.categoryId)}
+              onSelectCourse={(code) => handleScheduleCourse(currentStep.categoryId!, code, stepSemester)}
+              onSkip={() => handleSkipCategory(currentStep.categoryId!, stepSemester)}
+              isSkipped={stepSkipped.has(currentStep.categoryId)}
               degreeType={studentData.degreeType || 'major'}
-              termOfferings={termOfferings}
-              termLabel={termLabel}
+              semester={stepSemester}
             />
           )
         }
-        return (
-          <ScheduleStep
-            categoryId={currentStep.categoryId}
-            selectedCourse={selections[currentStep.categoryId]}
-            allSelectedCourses={allCompletedCourses}
-            allScheduledCourses={allScheduledCourses}
-            completedRequiredCourses={completedRequiredCourses}
-            onSelectCourse={(code) => handleScheduleCourse(currentStep.categoryId!, code, term)}
-            onSkip={() => handleSkipCategory(currentStep.categoryId!, term)}
-            isSkipped={skipped.has(currentStep.categoryId)}
-            degreeType={studentData.degreeType || 'major'}
-            termOfferings={termOfferings}
-            termLabel={termLabel}
-          />
-        )
+        return null
       }
 
       case 'reviewSummary':
@@ -789,6 +770,7 @@ function App() {
             }}
             generalElectives={categorySelections.generalElectives}
             scheduledSelections={scheduledSelections}
+            summerScheduledSelections={summerScheduledSelections}
           />
         )
 
