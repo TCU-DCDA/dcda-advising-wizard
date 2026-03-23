@@ -319,11 +319,14 @@ export function buildSemesterPlan(
   // Determine which semesters are available for distributing needed placeholder slots
   // Skip semesters that already have scheduled courses, and always skip summer semesters
   // (students opt into specific summer courses; placeholder slots belong in fall/spring)
+  // Allow the capstone semester through even if it already has the capstone placeholder,
+  // so that remaining courses (e.g. General Electives) can still be placed alongside it.
   const distributionIndices: number[] = []
   for (let i = 0; i < semesters.length; i++) {
     const isSummer = semesters[i].startsWith('Summer')
     if (isSummer) continue
-    if (plan[i].courses.length > 0) continue
+    const hasScheduledCourses = plan[i].courses.some(c => c.code !== '—')
+    if (hasScheduledCourses) continue
     distributionIndices.push(i)
   }
 
