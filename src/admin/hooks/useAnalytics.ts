@@ -42,6 +42,8 @@ export interface SubmissionSummary {
   courseDemand: CourseDemand | null
   insights: SubmissionInsights
   stepFunnel: StepFunnel[]
+  stepFunnelMajor: StepFunnel[]
+  stepFunnelMinor: StepFunnel[]
   peakHours: Record<string, number>
   exportCounts: Record<string, number>
 }
@@ -87,10 +89,21 @@ export function useAnalytics() {
 
       // Aggregate step funnel from stepVisits across all days
       const stepTotals: Record<string, number> = {}
+      const stepTotalsMajor: Record<string, number> = {}
+      const stepTotalsMinor: Record<string, number> = {}
       for (const d of dailySnap.docs) {
-        const stepVisits = d.data().stepVisits ?? {}
+        const data = d.data()
+        const stepVisits = data.stepVisits ?? {}
         for (const [stepId, count] of Object.entries(stepVisits)) {
           stepTotals[stepId] = (stepTotals[stepId] || 0) + (count as number)
+        }
+        const majorVisits = data.stepVisits_major ?? {}
+        for (const [stepId, count] of Object.entries(majorVisits)) {
+          stepTotalsMajor[stepId] = (stepTotalsMajor[stepId] || 0) + (count as number)
+        }
+        const minorVisits = data.stepVisits_minor ?? {}
+        for (const [stepId, count] of Object.entries(minorVisits)) {
+          stepTotalsMinor[stepId] = (stepTotalsMinor[stepId] || 0) + (count as number)
         }
       }
 
@@ -118,7 +131,7 @@ export function useAnalytics() {
       })
 
       // Fetch course demand for current term
-      const termId = getCurrentTerm()
+      const termId = getNextTerm()
       let courseDemand: CourseDemand | null = null
       try {
         const demandRef = collection(db, 'dcda_analytics', 'course_demand', 'terms')
@@ -135,15 +148,26 @@ export function useAnalytics() {
         // Course demand collection may not exist yet
       }
 
-      // Build ordered step funnel
+      // Build ordered step funnels — aggregate + split by degree type
       const stepOrder = [
         'welcome', 'name', 'graduation', 'intro', 'statistics', 'coding',
         'mmAuthoring', 'dcElective', 'daElective', 'generalElectives',
         'specialCredits', 'transition', 'schedule', 'reviewSummary', 'reviewActions',
       ]
+      const minorStepOrder = [
+        'welcome', 'name', 'graduation', 'statistics', 'coding',
+        'mmAuthoring', 'generalElectives',
+        'specialCredits', 'transition', 'schedule', 'reviewSummary', 'reviewActions',
+      ]
       const stepFunnel: StepFunnel[] = stepOrder
         .filter((id) => stepTotals[id])
         .map((id) => ({ stepId: id, visits: stepTotals[id] }))
+      const stepFunnelMajor: StepFunnel[] = stepOrder
+        .filter((id) => stepTotalsMajor[id])
+        .map((id) => ({ stepId: id, visits: stepTotalsMajor[id] }))
+      const stepFunnelMinor: StepFunnel[] = minorStepOrder
+        .filter((id) => stepTotalsMinor[id])
+        .map((id) => ({ stepId: id, visits: stepTotalsMinor[id] }))
 
       const total = subsSnap.size
 
@@ -161,6 +185,8 @@ export function useAnalytics() {
           specialCreditsCount,
         },
         stepFunnel,
+        stepFunnelMajor,
+        stepFunnelMinor,
         peakHours,
         exportCounts,
       })
@@ -179,11 +205,11 @@ export function useAnalytics() {
   return { summary, loading, error, refresh }
 }
 
-function getCurrentTerm(): string {
+function getNextTerm(): string {
   const now = new Date()
   const month = now.getMonth() + 1
-  const year = now.getFullYear().toString().slice(-2)
-  if (month >= 8) return `fa${year}`
-  if (month >= 5) return `su${year}`
-  return `sp${year}`
+  const year = now.getFullYear()
+  const yy = (y: number) => y.toString().slice(-2)
+  if (month >= 8) return `sp${yy(year + 1)}`
+  return `fa${yy(year)}`
 }

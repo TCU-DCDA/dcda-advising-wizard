@@ -1,6 +1,42 @@
-import { useAnalytics } from '../hooks/useAnalytics'
+import { useAnalytics, type StepFunnel } from '../hooks/useAnalytics'
 import { Button } from '@/components/ui/button'
 import { RefreshCw } from 'lucide-react'
+
+function formatTerm(code: string): string {
+  const prefix = code.slice(0, 2)
+  const yy = code.slice(2)
+  const season = prefix === 'fa' ? 'Fall' : prefix === 'sp' ? 'Spring' : 'Summer'
+  return `${season} 20${yy}`
+}
+
+function FunnelChart({ steps, barClass }: { steps: StepFunnel[]; barClass: string }) {
+  return (
+    <div className="space-y-1.5">
+      {steps.map((step, i) => {
+        const maxVisits = steps[0]?.visits || 1
+        const prev = i > 0 ? steps[i - 1].visits : step.visits
+        const dropoff = prev > 0 ? Math.round(((prev - step.visits) / prev) * 100) : 0
+        return (
+          <div key={step.stepId} className="flex items-center gap-3 text-sm">
+            <span className="w-32 text-muted-foreground font-mono text-xs truncate">{step.stepId}</span>
+            <div className="flex-1 flex items-center gap-2">
+              <div
+                className={`h-5 rounded ${barClass}`}
+                style={{ width: `${(step.visits / maxVisits) * 100}%`, minWidth: step.visits > 0 ? '4px' : '0' }}
+              />
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                {step.visits}
+                {i > 0 && dropoff > 0 && (
+                  <span className="text-destructive/70 ml-1">-{dropoff}%</span>
+                )}
+              </span>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 export function AnalyticsDashboard() {
   const { summary, loading, error, refresh } = useAnalytics()
@@ -139,7 +175,7 @@ export function AnalyticsDashboard() {
       {/* Course Demand */}
       <section className="space-y-3">
         <h3 className="text-lg font-semibold">
-          Course Demand {summary.courseDemand ? `(${summary.courseDemand.term})` : ''}
+          Course Demand {summary.courseDemand ? `(${formatTerm(summary.courseDemand.term)})` : ''}
         </h3>
         {demandEntries.length === 0 ? (
           <p className="text-sm text-muted-foreground">No course demand data yet.</p>
@@ -169,35 +205,39 @@ export function AnalyticsDashboard() {
         )}
       </section>
 
-      {/* Step Funnel */}
+      {/* Step Funnels — split by degree type, with aggregate fallback */}
       <section className="space-y-3">
         <h3 className="text-lg font-semibold">Step Funnel</h3>
-        {summary.stepFunnel.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No step data yet.</p>
+        {summary.stepFunnelMajor.length === 0 && summary.stepFunnelMinor.length === 0 ? (
+          <>
+            {/* No split data yet — show aggregate funnel (historical) */}
+            {summary.stepFunnel.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No step data yet.</p>
+            ) : (
+              <>
+                <p className="text-xs text-muted-foreground">All students (pre-split data)</p>
+                <FunnelChart steps={summary.stepFunnel} barClass="bg-primary/20" />
+              </>
+            )}
+          </>
         ) : (
-          <div className="space-y-1.5">
-            {summary.stepFunnel.map((step, i) => {
-              const maxVisits = summary.stepFunnel[0]?.visits || 1
-              const prev = i > 0 ? summary.stepFunnel[i - 1].visits : step.visits
-              const dropoff = prev > 0 ? Math.round(((prev - step.visits) / prev) * 100) : 0
-              return (
-                <div key={step.stepId} className="flex items-center gap-3 text-sm">
-                  <span className="w-32 text-muted-foreground font-mono text-xs truncate">{step.stepId}</span>
-                  <div className="flex-1 flex items-center gap-2">
-                    <div
-                      className="h-5 bg-primary/20 rounded"
-                      style={{ width: `${(step.visits / maxVisits) * 100}%`, minWidth: step.visits > 0 ? '4px' : '0' }}
-                    />
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {step.visits}
-                      {i > 0 && dropoff > 0 && (
-                        <span className="text-destructive/70 ml-1">-{dropoff}%</span>
-                      )}
-                    </span>
-                  </div>
-                </div>
-              )
-            })}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">Major</h4>
+              {summary.stepFunnelMajor.length === 0 ? (
+                <p className="text-xs text-muted-foreground">No major data yet.</p>
+              ) : (
+                <FunnelChart steps={summary.stepFunnelMajor} barClass="bg-blue-300/40" />
+              )}
+            </div>
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">Minor</h4>
+              {summary.stepFunnelMinor.length === 0 ? (
+                <p className="text-xs text-muted-foreground">No minor data yet.</p>
+              ) : (
+                <FunnelChart steps={summary.stepFunnelMinor} barClass="bg-violet-300/40" />
+              )}
+            </div>
           </div>
         )}
       </section>

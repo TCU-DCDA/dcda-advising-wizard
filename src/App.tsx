@@ -62,7 +62,7 @@ function App() {
     }
   }, [])
   useEffect(() => {
-    trackStepVisit(wizard.currentStep.id)
+    trackStepVisit(wizard.currentStep.id, studentData.degreeType ?? undefined)
   }, [wizard.currentStep.id])
 
   // Build chat context from current wizard state

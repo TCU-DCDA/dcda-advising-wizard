@@ -30,13 +30,13 @@ function getSessionId(): string {
   return id
 }
 
-function getCurrentTerm(): string {
+function getNextTerm(): string {
   const now = new Date()
   const month = now.getMonth() + 1
-  const year = now.getFullYear().toString().slice(-2)
-  if (month >= 8) return `fa${year}`
-  if (month >= 5) return `su${year}`
-  return `sp${year}`
+  const year = now.getFullYear()
+  const yy = (y: number) => y.toString().slice(-2)
+  if (month >= 8) return `sp${yy(year + 1)}`
+  return `fa${yy(year)}`
 }
 
 async function generateSessionHash(): Promise<string> {
@@ -67,13 +67,16 @@ export async function trackWizardStart(): Promise<void> {
   }
 }
 
-export async function trackStepVisit(stepId: string): Promise<void> {
+export async function trackStepVisit(stepId: string, degreeType?: string): Promise<void> {
   if (isLocal) return
   try {
     const dayRef = doc(db, 'dcda_analytics', 'daily', 'stats', getTodayId())
     await setDoc(
       dayRef,
-      { stepVisits: { [stepId]: increment(1) } },
+      {
+        stepVisits: { [stepId]: increment(1) },
+        ...(degreeType && { [`stepVisits_${degreeType}`]: { [stepId]: increment(1) } }),
+      },
       { merge: true }
     )
   } catch {
@@ -134,7 +137,7 @@ export async function recordAnonymousSubmission(
     await setDoc(dayRef, { wizardCompletions: increment(1) }, { merge: true })
 
     // Increment course demand counters
-    const termId = getCurrentTerm()
+    const termId = getNextTerm()
     const demandRef = doc(
       db,
       'dcda_analytics',
