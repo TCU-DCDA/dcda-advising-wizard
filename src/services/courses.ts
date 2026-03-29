@@ -44,11 +44,14 @@ export function getCoursesForCategory(
   if (degreeType === 'major' && 'electives' in degree && degree.electives) {
     const electiveCat = degree.electives.categories.find((c: { id: string }) => c.id === categoryId)
     if (electiveCat?.category) {
-      // Get all courses in this category
-      // Only exclude courses that are ACTUALLY being used to fulfill required categories
-      // (not just courses that COULD fulfill required categories)
+      // Find codes from the raw (pre-dedup) list so dual-category courses are included
+      const matchingCodes = new Set(
+        coursesRaw
+          .filter((c) => c.category === electiveCat.category)
+          .map((c) => c.code)
+      )
       return courses.filter(
-        (c) => c.category === electiveCat.category && !completedRequiredCourses.includes(c.code)
+        (c) => matchingCodes.has(c.code) && !completedRequiredCourses.includes(c.code)
       )
     }
   }
