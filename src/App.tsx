@@ -17,7 +17,8 @@ import {
 import { InstallPrompt } from '@/components/InstallPrompt'
 import { getRequiredCategoryCourses, getSummerTerm } from '@/services/courses'
 import { buildAdaContext } from '@/lib/buildAdaContext'
-import type { RequirementCategoryId } from '@/types'
+import type { RequirementCategoryId, FlexibleCourseCode, FlexibleCourseCategory } from '@/types'
+import { FLEXIBLE_COURSES } from '@/types'
 import requirementsData from '../data/requirements.json'
 import { trackWizardStart, trackStepVisit } from '@/services/analytics'
 
@@ -403,9 +404,28 @@ function App() {
 
     // Special handling for transitioning from Part 1 to Part 2
     if (currentStep.id === 'specialCredits') {
-      // Save all completed courses to student data
+      // Save all completed courses and flexible-course category assignments
       const completedCourses = allCompletedCourses
-      updateStudentData({ completedCourses })
+      const flexibleSet = new Set<string>(FLEXIBLE_COURSES)
+      const courseCategories: Partial<Record<FlexibleCourseCode, FlexibleCourseCategory>> = {}
+
+      // Primary electives (first in each list) keep their category
+      const primaryDC = categorySelections.dcElectives[0]
+      const primaryDA = categorySelections.daElectives[0]
+      if (primaryDC && flexibleSet.has(primaryDC)) {
+        courseCategories[primaryDC as FlexibleCourseCode] = 'dcElective'
+      }
+      if (primaryDA && flexibleSet.has(primaryDA)) {
+        courseCategories[primaryDA as FlexibleCourseCode] = 'daElective'
+      }
+      // Overflow electives and explicit general electives go to generalElectives
+      for (const c of [...categorySelections.dcElectives.slice(1), ...categorySelections.daElectives.slice(1), ...categorySelections.generalElectives]) {
+        if (flexibleSet.has(c)) {
+          courseCategories[c as FlexibleCourseCode] = 'generalElectives'
+        }
+      }
+
+      updateStudentData({ completedCourses, courseCategories })
 
       // Determine unmet categories for Part 2
       const unmet = calculateUnmetCategories(studentData.degreeType || 'major', notYetSelections)
