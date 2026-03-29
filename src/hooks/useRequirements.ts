@@ -1,11 +1,10 @@
 import { useMemo } from 'react'
 import requirementsData from '../../data/requirements.json'
-import coursesData from '../../data/courses.json'
-import type { Requirements, Course, StudentData, FlexibleCourseCategory } from '@/types'
+import type { Requirements, StudentData, FlexibleCourseCategory } from '@/types'
 import { FLEXIBLE_COURSES } from '@/types'
+import { getCoursesByCategory, getAllCourses } from '@/services/courses'
 
 const requirements = requirementsData as Requirements
-const courses = coursesData as Course[]
 
 // Helper to check if a course is a flexible course (can be assigned to multiple categories)
 function isFlexibleCourse(code: string): boolean {
@@ -87,8 +86,7 @@ export function useRequirements(
     if (degree.electives) {
       for (const cat of degree.electives.categories) {
         // Get courses in this category, but EXCLUDE courses that fulfill required categories
-        const categoryCourseCodes = courses
-          .filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code))
+        const categoryCourseCodes = getCoursesByCategory(cat.category!, requiredCategoryCourses)
           .map((c) => c.code)
 
         // Filter completed courses for this elective category
@@ -136,6 +134,7 @@ export function useRequirements(
     }
 
     // Process general electives
+    const courses = getAllCourses()
     const allCourseCodes = courses.map((c) => c.code)
 
     let generalCompleted: string[]
@@ -150,7 +149,7 @@ export function useRequirements(
     } else {
       // Fallback: infer general electives (for cases where explicit list not provided or empty)
       const electiveCategoryCourses = degree.electives?.categories.flatMap((cat) =>
-        courses.filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code)).map((c) => c.code)
+        getCoursesByCategory(cat.category!, requiredCategoryCourses).map((c) => c.code)
       ) ?? []
 
       generalCompleted = [
@@ -208,6 +207,6 @@ export function useRequirements(
   return {
     degreeProgress,
     requirements,
-    courses,
+    courses: getAllCourses(),
   }
 }

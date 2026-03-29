@@ -14,6 +14,17 @@ let offerings = offeringsData as CourseOfferings
 let summerOfferings = summerOfferingsData as CourseOfferings
 const requirements = requirementsData as typeof requirementsData
 
+/**
+ * Get deduped courses matching a category, accounting for dual-category entries
+ * (e.g. DCDA 40273 appears under both "Digital Culture" and "Data Analytics" in raw data)
+ */
+export function getCoursesByCategory(category: string, excludeCodes: string[] = []): Course[] {
+  const matchingCodes = new Set(
+    coursesRaw.filter((c) => c.category === category).map((c) => c.code)
+  )
+  return courses.filter((c) => matchingCodes.has(c.code) && !excludeCodes.includes(c.code))
+}
+
 /** Called by DCDADataProvider to update live offerings from Firestore */
 export function updateOfferings(data: CourseOfferings): void {
   offerings = data
@@ -44,15 +55,7 @@ export function getCoursesForCategory(
   if (degreeType === 'major' && 'electives' in degree && degree.electives) {
     const electiveCat = degree.electives.categories.find((c: { id: string }) => c.id === categoryId)
     if (electiveCat?.category) {
-      // Find codes from the raw (pre-dedup) list so dual-category courses are included
-      const matchingCodes = new Set(
-        coursesRaw
-          .filter((c) => c.category === electiveCat.category)
-          .map((c) => c.code)
-      )
-      return courses.filter(
-        (c) => matchingCodes.has(c.code) && !completedRequiredCourses.includes(c.code)
-      )
+      return getCoursesByCategory(electiveCat.category, completedRequiredCourses)
     }
   }
 

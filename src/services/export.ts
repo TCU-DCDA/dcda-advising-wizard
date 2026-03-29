@@ -1,11 +1,10 @@
 import { jsPDF } from 'jspdf'
-import type { StudentData, Course, SpecialCredit, FlexibleCourseCategory } from '@/types'
+import type { StudentData, SpecialCredit, FlexibleCourseCategory } from '@/types'
 import { FLEXIBLE_COURSES } from '@/types'
-import { getCapstoneTargetSemester, buildSemesterPlan, getNextSemesterTerm } from './courses'
-import coursesData from '../../data/courses.json'
+import { getCapstoneTargetSemester, buildSemesterPlan, getNextSemesterTerm, getAllCourses, getCoursesByCategory } from './courses'
 import requirementsData from '../../data/requirements.json'
 
-const courses = coursesData as Course[]
+const courses = getAllCourses()
 
 // Helper to check if a course is flexible
 function isFlexibleCourse(code: string): boolean {
@@ -139,8 +138,7 @@ export function generatePdfBlob({ studentData, generalElectives, scheduledSelect
   // Add elective categories (major only)
   if (degreeWithElectives.electives) {
     for (const cat of degreeWithElectives.electives.categories) {
-      const categoryCourseCodes = courses
-        .filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code))
+      const categoryCourseCodes = getCoursesByCategory(cat.category, requiredCategoryCourses)
         .map((c) => c.code)
       allCategories.push({
         id: cat.id,
@@ -362,8 +360,7 @@ export function generatePdfBlob({ studentData, generalElectives, scheduledSelect
   // Process elective categories (major only)
   if (degreeWithElectives.electives) {
     for (const cat of degreeWithElectives.electives.categories) {
-      const categoryCourseCodes = courses
-        .filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code))
+      const categoryCourseCodes = getCoursesByCategory(cat.category, requiredCategoryCourses)
         .map((c) => c.code)
       const completedInCat = studentData.completedCourses.filter((c: string) => {
         if (!categoryCourseCodes.includes(c)) return false
@@ -414,7 +411,7 @@ export function generatePdfBlob({ studentData, generalElectives, scheduledSelect
   } else {
     // Fallback: infer general electives
     const electiveCats = degreeWithElectives.electives?.categories.flatMap((cat: { category: string }) =>
-      courses.filter((c) => c.category === cat.category && !requiredCategoryCourses.includes(c.code)).map((c) => c.code)
+      getCoursesByCategory(cat.category, requiredCategoryCourses).map((c) => c.code)
     ) ?? []
     
     const allCourseCodes = courses.map((c) => c.code)
