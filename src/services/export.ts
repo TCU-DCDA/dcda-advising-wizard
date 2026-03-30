@@ -407,7 +407,14 @@ export function generatePdfBlob({ studentData, generalElectives, scheduledSelect
 
   if (generalElectives && generalElectives.length > 0) {
     // Use explicitly provided general electives + overflow
-    generalCompleted = [...generalElectives, ...requiredOverflow, ...electiveOverflow]
+    // Also include flexible courses assigned to generalElectives that were
+    // selected on DC/DA screens (overflow) but aren't in the explicit list
+    const flexibleGenerals = studentData.completedCourses.filter((c: string) =>
+      isFlexibleCourse(c) &&
+      (studentData.courseCategories?.[c as keyof typeof studentData.courseCategories] as FlexibleCourseCategory | undefined) === 'generalElectives' &&
+      !generalElectives.includes(c)
+    )
+    generalCompleted = [...generalElectives, ...flexibleGenerals, ...requiredOverflow, ...electiveOverflow]
   } else {
     // Fallback: infer general electives
     const electiveCats = degreeWithElectives.electives?.categories.flatMap((cat: { category: string }) =>

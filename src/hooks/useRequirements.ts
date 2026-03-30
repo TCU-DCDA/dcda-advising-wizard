@@ -141,8 +141,16 @@ export function useRequirements(
 
     if (explicitGeneralElectives && explicitGeneralElectives.length > 0) {
       // Use explicitly provided general electives list (from Part 1 selections)
+      // Also include flexible courses assigned to generalElectives that were
+      // selected on DC/DA screens (overflow) but aren't in the explicit list
+      const flexibleGenerals = completedCourses.filter((c) =>
+        isFlexibleCourse(c) &&
+        (courseCategories[c as keyof typeof courseCategories] as FlexibleCourseCategory | undefined) === 'generalElectives' &&
+        !explicitGeneralElectives.includes(c)
+      )
       generalCompleted = [
         ...explicitGeneralElectives,
+        ...flexibleGenerals,
         ...requiredOverflow,
         ...electiveOverflow,
       ]
