@@ -9,11 +9,13 @@
  * Part of the AddRan Advising Ecosystem integration (Phase 2)
  */
 
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
+import { initializeApp, applicationDefault } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,6 +25,15 @@ const projectRoot = join(__dirname, '..');
 const DATA_DIR = join(projectRoot, 'data');
 const SCHEMA_PATH = join(projectRoot, 'schemas', 'manifest.schema.json');
 const OUTPUT_PATH = join(projectRoot, 'public', 'advising-manifest.json');
+
+// Firestore holds the canonical offerings data (dcda_config/offerings_*).
+// Uses Application Default Credentials — run `gcloud auth application-default login`
+// on this machine if the fetch below fails with an auth error.
+initializeApp({
+  credential: applicationDefault(),
+  projectId: 'dcda-advisor-mobile',
+});
+const db = getFirestore();
 
 // Load data files
 function loadJSON(filename) {
@@ -37,42 +48,77 @@ function loadJSON(filename) {
 }
 
 /**
- * Auto-detect the latest offerings file by term date.
- * Filenames: offerings-{season}{yy}.json where season = sp|su|fa
- * Sorts by calendar date (fa26 = Fall 2026 = Aug 2026, sp27 = Spring 2027 = Jan 2027)
+ * Fetch all dcda_config/offerings_* docs from Firestore and return the ones
+ * whose term has not yet started. Sandra is forward-looking — students use
+ * her to plan what to register for next — so the manifest only exposes
+ * upcoming terms. Students with current-semester questions use the wizard
+ * UI directly, which reads Firestore live.
+ *
+ * Doc IDs: offerings_{sp|su|fa}{yy} (e.g. offerings_fa26). The doc ID is the
+ * source of truth for which term a doc represents; the doc's `term` string
+ * field is ignored because it's user-editable and has been observed to drift.
+ *
+ * Approximate TCU term start dates: sp → Jan 15, su → May 20, fa → Aug 20.
  */
-function findLatestOfferings() {
+async function fetchUpcomingOfferings() {
   const SEASON_ORDER = { sp: 0, su: 1, fa: 2 };
   const SEASON_LABEL = { sp: 'Spring', su: 'Summer', fa: 'Fall' };
 
-  const files = readdirSync(DATA_DIR)
-    .filter(f => /^offerings-(?:sp|su|fa)\d{2}\.json$/.test(f))
-    .map(f => {
-      const match = f.match(/^offerings-(sp|su|fa)(\d{2})\.json$/);
-      const season = match[1];
-      const year = parseInt(match[2], 10);
-      // Sort key: year * 10 + season order (fa26 = 262, sp27 = 270)
-      const sortKey = year * 10 + SEASON_ORDER[season];
-      return { file: f, season, year, sortKey, label: `${SEASON_LABEL[season]} 20${year}` };
-    })
-    .sort((a, b) => b.sortKey - a.sortKey);
-
-  if (files.length === 0) {
-    console.error('No offerings-*.json files found in data/');
-    process.exit(1);
+  function termStartDate(season, yy) {
+    const year = 2000 + yy;
+    if (season === 'sp') return new Date(year, 0, 15);  // Jan 15
+    if (season === 'su') return new Date(year, 4, 20);  // May 20
+    if (season === 'fa') return new Date(year, 7, 20);  // Aug 20
+    return null;
   }
 
-  return files[0];
+  const snap = await db.collection('dcda_config').get();
+  const now = new Date();
+  const terms = [];
+
+  snap.forEach(doc => {
+    const match = doc.id.match(/^offerings_(sp|su|fa)(\d{2})$/);
+    if (!match) return;
+    const season = match[1];
+    const yy = parseInt(match[2], 10);
+    const startDate = termStartDate(season, yy);
+    if (!startDate || startDate < now) return;
+    terms.push({
+      docId: doc.id,
+      season,
+      yy,
+      sortKey: yy * 10 + SEASON_ORDER[season],
+      label: `${SEASON_LABEL[season]} 20${yy}`,
+      data: doc.data(),
+    });
+  });
+
+  terms.sort((a, b) => a.sortKey - b.sortKey);
+  return terms;
 }
 
 console.log('TCU DCDA Department - Manifest Generator\n');
 
-const latestOfferings = findLatestOfferings();
-console.log(`Auto-detected latest offerings: ${latestOfferings.file} (${latestOfferings.label})`);
+console.log('Fetching upcoming offerings from Firestore...');
+let upcomingOfferings;
+try {
+  upcomingOfferings = await fetchUpcomingOfferings();
+} catch (err) {
+  console.error('\nFailed to read dcda_config from Firestore:');
+  console.error(`  ${err.message}`);
+  console.error('\nThis script requires Application Default Credentials.');
+  console.error('Run: gcloud auth application-default login');
+  console.error('Then rerun: npm run generate-manifest\n');
+  process.exit(1);
+}
+if (upcomingOfferings.length === 0) {
+  console.warn('Warning: no upcoming offerings found in Firestore dcda_config collection');
+} else {
+  console.log(`Fetched ${upcomingOfferings.length} upcoming term(s): ${upcomingOfferings.map(t => t.label).join(', ')}`);
+}
 
 const courses = loadJSON('courses.json');
 const requirements = loadJSON('requirements.json');
-const offerings = loadJSON(latestOfferings.file);
 const contacts = loadJSON('contacts.json');
 const careerOptions = loadJSON('career-options.json');
 
@@ -82,18 +128,6 @@ console.log('Loaded all data files');
 const courseLookup = new Map();
 for (const course of courses) {
   courseLookup.set(course.code, course);
-}
-
-// Build set of currently offered course codes
-const offeredCodes = new Set(offerings.offeredCodes || []);
-
-// Build section lookup for offered courses
-const sectionLookup = new Map();
-for (const section of (offerings.sections || [])) {
-  if (!sectionLookup.has(section.code)) {
-    sectionLookup.set(section.code, []);
-  }
-  sectionLookup.get(section.code).push(section);
 }
 
 /**
@@ -301,15 +335,17 @@ function generateManifest() {
     'Students may not receive credit for both DCDA 20833 and WRIT 20833',
     'DSGN courses: contact Tyra Musoma (t.musoma@tcu.edu) to be placed on waiting list — DSGN majors have priority enrollment',
     'STCO courses: contact the instructor of record to be placed on waiting list',
-    `Current semester offerings (${offerings.term}): ${offerings.offeredCodes?.length || 0} DCDA-approved courses available`,
+    `Upcoming term offerings: ${upcomingOfferings.map(t => `${t.label} (${(t.data.offeredCodes || []).length} courses)`).join('; ') || 'none on file'}`,
   ];
 
-  // Add highlighted courses from current offerings
-  if (offerings.sections?.length > 0) {
-    // Attach highlighted courses to both programs
-    const highlightedCourses = {
-      term: offerings.term,
-      courses: offerings.sections.map(s => {
+  // Highlighted courses across all upcoming terms — array of {term, courses}.
+  // Older manifest consumers expected a single {term, courses} object; the
+  // schema's oneOf accepts both shapes, and Sandra's converter handles either.
+  const highlightedByTerm = upcomingOfferings
+    .filter(t => (t.data.sections || []).length > 0)
+    .map(t => ({
+      term: t.label,
+      courses: t.data.sections.map(s => {
         const hours = parseHours(s.code);
         const course = {
           code: s.code,
@@ -322,10 +358,11 @@ function generateManifest() {
         // snapshots that go stale as students register
         return course;
       }),
-    };
+    }));
 
+  if (highlightedByTerm.length > 0) {
     for (const program of manifest.programs) {
-      program.highlightedCourses = highlightedCourses;
+      program.highlightedCourses = highlightedByTerm;
     }
   }
 
