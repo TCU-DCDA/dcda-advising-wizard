@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0",
   "department": "Digital Culture and Data Analytics",
-  "lastUpdated": "2026-04-10T10:18:11.137Z",
+  "lastUpdated": "2026-04-15T19:38:04.025Z",
   "wizardUrl": "https://dcda-advisor-mobile.web.app",
   "programs": [
     {
@@ -1368,6 +1368,20 @@
           "term": "Summer 2026",
           "courses": [
             {
+              "code": "DCDA 30970",
+              "title": "Special Topics in DCDA - Japanese Pop Culture",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "In Person"
+            },
+            {
+              "code": "DCDA 40273",
+              "title": "DCDA Internship",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "In Person"
+            },
+            {
               "code": "ECON 40313",
               "title": "Econometrics",
               "hours": 3,
@@ -1380,6 +1394,13 @@
               "hours": 3,
               "schedule": "MTWRF  9:00-11:30",
               "modality": "In Person"
+            },
+            {
+              "code": "INTR 20103",
+              "title": "Tech Skills for Emerging Prof",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "Online Only"
             },
             {
               "code": "MATH 10043",
@@ -1492,6 +1513,13 @@
               "modality": "In Person"
             },
             {
+              "code": "DCDA 40273",
+              "title": "DCDA Internship",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "In Person"
+            },
+            {
               "code": "DSGN 10103",
               "title": "Intro Creative Practice",
               "hours": 3,
@@ -1576,13 +1604,6 @@
               "modality": "In Person"
             },
             {
-              "code": "ECON 40313",
-              "title": "Econometrics",
-              "hours": 3,
-              "schedule": "TR 12:30-13:50",
-              "modality": "In Person"
-            },
-            {
               "code": "EDUC 50263",
               "title": "Digital Comm & Collaboration",
               "hours": 3,
@@ -1597,10 +1618,31 @@
               "modality": "In Person"
             },
             {
+              "code": "ENGL 30873",
+              "title": "Digital Textual Problems",
+              "hours": 3,
+              "schedule": "MWF 14:00-14:50",
+              "modality": "In Person"
+            },
+            {
               "code": "GEOG 30323",
               "title": "Data Analysis & Visualization",
               "hours": 3,
               "schedule": "TR  9:30-10:50",
+              "modality": "In Person"
+            },
+            {
+              "code": "GEOG 30333",
+              "title": "Intro to GIS for Real Estate",
+              "hours": 3,
+              "schedule": "TR 11:00-12:20",
+              "modality": "In Person"
+            },
+            {
+              "code": "GEOG 40333",
+              "title": "Digital Cartography",
+              "hours": 3,
+              "schedule": "TR 14:00-15:20",
               "modality": "In Person"
             },
             {
@@ -1636,6 +1678,13 @@
               "title": "Statistical Analysis",
               "hours": 3,
               "schedule": "MWF 11:00-11:50",
+              "modality": "In Person"
+            },
+            {
+              "code": "INSC 20153",
+              "title": "Statistical Analysis",
+              "hours": 3,
+              "schedule": "TR 11:00-12:20",
               "modality": "In Person"
             },
             {
@@ -1691,7 +1740,7 @@
               "code": "INSC 20153",
               "title": "Statistical Analysis",
               "hours": 3,
-              "schedule": "T 18:30-21:10",
+              "schedule": "MW 16:00-17:20",
               "modality": "In Person"
             },
             {
@@ -2709,6 +2758,20 @@
           "term": "Summer 2026",
           "courses": [
             {
+              "code": "DCDA 30970",
+              "title": "Special Topics in DCDA - Japanese Pop Culture",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "In Person"
+            },
+            {
+              "code": "DCDA 40273",
+              "title": "DCDA Internship",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "In Person"
+            },
+            {
               "code": "ECON 40313",
               "title": "Econometrics",
               "hours": 3,
@@ -2721,6 +2784,13 @@
               "hours": 3,
               "schedule": "MTWRF  9:00-11:30",
               "modality": "In Person"
+            },
+            {
+              "code": "INTR 20103",
+              "title": "Tech Skills for Emerging Prof",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "Online Only"
             },
             {
               "code": "MATH 10043",
@@ -2833,6 +2903,13 @@
               "modality": "In Person"
             },
             {
+              "code": "DCDA 40273",
+              "title": "DCDA Internship",
+              "hours": 3,
+              "schedule": "TBA ARR",
+              "modality": "In Person"
+            },
+            {
               "code": "DSGN 10103",
               "title": "Intro Creative Practice",
               "hours": 3,
@@ -2917,13 +2994,6 @@
               "modality": "In Person"
             },
             {
-              "code": "ECON 40313",
-              "title": "Econometrics",
-              "hours": 3,
-              "schedule": "TR 12:30-13:50",
-              "modality": "In Person"
-            },
-            {
               "code": "EDUC 50263",
               "title": "Digital Comm & Collaboration",
               "hours": 3,
@@ -2938,10 +3008,31 @@
               "modality": "In Person"
             },
             {
+              "code": "ENGL 30873",
+              "title": "Digital Textual Problems",
+              "hours": 3,
+              "schedule": "MWF 14:00-14:50",
+              "modality": "In Person"
+            },
+            {
               "code": "GEOG 30323",
               "title": "Data Analysis & Visualization",
               "hours": 3,
               "schedule": "TR  9:30-10:50",
+              "modality": "In Person"
+            },
+            {
+              "code": "GEOG 30333",
+              "title": "Intro to GIS for Real Estate",
+              "hours": 3,
+              "schedule": "TR 11:00-12:20",
+              "modality": "In Person"
+            },
+            {
+              "code": "GEOG 40333",
+              "title": "Digital Cartography",
+              "hours": 3,
+              "schedule": "TR 14:00-15:20",
               "modality": "In Person"
             },
             {
@@ -2977,6 +3068,13 @@
               "title": "Statistical Analysis",
               "hours": 3,
               "schedule": "MWF 11:00-11:50",
+              "modality": "In Person"
+            },
+            {
+              "code": "INSC 20153",
+              "title": "Statistical Analysis",
+              "hours": 3,
+              "schedule": "TR 11:00-12:20",
               "modality": "In Person"
             },
             {
@@ -3032,7 +3130,7 @@
               "code": "INSC 20153",
               "title": "Statistical Analysis",
               "hours": 3,
-              "schedule": "T 18:30-21:10",
+              "schedule": "MW 16:00-17:20",
               "modality": "In Person"
             },
             {
@@ -3763,6 +3861,6 @@
     "Students may not receive credit for both DCDA 20833 and WRIT 20833",
     "DSGN courses: contact Tyra Musoma (t.musoma@tcu.edu) to be placed on waiting list — DSGN majors have priority enrollment",
     "STCO courses: contact the instructor of record to be placed on waiting list",
-    "Upcoming term offerings: Summer 2026 (4 courses); Fall 2026 (26 courses)"
+    "Upcoming term offerings: Summer 2026 (7 courses); Fall 2026 (29 courses)"
   ]
 }
