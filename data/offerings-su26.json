@@ -1,13 +1,30 @@
 {
   "term": "Summer 2026",
-  "updated": "2026-03-22",
+  "updated": "2026-04-15",
   "offeredCodes": [
+    "DCDA 30970",
+    "DCDA 40273",
     "ECON 40313",
     "INSC 20153",
+    "INTR 20103",
     "MATH 10043",
     "WRIT 20833"
   ],
   "sections": [
+    {
+      "code": "DCDA 30970",
+      "section": "530\nMAY",
+      "title": "Special Topics in DCDA - Japanese Pop Culture",
+      "schedule": "TBA\nARR",
+      "modality": "In Person"
+    },
+    {
+      "code": "DCDA 40273",
+      "section": "079\n10W",
+      "title": "DCDA Internship",
+      "schedule": "TBA\nARR",
+      "modality": "In Person"
+    },
     {
       "code": "ECON 40313",
       "section": "020\nJLY",
@@ -21,6 +38,14 @@
       "title": "Statistical Analysis",
       "schedule": "MTWRF\n 9:00-11:30",
       "modality": "In Person"
+    },
+    {
+      "code": "INTR 20103",
+      "section": "045\n6W2",
+      "title": "Tech Skills for Emerging Prof",
+      "schedule": "TBA\nARR",
+      "modality": "Online Only",
+      "coreCode": "CSV"
     },
     {
       "code": "MATH 10043",

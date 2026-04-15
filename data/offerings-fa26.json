@@ -1,6 +1,6 @@
 {
   "term": "Fall 2026",
-  "updated": "2026-03-09",
+  "updated": "2026-04-15",
   "offeredCodes": [
     "ANTH 40523",
     "ARST 10123",
@@ -9,13 +9,16 @@
     "ARST 30610",
     "COSC 10603",
     "CRJU 20883",
+    "DCDA 40273",
     "DSGN 10103",
     "DSGN 10153",
     "ECON 40313",
     "EDUC 50263",
     "ENGL 20813",
-    "GEOG 30313",
+    "ENGL 30873",
     "GEOG 30323",
+    "GEOG 30333",
+    "GEOG 40333",
     "GEOL 30363",
     "INSC 20153",
     "INTR 20103",
@@ -116,6 +119,13 @@
       "modality": "In Person"
     },
     {
+      "code": "DCDA 40273",
+      "section": "079\nREG",
+      "title": "DCDA Internship",
+      "schedule": "TBA\nARR",
+      "modality": "In Person"
+    },
+    {
       "code": "DSGN 10103",
       "section": "015\nREG",
       "title": "Intro Creative Practice",
@@ -206,13 +216,6 @@
       "modality": "In Person"
     },
     {
-      "code": "ECON 40313",
-      "section": "045\nREG",
-      "title": "Econometrics",
-      "schedule": "TR\n12:30-13:50",
-      "modality": "In Person"
-    },
-    {
       "code": "EDUC 50263",
       "section": "065\nREG",
       "title": "Digital Comm & Collaboration",
@@ -228,24 +231,32 @@
       "coreCode": "CA,HUM"
     },
     {
-      "code": "GEOG 30313",
+      "code": "ENGL 30873",
+      "section": "060\nREG",
+      "title": "Digital Textual Problems",
+      "schedule": "MWF\n14:00-14:50",
+      "modality": "In Person",
+      "coreCode": "WEM"
+    },
+    {
+      "code": "GEOG 30323",
       "section": "015\nREG",
-      "title": "Intro to Geog Info Systems",
+      "title": "Data Analysis & Visualization",
       "schedule": "TR\n 9:30-10:50",
       "modality": "In Person"
     },
     {
-      "code": "GEOG 30323",
-      "section": "074\nREG",
-      "title": "Data Analysis & Visualization",
-      "schedule": "MW\n16:00-17:20",
+      "code": "GEOG 30333",
+      "section": "035\nREG",
+      "title": "Intro to GIS for Real Estate",
+      "schedule": "TR\n11:00-12:20",
       "modality": "In Person"
     },
     {
-      "code": "GEOG 30323",
-      "section": "080\nREG",
-      "title": "Data Analysis & Visualization",
-      "schedule": "MW\n17:30-18:50",
+      "code": "GEOG 40333",
+      "section": "055\nREG",
+      "title": "Digital Cartography",
+      "schedule": "TR\n14:00-15:20",
       "modality": "In Person"
     },
     {
@@ -274,13 +285,6 @@
       "section": "010\nREG",
       "title": "Statistical Analysis",
       "schedule": "MWF\n 9:00- 9:50",
-      "modality": "In Person"
-    },
-    {
-      "code": "INSC 20153",
-      "section": "020\nREG",
-      "title": "Statistical Analysis",
-      "schedule": "MWF\n10:00-10:50",
       "modality": "In Person"
     },
     {
@@ -348,23 +352,9 @@
     },
     {
       "code": "INSC 20153",
-      "section": "070\nREG",
+      "section": "074\nREG",
       "title": "Statistical Analysis",
-      "schedule": "MWF\n15:00-15:50",
-      "modality": "In Person"
-    },
-    {
-      "code": "INSC 20153",
-      "section": "080\nREG",
-      "title": "Statistical Analysis",
-      "schedule": "T\n18:30-21:10",
-      "modality": "In Person"
-    },
-    {
-      "code": "INSC 20153",
-      "section": "081\nREG",
-      "title": "Statistical Analysis",
-      "schedule": "TR\n17:00-18:20",
+      "schedule": "MW\n16:00-17:20",
       "modality": "In Person"
     },
     {
@@ -379,14 +369,16 @@
       "section": "055\nREG",
       "title": "Tech Skills for Emerging Prof",
       "schedule": "TR\n14:00-15:20",
-      "modality": "In Person"
+      "modality": "In Person",
+      "coreCode": "CSV"
     },
     {
       "code": "INTR 20103",
       "section": "074\nREG",
       "title": "Tech Skills for Emerging Prof",
       "schedule": "MW\n16:00-17:20",
-      "modality": "In Person"
+      "modality": "In Person",
+      "coreCode": "CSV"
     },
     {
       "code": "MATH 10043",
