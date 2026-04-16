@@ -4,6 +4,13 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/api/advising-manifest.json",
+        "function": {
+          "functionId": "advisingManifest",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "/admin.html",
         "destination": "/admin.html"
       },
@@ -13,8 +20,22 @@
       }
     ]
   },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    }
+  ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "functions": { "port": 5001 },
+    "firestore": { "port": 8080 },
+    "hosting": { "port": 5500 },
+    "ui": { "enabled": true },
+    "singleProjectMode": true
   }
 }
