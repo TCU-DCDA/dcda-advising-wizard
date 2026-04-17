@@ -36,7 +36,7 @@ This architecture means the AI can be honest about what it doesn't know and accu
 ## Key Features
 
 ### Degree Planning Wizard
-- **Four-phase flow:** History (completed courses) → Schedule (upcoming semester) → Review (progress dashboard + graduation plan) → Submit (PDF/CSV/email export)
+- **Four-phase flow:** History (completed courses) → Schedule (upcoming semester) → Review (progress dashboard + graduation plan) → Submit (PDF/email export)
 - Handles Major (33 hours) and Minor (21 hours) with distinct logic paths
 - Enforces mutually exclusive courses, prerequisite chains, and elective overflow rules
 - Generates multi-semester plans calibrated to expected graduation date

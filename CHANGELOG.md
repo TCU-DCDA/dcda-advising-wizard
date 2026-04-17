@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`src/services/terms.ts`** — pure-function module resolving offerings doc IDs based on the calendar. Exports `currentTermId(season, now)`, `parseTermId(id)`, and `sortOfferingIds(ids)`. Rollover dates: spring → May 10, summer → Aug 15, fall → Dec 20. Nine unit tests in `src/services/terms.test.ts`.
+- **`advisingManifest` Cloud Function** (`functions/advisingManifest`). Serves the DCDA manifest live from Firestore at request time, validating against the schema. Hosting rewrite at `/api/advising-manifest.json` and a direct function URL at `https://us-central1-dcda-advisor-mobile.cloudfunctions.net/advisingManifest`. Admin.html edits reach Sandra within advisor-chat's 1-hour TTL instead of requiring a local regen + commit + deploy. 27 unit tests for `functions/manifest-assembly.js` (pure helpers + mock-Firestore smoke test).
+
 ### Changed
 
+- **Offerings doc IDs are resolved dynamically.** `useDCDAData` and the admin `OfferingsEditor` no longer hardcode `offerings_fa26` / `offerings_su26`. The student-facing hook calls `currentTermId('fa')` + `currentTermId('su')` at mount; the admin editor enumerates every `offerings_*` doc in `dcda_config` via `useFirestoreCollection` and populates its selector from whatever exists. Fixes the latent bug where `handleCreateTerm` could write a new term doc but the editor dropdown could not navigate to it, and prevents the student UI from silently pinning to a past term after the academic-year rollover.
+- **Integration probe renamed** — `functions/test-freshness.js` is now `functions/freshness-probe.mjs`, so `node --test` stops auto-discovering it. The probe still runs under `firebase emulators:exec` exactly as before; it just no longer hijacks the default unit-test run.
 - **Manifest generator now reads offerings from Firestore.** `scripts/generate-manifest.js` uses `firebase-admin` + Application Default Credentials to pull every `dcda_config/offerings_*` doc directly, replacing the `findLatestOfferings()` reader that picked only the single chronologically-latest `data/offerings-*.json` file and silently ignored the rest. Any Admin UI edit now reaches Sandra on the next `npm run build`, with no manual JSON export step.
   - **`npm run build` now requires ADC.** If the build fails with a credential error, run `gcloud auth application-default login` on the build machine.
   - CI/CD that doesn't have ADC will need a service account JSON and `GOOGLE_APPLICATION_CREDENTIALS` set. Local dev with `firebase login` already sharing the Google account works out of the box.
@@ -16,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Term filter** now selects offerings whose start date is in the future (sp → Jan 15, su → May 20, fa → Aug 20). Sandra is forward-looking — students with current-semester questions use the live wizard UI, not the chatbot.
 - **Term labels** are now derived from the offerings doc ID (`offerings_sp26` → "Spring 2026") instead of the doc's user-editable `term` field. The `term` field has been observed to drift: `offerings_sp26` in Firestore currently has `term: "Fall 2026"` from a stale template copy.
 - **CI fallback for generate-manifest.** When the Firestore fetch fails AND `process.env.CI === 'true'` AND a committed `public/advising-manifest.json` exists, the script logs a warning and exits 0 instead of failing the build. GitHub Actions (and most CI providers) don't have Application Default Credentials, and it's impractical to hand out Firestore-read service accounts to CI. The contract is: **run `npm run generate-manifest` locally and commit the regenerated manifest before pushing content changes** — CI then deploys the committed file as-is. Local builds without ADC still fail hard with the `gcloud auth application-default login` instructions.
+
+### Security
+
+- **`advisingManifest` 500 response no longer echoes `err.message`** to unauthenticated callers. Internal errors are still captured via `logger.error` with full stack traces; the public payload is now just `{ error: 'Failed to assemble manifest' }`.
 
 ### Removed
 
