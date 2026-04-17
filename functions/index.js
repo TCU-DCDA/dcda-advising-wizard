@@ -40,7 +40,7 @@ export const advisingManifest = onRequest(
         .send(JSON.stringify(manifest));
     } catch (err) {
       logger.error('Failed to assemble manifest', { error: err.message, stack: err.stack });
-      res.status(500).json({ error: 'Failed to assemble manifest', message: err.message });
+      res.status(500).json({ error: 'Failed to assemble manifest' });
     }
   }
 );
