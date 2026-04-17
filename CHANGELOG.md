@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dead code: the `offeredCodes` set and `sectionLookup` map in `generate-manifest.js` were initialized from the old single-offerings object but never consulted.
 - `scripts/generate-manifest.js` no longer reads `data/offerings-*.json`. The static files remain in the repo for now as historical snapshots; they can be retired in a follow-up once the Firestore path is confirmed stable.
+- **Build-time manifest generator retired.** `scripts/generate-manifest.js`, `public/advising-manifest.json`, and the `generate-manifest` + `build`-step invocation in `package.json` are all gone. The `advisingManifest` Cloud Function (added alongside these deletions) is now the sole source of the DCDA manifest; Sandra's wizard-registry.json already points at the function URL, and the wizard's own UI uses Firestore subscriptions. Sidecar consequence: the "CI fallback for generate-manifest" contract above is no longer relevant — CI just builds the Vite app. A snapshot of the last generated manifest was moved to `advisor-chat/functions/test/fixtures/dcda-manifest.json` as a test fixture for the manifest-loader suite.
 
 ## [1.0.0] - 2026-03-22
 
